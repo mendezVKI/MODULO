@@ -1,0 +1,7 @@
+
+
+
+%% This exercise presents an example of the use of mPOD and POD on a 1D scalar dataset.
+% This dataset is the velocity profile of a pulsating Poiseuille Flow
+
+
