@@ -2,6 +2,24 @@
 
 
 %% This exercise presents an example of the use of mPOD and POD on a 1D scalar dataset.
-% This dataset is the velocity profile of a pulsating Poiseuille Flow
+% This dataset is the velocity profile of a pulsating Poiseuille Flow. 
+% More info on the test case is presented in Mendez & Buchlin, TN215, available at:
+
+https://www.researchgate.net/publication/304538821_Notes_on_2D_Pulsatile_Poiseuille_Flows_An_Introduction_to_Eigenfunction_Expansion_and_Complex_Variables_using_Matlab/stats
+
+% The Pulsation is produced at two different frequencies, which corresponds to Womersley numbers of 0.1 and 0.2.
+% The first triggers a response which is almost in quasi-steady condition and hence preserves the parabolic shape of the profile.
+% The second triggers a more distorted response, which results in the excitation of many more eigenfunctions. 
+% In this exercise, the mPOD easily separates the two contributions, while the classical POD is incapable of achieving such distinction.
+
+
+
+
+
+
+
+
+
+
 
 
