@@ -20,8 +20,11 @@ TR-PIV or video sequences satisfy these conditions easily. Other simple exercise
 
 The proposed exercises are the following:
 1- Decomposition of the velocity profile of a pulsating poiseuille flow (1D, scalar). The theoretical backroung for the analysical solution is described in M.A. Mendez,J.-M Buchlin, VKI-TN 215, 2016, pdf available at https://www.researchgate.net/publication/304538821_Notes_on_2D_Pulsatile_Poiseuille_Flows_An_Introduction_to_Eigenfunction_Expansion_and_Complex_Variables_using_Matlab/stats.
+
 2. Decomposition of a Synthetic Test case
+
 3- Decomposition of the Vorticity field of a 2D simulation in Matlab.
+
 4- Decomposition of a TR-PIV measurement of an impinging jet.
 
 Exercises 2,3 and 4 are taken from the article at https://arxiv.org/abs/1804.09646 .
