@@ -19,9 +19,10 @@ All the codes so far assume that the dataset is equally spaced both in space (i.
 TR-PIV or video sequences satisfy these conditions easily. Other simple exercises using Finite Difference are also considered (ex.1, ex.2, ex. 3). 
 
 The proposed exercises are the following:
+
 1- Decomposition of the velocity profile of a pulsating poiseuille flow (1D, scalar). The theoretical backroung for the analysical solution is described in M.A. Mendez,J.-M Buchlin, VKI-TN 215, 2016, pdf available at https://www.researchgate.net/publication/304538821_Notes_on_2D_Pulsatile_Poiseuille_Flows_An_Introduction_to_Eigenfunction_Expansion_and_Complex_Variables_using_Matlab/stats.
 
-2. Decomposition of a Synthetic Test case
+2- Decomposition of a Synthetic Test case
 
 3- Decomposition of the Vorticity field of a 2D simulation in Matlab.
 
@@ -30,10 +31,10 @@ The proposed exercises are the following:
 Exercises 2,3 and 4 are taken from the article at https://arxiv.org/abs/1804.09646 .
  
 
-The do list currently include.
+The do list currently include:
 
 1- Prepare a stand-alone application with an .exe installer that requires no Matlab. This is currently under development by Ir. D. Ninni.
 
-2- Prepare a folder with the code and the exercises in Python.
+2- Prepare a folder with the codes and the exercises in Python.
 
 3- Extend the analysis to cases that do not have Cartesian grids, hence requiring weighted inner products.
