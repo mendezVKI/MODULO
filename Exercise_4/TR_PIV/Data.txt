@@ -1,0 +1,2 @@
+This contains the data exported from the PIV analysis. Sampling frequency is 2kHz.
+Each file contains the X and Y coordinates (in mm) in the first two coulmns; the U and V components in m/s in the third and fourth.
