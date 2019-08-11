@@ -30,5 +30,7 @@ Exercises 2,3 and 4 are taken from the article at https://arxiv.org/abs/1804.096
 The do list currently include.
 
 1- Prepare a stand-alone application with an .exe installer that requires no Matlab. This is currently under development by Ir. D. Ninni.
+
 2- Prepare a folder with the code and the exercises in Python.
+
 3- Extend the analysis to cases that do not have Cartesian grids, hence requiring weighted inner products.
