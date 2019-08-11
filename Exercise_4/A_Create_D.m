@@ -7,13 +7,13 @@ close all; clc; clear all
  % 1 . Data Preparation
 % If not done yet, unzip the folder provided with the TR_piv data.
 disp('Unzipping Folder TR_PIV')
-unzip('TR_PIV.zip');
+unzip('TR_PIV');
 disp('Folder Ready')
 
 
 
 FOLDER='TR_PIV';
-n_t=2728; % number of steps.
+n_t=2000; % number of steps.
 Fs=2000; dt=1/Fs; % This data was sampled at 2kHz.
 t=[0:1:n_t-1]*dt;% Read only one to have more info.
 
