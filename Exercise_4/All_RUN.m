@@ -1,6 +1,6 @@
 
 
-% This runs all the scripts for the exercise 1
+% This runs all the scripts for the exercise 4
 
 
 % A. Create Matrix D
