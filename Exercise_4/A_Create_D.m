@@ -54,7 +54,7 @@ V_Y=DATA(:,4);
 
 %% 2. Assembly Data Matrix D
 
-filename='Exercise_2.gif';
+filename='Exercise_4.gif';
 D=zeros(n_s,n_t);
 for k=1:1:n_t
 % Loop over the file name
@@ -77,7 +77,7 @@ save('Data.mat','D','t','dt','n_t','Xg','Yg')
  
 %% Visualize entire evolution (Optional)
 
-filename='Exercise_2.gif';
+filename='Exercise_4.gif';
 HFIG=figure(11);
 HFIG.Units='normalized';
 HFIG.Position=[0.3 0.3 0.5 0.5];
