@@ -251,7 +251,7 @@ set(STR,'LineWidth',0.7,'Color','k');
  % Label Information
  xlabel('$x[mm]$','Interpreter','Latex')
  ylabel('$y[mm]$','Interpreter','Latex')
- title(['Spatial Structure ',num2str(j+1)],'Interpreter','Latex')
+ title(['Spatial Structure ',num2str(j+4)],'Interpreter','Latex')
  set(gcf,'color','white')
 end
 
@@ -273,7 +273,7 @@ xlim([0 600])
  % Label Information
  xlabel('$f[Hz]$','Interpreter','Latex')
  ylabel('$\widehat{\psi}_{\mathcal{P}}$','Interpreter','Latex')
- title(['Frequency in the T. Structure ',num2str(j+1)],'Interpreter','Latex')
+ title(['Frequency in the T. Structure ',num2str(j+4)],'Interpreter','Latex')
  set(gcf,'color','white')
  end
 
