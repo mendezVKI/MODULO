@@ -121,7 +121,7 @@ ylim([-19 19])
  % Label Information
  xlabel('$x[-]$','Interpreter','Latex')
  ylabel('$y[-]$','Interpreter','Latex')
- title(['Spatial Structure ',num2str(j+1)],'Interpreter','Latex')
+ title(['Spatial Structure ',num2str(j+4)],'Interpreter','Latex')
  set(gcf,'color','white')
 end
 
@@ -143,7 +143,7 @@ xlim([0 20])
  % Label Information
  xlabel('$f[-]$','Interpreter','Latex')
  ylabel('$\widehat{\psi}_{\mathcal{M}}$','Interpreter','Latex')
- title(['Frequency in the T. Structure ',num2str(j+1)],'Interpreter','Latex')
+ title(['Frequency in the T. Structure ',num2str(j+4)],'Interpreter','Latex')
  set(gcf,'color','white')
  end
 
