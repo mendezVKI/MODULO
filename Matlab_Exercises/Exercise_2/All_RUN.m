@@ -1,6 +1,6 @@
 
 
-% This runs all the scripts for the exercise 4
+% This runs all the scripts for the exercise 2
 
 
 % A. Create Matrix D
@@ -11,4 +11,3 @@ run('B_Compute_K.m')
 run('C_Compute_Temporal_Basis_mPOD.m')
 % D. Projection for Spatial Basis
 run('D_Projection_and_Spatial_Structures.m')
-
