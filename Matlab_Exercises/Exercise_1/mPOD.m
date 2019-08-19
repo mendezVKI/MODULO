@@ -1,6 +1,6 @@
 function PSI_M_Final = mPOD(K,dt,Nf,F_V,Keep,BC)
 %mPOD is the function to compute the Multiscale Proper Orthogonal
-%Decomposition (Davide add more details here)
+%Decomposition
 %% Input Parameters
 % 
 % * K- Temporal Correlation Matrix, D'*W*D )
