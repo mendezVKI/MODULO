@@ -31,7 +31,7 @@ The proposed exercises are the following:
 Exercises 2,3 and 4 are taken from the article at https://arxiv.org/abs/1804.09646 .
  
 
-The do list currently include:
+The do list currently includes:
 
 1- Prepare a stand-alone application with an .exe installer that requires no Matlab. This is currently under development by Ir. D. Ninni.
 
