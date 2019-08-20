@@ -33,20 +33,22 @@ F_Bank_r = F_V*2/Fs; %(Fs/2 mapped to 1)
 disp('Preparing Kernels...')
 
 for m=1:1:M
+    
     disp(['Preparing Kernel ',num2str(m),' of ',num2str(M)]);
+    
     if m==1
-     h1d_L = fir1(Nf(m),F_Bank_r(m),'low')'; % 1d Kernel for Low Pass
-    h_A = h1d_L*h1d_L'; % 2d Kernel for Low Pass (Approximation)
-    h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
-    h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for Low Pass (Diagonal Detail)
+       h1d_L = fir1(Nf(m),F_Bank_r(m),'low')'; % 1d Kernel for Low Pass
+       h_A = h1d_L*h1d_L'; % 2d Kernel for Low Pass (Approximation)
+       h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
+       h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for Low Pass (Diagonal Detail)
     elseif  m>1 && m<M 
-        % This is the 1d Kernel for Band pass
+       % This is the 1d Kernel for Band pass
        h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
        h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for Low Pass (Diagonal Detail)
     else
-        % This is the 1d Kernel for High Pass (last scale)
+       % This is the 1d Kernel for High Pass (last scale)
        h1d_H{m} = fir1(Nf(m),[F_Bank_r(m)],'high')';
-        h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for High Pass (finest scale)
+       h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for High Pass (finest scale)
     end    
     
 end
@@ -69,10 +71,12 @@ K_L = imfilter(K,h_A,BC);
 %Band-pass Portions (using Keep Vector)
 Ind=find(Keep==1);
 for ll=1:1:length(Ind)
+    
     MEX = ['Getting K_H',num2str(Ind(ll))];
     disp(MEX)
     %Do not take the full spectral frame
-    K_H{ll} = imfilter(K,h_D{Ind(ll)},BC);   
+    K_H{ll} = imfilter(K,h_D{Ind(ll)},BC); 
+    
 end
 
 %% 3. Diagonalize all the Scales
@@ -87,24 +91,29 @@ clear K_L
 
 
 for ll=1:1:length(Ind)
-MEX = ['Eigenspace of K_H',num2str(Ind(ll))];
-disp(MEX)
-% Repeat the previous estimation and diagonalization for all the scales     
-[h,w] = freqz(h1d_H{ll},n_t); 
-H=abs(h)/max(abs(h));
-N_S=length(find(H>0.1));
-[Psi_H{ll} Sigma_H{ll} ~] = svds(K_H{Ind(ll)},rank(K_H{Ind(ll)}));
-% Release some memory
-K_H{Ind(ll)}={};
+    
+    MEX = ['Eigenspace of K_H',num2str(Ind(ll))];
+    disp(MEX)
+    % Repeat the previous estimation and diagonalization for all the scales     
+    [h,w] = freqz(h1d_H{ll},n_t); 
+    H=abs(h)/max(abs(h));
+    N_S=length(find(H>0.1));
+    [Psi_H{ll} Sigma_H{ll} ~] = svds(K_H{Ind(ll)},rank(K_H{Ind(ll)}));
+    % Release some memory
+    K_H{Ind(ll)}={};
+    
 end
 
 %% 4. Mount the global mPOD basis
 disp('Mounting the global basis...')
 PSI_M = [Psi_L(:,1:end)];
 Sigma_v_M = [diag(Sigma_L(1:1:end,1:1:end))];
+
 for ll=2:1:length(Sigma_H)+1
+    
     PSI_M = [PSI_M, Psi_H{ll-1}(:,1:end)];
     Sigma_v_M = [Sigma_v_M;diag(Sigma_H{ll-1}(1:1:end,1:1:end))];
+    
 end
 
 %Sort energies descending order
