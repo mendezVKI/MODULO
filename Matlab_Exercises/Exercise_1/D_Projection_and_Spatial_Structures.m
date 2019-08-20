@@ -25,12 +25,14 @@ PHI_M_SIGMA_M=D*PSI_M;
 PHI_M=zeros([n_y,R]);
 SIGMA_M=zeros([R,R]);
 
- for i=1:1:R
-disp(['Completing mPOD Mode ',num2str(i)]);
-% Normalize the columns of C to get spatial modes
-PHI_M(:,i) = PHI_M_SIGMA_M(:,i)/norm(PHI_M_SIGMA_M(:,i));
-% Assign the norm as amplitude
-SIGMA_M(i,i) = norm(PHI_M_SIGMA_M(:,i));
+for i=1:1:R
+     
+    disp(['Completing mPOD Mode ',num2str(i)]);
+    % Normalize the columns of C to get spatial modes
+    PHI_M(:,i) = PHI_M_SIGMA_M(:,i)/norm(PHI_M_SIGMA_M(:,i));
+    % Assign the norm as amplitude
+    SIGMA_M(i,i) = norm(PHI_M_SIGMA_M(:,i));
+
 end
 
 % Sort the amplitudes in decreasing order
@@ -49,34 +51,31 @@ HFIG=figure(1);
 HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.8 0.8];
 HFIG.Name='Results mPOD Analysis';
+
 for j=1:3
-subplot(3,2,2*j-1)
-plot(y,Phi_M(:,j),'linewidth',1.5)
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
- % Label Information
- xlabel('$\hat{y}$','Interpreter','Latex')
- ylabel('$\phi_{\mathcal{M}}$','Interpreter','Latex')
- title(['Spatial Structure ',num2str(j)],'Interpreter','Latex')
- set(gcf,'color','white')
+    
+    subplot(3,2,2*j-1)
+    plot(y,Phi_M(:,j),'linewidth',1.5)
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    % Label Information
+    xlabel('$\hat{y}$','Interpreter','Latex')
+    ylabel('$\phi_{\mathcal{M}}$','Interpreter','Latex')
+    title(['Spatial Structure ',num2str(j)],'Interpreter','Latex')
+    set(gcf,'color','white')
+
 end
 for j=1:3
-subplot(3,2,2*j)
-plot(t,Psi_M(:,j),'linewidth',1.5)
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
- % Label Information
- xlabel('$\hat{t}$','Interpreter','Latex')
- ylabel('$\psi_{\mathcal{M}}$','Interpreter','Latex')
- title(['Temporal Structure ',num2str(j)],'Interpreter','Latex')
- set(gcf,'color','white')
- end
+    
+    subplot(3,2,2*j)
+    plot(t,Psi_M(:,j),'linewidth',1.5)
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    % Label Information
+    xlabel('$\hat{t}$','Interpreter','Latex')
+    ylabel('$\psi_{\mathcal{M}}$','Interpreter','Latex')
+    title(['Temporal Structure ',num2str(j)],'Interpreter','Latex')
+    set(gcf,'color','white')
+    
+end
 
 print(HFIG,'Results_mPOD.png','-dpng')
 
@@ -88,11 +87,13 @@ PHI_P_SIGMA_P=D*PSI_P;
 % Initialize the output
 Phi_P=zeros([n_y,R]);
 
- for i=1:1:R
-disp(['Completing POD Mode ',num2str(i)]);
-% Normalize the columns of C to get spatial modes
-Phi_P(:,i) = PHI_P_SIGMA_P(:,i)/Sigma_P(i,i);
-% The POD does not need a normalization for the amplitude!
+for i=1:1:R
+    
+    disp(['Completing POD Mode ',num2str(i)]);
+    % Normalize the columns of C to get spatial modes
+    Phi_P(:,i) = PHI_P_SIGMA_P(:,i)/Sigma_P(i,i);
+    % The POD does not need a normalization for the amplitude!
+    
 end
 
 
@@ -102,39 +103,31 @@ HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.8 0.8];
 HFIG.Name='Results POD Analysis';
 for j=1:3
-subplot(3,2,2*j-1)
-plot(y,Phi_P(:,j),'linewidth',1.5)
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
- % Label Information
- xlabel('$\hat{y}$','Interpreter','Latex')
- ylabel('$\phi_{\mathcal{P}}$','Interpreter','Latex')
- title(['Spatial Structure ',num2str(j)],'Interpreter','Latex')
- set(gcf,'color','white')
+    
+    subplot(3,2,2*j-1)
+    plot(y,Phi_P(:,j),'linewidth',1.5)
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    % Label Information
+    xlabel('$\hat{y}$','Interpreter','Latex')
+    ylabel('$\phi_{\mathcal{P}}$','Interpreter','Latex')
+    title(['Spatial Structure ',num2str(j)],'Interpreter','Latex')
+    set(gcf,'color','white')
+
 end
+
 for j=1:3
-subplot(3,2,2*j)
-plot(t,PSI_P(:,j),'linewidth',1.5)
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
- % Label Information
- xlabel('$\hat{t}$','Interpreter','Latex')
- ylabel('$\psi_{\mathcal{P}}$','Interpreter','Latex')
- title(['Temporal Structure ',num2str(j)],'Interpreter','Latex')
- set(gcf,'color','white')
- end
+    
+    subplot(3,2,2*j)
+    plot(t,PSI_P(:,j),'linewidth',1.5)
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    % Label Information
+    xlabel('$\hat{t}$','Interpreter','Latex')
+    ylabel('$\psi_{\mathcal{P}}$','Interpreter','Latex')
+    title(['Temporal Structure ',num2str(j)],'Interpreter','Latex')
+    set(gcf,'color','white')
+    
+end
 
 print(HFIG,'Results_POD.png','-dpng')
-
-
-
-return
-
 
 
