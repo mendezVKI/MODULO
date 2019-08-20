@@ -31,15 +31,11 @@ axis([-600 600 -600 600])
 set(gca,'XTick',-600:200:600)
 set(gca,'YTick',-600:200:600)
 daspect([1 1 1]) 
-     set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
-    % Label Information
-     xlabel('$f[Hz]$','Interpreter','Latex','fontsize',18)
-    ylabel('$f[Hz]$','Interpreter','Latex','fontsize',18)
-   set(gcf,'color','w')
+set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+% Label Information
+xlabel('$f[Hz]$','Interpreter','Latex','fontsize',18)
+ylabel('$f[Hz]$','Interpreter','Latex','fontsize',18)
+set(gcf,'color','w')
 
 drawnow
 
@@ -68,34 +64,32 @@ diag_K(ZERO_F-1:ZERO_F+1)=0;
 plot(Freq,diag_K./max(diag_K),'linewidth',1.2);
 
 for m=1:length(Keep)
-hold on
-% Generate the 1d filter for this 
-if m==1
-h_A=fir1(Nf(m),F_Bank_r(m),'low')'; % 1d Kernel for Low Pass
-h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
-plot(Freq,fftshift(abs(fft(h_A,n_t))),'linewidth',1.5)
-plot(Freq,fftshift(abs(fft(h1d_H{m},n_t))),'linewidth',1.5)
- elseif  m>1 && m<M 
-% This is the 1d Kernel for Band pass
-h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
-plot(Freq,fftshift(abs(fft(h1d_H{m},n_t))))
-else
-% This is the 1d Kernel for High Pass (last scale)
-h1d_H{m} = fir1(Nf(m),[F_Bank_r(m)],'high')';
-plot(Freq,fftshift(abs(fft(h1d_H{m},n_t))),'linewidth',1.5)
- end
+    
+    hold on
+    % Generate the 1d filter for this 
+    if m==1
+       h_A=fir1(Nf(m),F_Bank_r(m),'low')'; % 1d Kernel for Low Pass
+       h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
+       plot(Freq,fftshift(abs(fft(h_A,n_t))),'linewidth',1.5)
+       plot(Freq,fftshift(abs(fft(h1d_H{m},n_t))),'linewidth',1.5)
+    elseif  m>1 && m<M 
+       % This is the 1d Kernel for Band pass
+       h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
+       plot(Freq,fftshift(abs(fft(h1d_H{m},n_t))))
+    else
+       % This is the 1d Kernel for High Pass (last scale)
+       h1d_H{m} = fir1(Nf(m),[F_Bank_r(m)],'high')';
+       plot(Freq,fftshift(abs(fft(h1d_H{m},n_t))),'linewidth',1.5)
+    end
 
-    end    
+end  
+
 xlim([0 600])  
-  set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
-    % Label Information
-     xlabel('$f[Hz]$','Interpreter','Latex','fontsize',18)
-    ylabel('$Normalized Spectra$','Interpreter','Latex','fontsize',18)
-   set(gcf,'color','w')
+set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+% Label Information
+xlabel('$f[Hz]$','Interpreter','Latex','fontsize',18)
+ylabel('$Normalized Spectra$','Interpreter','Latex','fontsize',18)
+set(gcf,'color','w')
 
 
 print(HFIG,'Frequency_Splitting.png','-dpng')
@@ -114,12 +108,6 @@ save('Psis_mPOD.mat','PSI_M')
 Sigma_P=sqrt(Lambda_P); 
 
 save('Psis_POD.mat','PSI_P','Sigma_P')
-
-
-return
-
-F_V
-
 
 
 
