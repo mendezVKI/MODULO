@@ -48,19 +48,22 @@ S_1_t=S_1_t/norm(S_1_t); % Normalize to ensure equal energy
 
 close all
 for i=1:1:n_t
-   S_time= S_1_t(i);
-   S_Space=S_time*S1;
-   % Assembly D1 Matrix
-   D1(:,i)=reshape(S_Space,[numel(S_Space),1]); 
+    
+    S_time= S_1_t(i);
+    S_Space=S_time*S1;
+    % Assembly D1 Matrix
+    D1(:,i)=reshape(S_Space,[numel(S_Space),1]); 
 %    figure(1) % If you want to see this mode
 %    pcolor(Xg,Yg,S_Space)
 %    shading interp
 %    caxis([-1,1])
 %    daspect([1 1 1])
 %    drawnow
-MEX=['Source 1, step ',num2str(i),' of ',num2str(n_t)];
-   disp(MEX)
+    MEX=['Source 1, step ',num2str(i),' of ',num2str(n_t)];
+    disp(MEX)
+    
 end
+
 %% Build Source 2--------------------------------------------
 
 sigma_Y=5;
@@ -81,20 +84,20 @@ S_2_t=S_2_t/norm(S_2_t); %% normalize to have equal importance
 % daspect([1 1 1])
 close all
 for i=1:1:n_t
-   S_time= S_2_t(i);
-   S_Space=S_time*S2;
-      % Assembly D2 Matrix
-   D2(:,i)=reshape(S_Space,[numel(S_Space),1]);
-      
+    
+    S_time= S_2_t(i);
+    S_Space=S_time*S2;
+    % Assembly D2 Matrix
+    D2(:,i)=reshape(S_Space,[numel(S_Space),1]);
 %    figure(1) % If you want to see this mode
 %    pcolor(X,Y,S_Space)
 %    shading interp
 %    caxis([-1,1])
 %    daspect([1 1 1])
 %    drawnow
-    
-MEX=['Source 2, step ',num2str(i),' of ',num2str(n_t)];
-   disp(MEX)
+    MEX=['Source 2, step ',num2str(i),' of ',num2str(n_t)];
+    disp(MEX)
+   
 end
 
 
@@ -130,7 +133,6 @@ T3=Q(:,3);
 
 
 
-% 
 % HFIG=figure(1);
 % pcolor(Xg,Yg,S3)
 % colorbar
@@ -138,12 +140,11 @@ T3=Q(:,3);
 % daspect([1 1 1])
 close all
 for i=1:1:n_t
-   S_time= S_3_t(i);
-   S_Space=S_time*S3;
-   
-   % Assembly D3 Matrix
-   D3(:,i)=reshape(S_Space,[numel(S_Space),1]);
-      
+    
+    S_time= S_3_t(i);
+    S_Space=S_time*S3;
+    % Assembly D3 Matrix
+    D3(:,i)=reshape(S_Space,[numel(S_Space),1]);
 %    figure(1) % If you want to see this mode
 %    pcolor(Xg,Yg,S_Space)
 %    shading interp
@@ -152,8 +153,9 @@ for i=1:1:n_t
 %    colorbar
 %    drawnow
     
-MEX=['Source 3, step ',num2str(i),' of ',num2str(n_t)];
-   disp(MEX)
+    MEX=['Source 3, step ',num2str(i),' of ',num2str(n_t)];
+    disp(MEX)
+    
 end
 
 %% Print the introduced modes
@@ -163,43 +165,39 @@ HFIG=figure(3);
 HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.65 0.75];
 HFIG.Name='Introduced Modes';
-for j=1:3
-subplot(3,2,2*j-1)
-% Reconstruct the Spatial structure
 
-pcolor(Xg,Yg,eval(['S',num2str(j)]));
-shading interp
-daspect([1 1 1])
-ylim([-19 19])  
-  xlim([-19 19])
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
- % Label Information
- xlabel('$x[-]$','Interpreter','Latex')
- ylabel('$y[-]$','Interpreter','Latex')
- title(['Introduced Spatial Structure ',num2str(j)],'Interpreter','Latex')
- set(gcf,'color','white')
+for j=1:3
+    
+    subplot(3,2,2*j-1)
+    % Reconstruct the Spatial structure
+    pcolor(Xg,Yg,eval(['S',num2str(j)]));
+    shading interp
+    daspect([1 1 1])
+    ylim([-19 19])  
+    xlim([-19 19])
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    % Label Information
+    xlabel('$x[-]$','Interpreter','Latex')
+    ylabel('$y[-]$','Interpreter','Latex')
+    title(['Introduced Spatial Structure ',num2str(j)],'Interpreter','Latex')
+    set(gcf,'color','white')
+    
 end
 
 
 
 for j=1:3
+    
     subplot(3,2,2*j)
-plot(t,eval(['T',num2str(j)]),'linewidth',1.5)
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
-xlim([0 5])
- % Label Information
- xlabel('$t[-]$','Interpreter','Latex')
- ylabel('$T Structure$','Interpreter','Latex')
- title(['Introduced T. Structure ',num2str(j)],'Interpreter','Latex')
- set(gcf,'color','white')
+    plot(t,eval(['T',num2str(j)]),'linewidth',1.5)
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    xlim([0 5])
+    % Label Information
+    xlabel('$t[-]$','Interpreter','Latex')
+    ylabel('$T Structure$','Interpreter','Latex')
+    title(['Introduced T. Structure ',num2str(j)],'Interpreter','Latex')
+    set(gcf,'color','white')
+ 
 end
 
 print(HFIG,'Introduced_Modes.png','-dpng')
@@ -228,37 +226,33 @@ HFIG.Units='normalized';
 HFIG.Position=[0.3 0.3 0.5 0.5];
 NA=500; % Number of steps included in the video
 for k=1:5:NA
-disp(['Animating ',num2str(k),' of ',num2str(NA)])
+    
+    disp(['Animating ',num2str(k),' of ',num2str(NA)])
 
-pcolor(Xg,Yg,reshape(D(:,k),[n_x,n_y]));
-shading interp
-daspect([1 1 1])
-ylim([-19 19])  
-  xlim([-19 19])
-caxis([-1 1])
-     set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
+    pcolor(Xg,Yg,reshape(D(:,k),[n_x,n_y]));
+    shading interp
+    daspect([1 1 1])
+    ylim([-19 19])  
+    xlim([-19 19])
+    caxis([-1 1])
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
     % Label Information
     set(gca,'XTick',[-15:5:15])
     set(gca,'YTick',[-15:5:15])
-     xlabel('$x[-]$','Interpreter','Latex','fontsize',18)
+    xlabel('$x[-]$','Interpreter','Latex','fontsize',18)
     ylabel('$y[-]$','Interpreter','Latex','fontsize',18)
-   set(gcf,'color','w')
-%title('$\omega[-]$','Interpreter','Latex','fontsize',24)
+    set(gcf,'color','w')
+    %title('$\omega[-]$','Interpreter','Latex','fontsize',24)
 
+    frame = getframe(11);
+    im = frame2im(frame);
+    [imind,cm] = rgb2ind(im,256);
 
- frame = getframe(11);
- im = frame2im(frame);
-       [imind,cm] = rgb2ind(im,256);
-
-      if k == 1
-          imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
-      else
-          imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime', 0.05);
-      end
+     if k == 1
+        imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
+     else
+        imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime', 0.05);
+     end
 
 end
 
