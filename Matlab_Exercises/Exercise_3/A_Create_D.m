@@ -4,7 +4,7 @@
 %% Set Up and Create Data Matrix D
 
 close all; clc; clear all
- % 1 . Data Preparation
+% 1 . Data Preparation
 % If not done yet, unzip the folder provided with the TR_piv data.
 disp('Unzipping Folder Data')
 unzip('CFD_Vortices_com','Data');
@@ -50,15 +50,15 @@ IND_Y=find(GRAD_Y~=0,1);
 
 
 if IND_X>IND_Y
-n_x=IND_X;
-n_y=(n_s/(n_x));
-Xg=reshape(X_S,[n_x,n_y]);
-Yg=reshape(Y_S,[n_x,n_y]);
+   n_x=IND_X;
+   n_y=(n_s/(n_x));
+   Xg=reshape(X_S,[n_x,n_y]);
+   Yg=reshape(Y_S,[n_x,n_y]);
 elseif IND_Y>2
-n_y=IND_Y;
-n_x=(n_s/(n_y));
-Xg=reshape(X_S,[n_y,n_x]);
-Yg=reshape(Y_S,[n_y,n_x]);
+   n_y=IND_Y;
+   n_x=(n_s/(n_y));
+   Xg=reshape(X_S,[n_y,n_x]);
+   Yg=reshape(Y_S,[n_y,n_x]);
 end
 
 
@@ -68,16 +68,17 @@ end
 
 D=zeros(n_s,n_t);
 for k=1:1:n_t
-% Loop over the file name
-file = [FOLDER,filesep,'Step',num2str(k-1,'%04.f'),'.dat'];
-% Import data
-Data=importdata(file);
-DATA=Data.data;
-% Read columns
-Omega=DATA(:,1); % Vorticity Field
-D(:,k)=Omega; % Assmbly the columns of D
-disp(['Reading File ',num2str(k),' of ',...
-num2str(n_t)]); % Message to follow the process
+    
+    % Loop over the file name
+    file = [FOLDER,filesep,'Step',num2str(k-1,'%04.f'),'.dat'];
+    % Import data
+    Data=importdata(file);
+    DATA=Data.data;
+    % Read columns
+    Omega=DATA(:,1); % Vorticity Field
+    D(:,k)=Omega; % Assmbly the columns of D
+    disp(['Reading File ',num2str(k),' of ',...
+    num2str(n_t)]); % Message to follow the process
 
 end
 
@@ -94,44 +95,42 @@ HFIG=figure(11);
 HFIG.Units='normalized';
 HFIG.Position=[0.3 0.3 0.5 0.5];
 NA=1000; % Number of steps included in the video
+
 for k=1:2:NA
-disp(['Animating ',num2str(k),' of ',num2str(NA)])
-% Loop over the file name
-file = [FOLDER,filesep,'Step',num2str(k,'%04.f'),'.dat'];
-% Import data
-Data=importdata(file);
-DATA=Data.data;
-% Read column
-Omega=reshape(DATA(:,1),[n_x n_y]); % Vorticity Field
+    
+    disp(['Animating ',num2str(k),' of ',num2str(NA)])
+    % Loop over the file name
+    file = [FOLDER,filesep,'Step',num2str(k,'%04.f'),'.dat'];
+    % Import data
+    Data=importdata(file);
+    DATA=Data.data;
+    % Read column
+    Omega=reshape(DATA(:,1),[n_x n_y]); % Vorticity Field
 
 
-pcolor(Xg,Yg,Omega);
-shading interp
-daspect([1 1 1])
-ylim([-20 20])  
-  xlim([-20 20])
-caxis([-40 40])
-     set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
+    pcolor(Xg,Yg,Omega);
+    shading interp
+    daspect([1 1 1])
+    ylim([-20 20])  
+    xlim([-20 20])
+    caxis([-40 40])
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
     % Label Information
-     xlabel('$x[-]$','Interpreter','Latex','fontsize',18)
+    xlabel('$x[-]$','Interpreter','Latex','fontsize',18)
     ylabel('$y[-]$','Interpreter','Latex','fontsize',18)
-   set(gcf,'color','w')
-title('$\omega[-]$','Interpreter','Latex','fontsize',24)
+    set(gcf,'color','w')
+    title('$\omega[-]$','Interpreter','Latex','fontsize',24)
 
 
- frame = getframe(11);
- im = frame2im(frame);
-       [imind,cm] = rgb2ind(im,256);
+    frame = getframe(11);
+    im = frame2im(frame);
+    [imind,cm] = rgb2ind(im,256);
 
-      if k == 1
-          imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
-      else
-          imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime', 0.05);
-      end
+     if k == 1
+        imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
+     else
+        imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime', 0.05);
+     end
 
 end
 
