@@ -26,12 +26,14 @@ PHI_M_SIGMA_M=D*PSI_M;
 PHI_M=zeros([n_s,R]);
 SIGMA_M=zeros([R,R]);
 
- for i=1:1:R
-disp(['Completing mPOD Mode ',num2str(i)]);
-% Normalize the columns of C to get spatial modes
-PHI_M(:,i) = PHI_M_SIGMA_M(:,i)/norm(PHI_M_SIGMA_M(:,i));
-% Assign the norm as amplitude
-SIGMA_M(i,i) = norm(PHI_M_SIGMA_M(:,i));
+for i=1:1:R
+     
+    disp(['Completing mPOD Mode ',num2str(i)]);
+    % Normalize the columns of C to get spatial modes
+    PHI_M(:,i) = PHI_M_SIGMA_M(:,i)/norm(PHI_M_SIGMA_M(:,i));
+    % Assign the norm as amplitude
+    SIGMA_M(i,i) = norm(PHI_M_SIGMA_M(:,i));
+
 end
 
 % Sort the amplitudes in decreasing order
@@ -50,26 +52,25 @@ HFIG=figure(1);
 HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.65 0.75];
 HFIG.Name='Results mPOD Analysis- Part 1';
-for j=1:3
-subplot(3,2,2*j-1)
-% Reconstruct the Omega from the columns
-Omega=reshape(Phi_M(:,j+1),[n_x,n_y]);
 
-pcolor(Xg,Yg,Omega);
-shading interp
-daspect([1 1 1])
-ylim([-19 19])  
-  xlim([-19 19])
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
- % Label Information
- xlabel('$x[-]$','Interpreter','Latex')
- ylabel('$y[-]$','Interpreter','Latex')
- title(['Spatial Structure ',num2str(j+1)],'Interpreter','Latex')
- set(gcf,'color','white')
+for j=1:3
+    
+    subplot(3,2,2*j-1)
+    % Reconstruct the Omega from the columns
+    Omega=reshape(Phi_M(:,j+1),[n_x,n_y]);
+
+    pcolor(Xg,Yg,Omega);
+    shading interp
+    daspect([1 1 1])
+    ylim([-19 19])  
+    xlim([-19 19])
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    % Label Information
+    xlabel('$x[-]$','Interpreter','Latex')
+    ylabel('$y[-]$','Interpreter','Latex')
+    title(['Spatial Structure ',num2str(j+1)],'Interpreter','Latex')
+    set(gcf,'color','white')
+ 
 end
 
 
@@ -79,20 +80,18 @@ Freq = [-n_t/2:1:n_t/2-1]*(Fs)*1/n_t; % Frequency Axis
 
 
 for j=1:3
-subplot(3,2,2*j)
-plot(Freq,abs(fftshift(fft(Psi_M(:,j+1)))),'linewidth',1.5)
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
-xlim([0 20])
- % Label Information
- xlabel('$f[-]$','Interpreter','Latex')
- ylabel('$\widehat{\psi}_{\mathcal{M}}$','Interpreter','Latex')
- title(['Frequency in the T. Structure ',num2str(j+1)],'Interpreter','Latex')
- set(gcf,'color','white')
- end
+    
+    subplot(3,2,2*j)
+    plot(Freq,abs(fftshift(fft(Psi_M(:,j+1)))),'linewidth',1.5)
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    xlim([0 20])
+    % Label Information
+    xlabel('$f[-]$','Interpreter','Latex')
+    ylabel('$\widehat{\psi}_{\mathcal{M}}$','Interpreter','Latex')
+    title(['Frequency in the T. Structure ',num2str(j+1)],'Interpreter','Latex')
+    set(gcf,'color','white')
+    
+end
 
 print(HFIG,'Results_mPOD_1.png','-dpng')
 
@@ -103,26 +102,25 @@ HFIG=figure(2);
 HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.65 0.75];
 HFIG.Name='Results mPOD Analysis- Part 2';
-for j=1:3
-subplot(3,2,2*j-1)
-% Reconstruct the Omega from the columns
-Omega=reshape(Phi_M(:,j+4),[n_x,n_y]);
 
-pcolor(Xg,Yg,Omega);
-shading interp
-daspect([1 1 1])
-ylim([-19 19])  
-  xlim([-19 19])
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
- % Label Information
- xlabel('$x[-]$','Interpreter','Latex')
- ylabel('$y[-]$','Interpreter','Latex')
- title(['Spatial Structure ',num2str(j+4)],'Interpreter','Latex')
- set(gcf,'color','white')
+for j=1:3
+    
+    subplot(3,2,2*j-1)
+    % Reconstruct the Omega from the columns
+    Omega=reshape(Phi_M(:,j+4),[n_x,n_y]);
+
+    pcolor(Xg,Yg,Omega);
+    shading interp
+    daspect([1 1 1])
+    ylim([-19 19])  
+    xlim([-19 19])
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    % Label Information
+    xlabel('$x[-]$','Interpreter','Latex')
+    ylabel('$y[-]$','Interpreter','Latex')
+    title(['Spatial Structure ',num2str(j+4)],'Interpreter','Latex')
+    set(gcf,'color','white')
+    
 end
 
 
@@ -132,20 +130,18 @@ Freq = [-n_t/2:1:n_t/2-1]*(Fs)*1/n_t; % Frequency Axis
 
 
 for j=1:3
-subplot(3,2,2*j)
-plot(Freq,abs(fftshift(fft(Psi_M(:,j+4)))),'linewidth',1.5)
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
-xlim([0 20])
- % Label Information
- xlabel('$f[-]$','Interpreter','Latex')
- ylabel('$\widehat{\psi}_{\mathcal{M}}$','Interpreter','Latex')
- title(['Frequency in the T. Structure ',num2str(j+4)],'Interpreter','Latex')
- set(gcf,'color','white')
- end
+    
+    subplot(3,2,2*j)
+    plot(Freq,abs(fftshift(fft(Psi_M(:,j+4)))),'linewidth',1.5)
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    xlim([0 20])
+    % Label Information
+    xlabel('$f[-]$','Interpreter','Latex')
+    ylabel('$\widehat{\psi}_{\mathcal{M}}$','Interpreter','Latex')
+    title(['Frequency in the T. Structure ',num2str(j+4)],'Interpreter','Latex')
+    set(gcf,'color','white')
+    
+end
 
 print(HFIG,'Results_mPOD_2.png','-dpng')
 
@@ -157,11 +153,13 @@ PHI_P_SIGMA_P=D*PSI_P;
 % Initialize the output
 Phi_P=zeros([n_s,R]);
 
- for i=1:1:R
-disp(['Completing POD Mode ',num2str(i)]);
-% Normalize the columns of C to get spatial modes
-Phi_P(:,i) = PHI_P_SIGMA_P(:,i)/Sigma_P(i,i);
-% The POD does not need a normalization for the amplitude!
+for i=1:1:R
+    
+    disp(['Completing POD Mode ',num2str(i)]);
+    % Normalize the columns of C to get spatial modes
+    Phi_P(:,i) = PHI_P_SIGMA_P(:,i)/Sigma_P(i,i);
+    % The POD does not need a normalization for the amplitude!
+    
 end
 
 
@@ -170,27 +168,24 @@ HFIG=figure(3);
 HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.65 0.75];
 HFIG.Name='Results POD Analysis- Part 1';
+
 for j=1:3
-subplot(3,2,2*j-1)
-% Reconstruct the fields from the columns
+    
+    subplot(3,2,2*j-1)
+    % Reconstruct the fields from the columns
+    Omega=reshape(Phi_M(:,j+4),[n_x,n_y]);
+    pcolor(Xg,Yg,Omega);
+    shading interp
+    daspect([1 1 1])
+    ylim([-19 19])  
+    xlim([-19 19])
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    % Label Information
+    xlabel('$x[-]$','Interpreter','Latex')
+    ylabel('$y[-]$','Interpreter','Latex')
+    title(['Spatial Structure ',num2str(j+1)],'Interpreter','Latex')
+    set(gcf,'color','white')
 
-Omega=reshape(Phi_M(:,j+4),[n_x,n_y]);
-
-pcolor(Xg,Yg,Omega);
-shading interp
-daspect([1 1 1])
-ylim([-19 19])  
-  xlim([-19 19])
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
- % Label Information
- xlabel('$x[-]$','Interpreter','Latex')
- ylabel('$y[-]$','Interpreter','Latex')
- title(['Spatial Structure ',num2str(j+1)],'Interpreter','Latex')
- set(gcf,'color','white')
 end
 
 
@@ -200,20 +195,18 @@ Freq = [-n_t/2:1:n_t/2-1]*(Fs)*1/n_t; % Frequency Axis
 
 
 for j=1:3
-subplot(3,2,2*j)
-plot(Freq,abs(fftshift(fft(PSI_P(:,j+1)))),'linewidth',1.5)
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
-xlim([0 20])
- % Label Information
- xlabel('$f[-]$','Interpreter','Latex')
- ylabel('$\widehat{\psi}_{\mathcal{P}}$','Interpreter','Latex')
- title(['Frequency in the T. Structure ',num2str(j+1)],'Interpreter','Latex')
- set(gcf,'color','white')
- end
+    
+    subplot(3,2,2*j)
+    plot(Freq,abs(fftshift(fft(PSI_P(:,j+1)))),'linewidth',1.5)
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    xlim([0 20])
+    % Label Information
+    xlabel('$f[-]$','Interpreter','Latex')
+    ylabel('$\widehat{\psi}_{\mathcal{P}}$','Interpreter','Latex')
+    title(['Frequency in the T. Structure ',num2str(j+1)],'Interpreter','Latex')
+    set(gcf,'color','white')
+    
+end
 
 print(HFIG,'Results_POD_1.png','-dpng')
 
@@ -222,26 +215,24 @@ HFIG=figure(4);
 HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.65 0.75];
 HFIG.Name='Results POD Analysis- Part 2';
-for j=1:3
-subplot(3,2,2*j-1)
-% Reconstruct the fields from the columns
-Omega=reshape(Phi_P(:,j+4),[n_x,n_y]);
 
-pcolor(Xg,Yg,Omega);
-shading interp
-daspect([1 1 1])
-ylim([-19 19])  
-  xlim([-19 19])
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
- % Label Information
- xlabel('$x[-]$','Interpreter','Latex')
- ylabel('$y[-]$','Interpreter','Latex')
- title(['Spatial Structure ',num2str(j+4)],'Interpreter','Latex')
- set(gcf,'color','white')
+for j=1:3
+    
+    subplot(3,2,2*j-1)
+    % Reconstruct the fields from the columns
+    Omega=reshape(Phi_P(:,j+4),[n_x,n_y]);
+    pcolor(Xg,Yg,Omega);
+    shading interp
+    daspect([1 1 1])
+    ylim([-19 19])  
+    xlim([-19 19])
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    % Label Information
+    xlabel('$x[-]$','Interpreter','Latex')
+    ylabel('$y[-]$','Interpreter','Latex')
+    title(['Spatial Structure ',num2str(j+4)],'Interpreter','Latex')
+    set(gcf,'color','white')
+     
 end
 
 
@@ -250,20 +241,16 @@ Freq = [-n_t/2:1:n_t/2-1]*(Fs)*1/n_t; % Frequency Axis
 
 
 for j=1:3
-subplot(3,2,2*j)
-plot(Freq,abs(fftshift(fft(PSI_P(:,j+4)))),'linewidth',1.5)
- set(gca, ...
-      'Fontname', 'Palatino Linotype', ...
-      'Fontsize', 16, ...
-       'Box'         , 'off'     , ...   
-        'LineWidth'   , 1         )
-xlim([0 20])
- % Label Information
- xlabel('$f[-]$','Interpreter','Latex')
- ylabel('$\widehat{\psi}_{\mathcal{P}}$','Interpreter','Latex')
- title(['Frequency in the T. Structure ',num2str(j+4)],'Interpreter','Latex')
- set(gcf,'color','white')
- end
+    subplot(3,2,2*j)
+    plot(Freq,abs(fftshift(fft(PSI_P(:,j+4)))),'linewidth',1.5)
+    set(gca,'Fontname','Palatino Linotype','Fontsize',16,'Box','off','LineWidth',1)
+    xlim([0 20])
+    % Label Information
+    xlabel('$f[-]$','Interpreter','Latex')
+    ylabel('$\widehat{\psi}_{\mathcal{P}}$','Interpreter','Latex')
+    title(['Frequency in the T. Structure ',num2str(j+4)],'Interpreter','Latex')
+    set(gcf,'color','white')
+end
 
 print(HFIG,'Results_POD_2.png','-dpng')
 
