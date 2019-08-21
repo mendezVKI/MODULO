@@ -16,10 +16,7 @@ load('Correlation_K.mat') % Load the correlation matrix K
 
 
 %% Study the frequency content of K
-% We plot || K_hat || to look for frequencies
-% This could be done via Matrix Multiplication but we use fft2 for fast
-% computation. If you want to see the algebraic form of the code,
-% do not hesitate to contact me at menez@vki.ac.be
+% For the commenting of this part of the code, have a look at exercise 1
 
 Fs=1/dt; % Sampling frequency
 Freq = [-n_t/2:1:n_t/2-1]*(Fs)*1/n_t; % Frequency Axis
@@ -38,11 +35,7 @@ ylabel('$f[-]$','Interpreter','Latex','fontsize',18)
 set(gcf,'color','w')
 drawnow
 
-
-% This matrix shows that there are phenomena at different scales.
-% this is shown in Fig. 24 of the article.  We set our splitting vector as
-% in the article. 
-
+% see comments in the same file for exercise 1 for more info.
 
 F_V=[1 3 8]; % This will generate four scales: H_A, H_H_1, H_H_2, H_H_3. See Sec. 3.2
 

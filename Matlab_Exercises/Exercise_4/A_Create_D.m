@@ -36,17 +36,12 @@ GRAD_Y=diff(Y_S);
 IND_X=find(GRAD_X~=0,1);
 IND_Y=find(GRAD_Y~=0,1);
 
-if IND_X>1
+% Reshaping the grid from the data
     n_x=IND_X;
     n_y=(nxny/(n_x));
     Xg=reshape(X_S,[n_x,n_y]);
     Yg=reshape(Y_S,[n_x,n_y]);
-elseif IND_Y>1
-    n_y=IND_Y;
-    n_x=(nxny/(n_y));
-    Xg=reshape(X_S,[n_y,n_x]);
-    Yg=reshape(Y_S,[n_y,n_x]);
-end
+
 
 % Reshape u and v
 % In this dataset the mesh is repeated in each file. Hence we read from 3:
@@ -55,7 +50,6 @@ V_Y=DATA(:,4); % V component
 
 %% 2. Assembly Data Matrix D
 
-filename='Exercise_4.gif';
 D=zeros(n_s,n_t);
 
 for k=1:1:n_t

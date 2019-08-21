@@ -51,7 +51,7 @@ Sigma_M = diag(Sigma_VV); % Amplitude for mPOD Basis
 HFIG=figure(1);
 HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.65 0.75];
-HFIG.Name='Results mPOD Analysis- Part 1';
+HFIG.Name='Results mPOD Analysis';
 
 for j=1:3
     

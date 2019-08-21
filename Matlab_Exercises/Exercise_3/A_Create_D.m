@@ -10,6 +10,11 @@ disp('Unzipping Folder Data')
 unzip('CFD_Vortices_com','Data');
 disp('Folder Ready')
 
+% IMPORTANT: To keep the size of the GitHub folder within a reasonable
+% limit, the dataset has been reduced. Therefore, you might not obtains
+% exactly the same results as in the paper. If you want to have the
+% complete set, contact mendez@vki.ac.be
+
 
 % Observe that for demonstration purposes we use half of the data that was
 % used in the article.
@@ -37,9 +42,6 @@ XY=Data.data; % Take only the numerical data
 X_S=XY(:,1);
 Y_S=XY(:,2);
 
-
-
-
 % Number of n_X/n_Y from forward differences
 GRAD_X=diff(X_S); 
 GRAD_Y=diff(Y_S);
@@ -47,25 +49,13 @@ GRAD_Y=diff(Y_S);
 % non-zero gradient. The other will have zero gradient only on the change.
 IND_X=find(GRAD_X~=0,1);
 IND_Y=find(GRAD_Y~=0,1);
-
-
-if IND_X>IND_Y
-   n_x=IND_X;
-   n_y=(n_s/(n_x));
-   Xg=reshape(X_S,[n_x,n_y]);
-   Yg=reshape(Y_S,[n_x,n_y]);
-elseif IND_Y>2
-   n_y=IND_Y;
-   n_x=(n_s/(n_y));
-   Xg=reshape(X_S,[n_y,n_x]);
-   Yg=reshape(Y_S,[n_y,n_x]);
-end
-
-
+% Reshape from the column of the data file.
+n_x=IND_X; n_y=(n_s/(n_x));
+Xg=reshape(X_S,[n_x,n_y]); % Cartesian Mesh Grid, X Coordinates
+Yg=reshape(Y_S,[n_x,n_y]); % Cartesian Mesh Grid, Y Coordinates
 
 
 %% 2. Assembly Data Matrix D
-
 D=zeros(n_s,n_t);
 for k=1:1:n_t
     

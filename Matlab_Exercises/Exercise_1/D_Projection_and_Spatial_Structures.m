@@ -64,6 +64,7 @@ for j=1:3
     set(gcf,'color','white')
 
 end
+
 for j=1:3
     
     subplot(3,2,2*j)

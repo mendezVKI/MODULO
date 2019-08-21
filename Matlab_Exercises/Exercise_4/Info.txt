@@ -5,9 +5,9 @@ This exercise presents an example of the use of mPOD and POD on a 2D vector data
 This dataset is the TR-PIV of an impinging jet.
 More info on the test case is presented in Sec. 6 of 
 
-    Volume 870
+    Journal of Fluid Mechanics, Volume 870
     10 July 2019 , pp. 988-1036
-
+    
 Multi-scale proper orthogonal decomposition of complex fluid flows
 
     M. A. Mendez (a1), M. Balabane (a2) and J.-M. Buchlin (a1)

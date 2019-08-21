@@ -6,9 +6,9 @@ This dataset is constructed from the CFD simulation of the 2D Navier-stokes prob
 formulation. The data has coherent and non coherent sources as well as a significant amount of random noise.
 More info on the test case is presented in Sec. 5 of 
 
-    Volume 870
+     Journal of Fluid Mechanics, Volume 870
     10 July 2019 , pp. 988-1036
-
+    
 Multi-scale proper orthogonal decomposition of complex fluid flows
 
     M. A. Mendez (a1), M. Balabane (a2) and J.-M. Buchlin (a1)

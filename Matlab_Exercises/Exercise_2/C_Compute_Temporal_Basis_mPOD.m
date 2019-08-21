@@ -16,10 +16,7 @@ load('Correlation_K.mat') % Load the correlation matrix K
 
 
 %% Study the frequency content of K
-% We plot || K_hat || to look for frequencies
-% This could be done via Matrix Multiplication but we use fft2 for fast
-% computation. If you want to see the algebraic form of the code,
-% do not hesitate to contact me at menez@vki.ac.be
+% For the commenting of this part, refer to the same file from exercise 1.
 
 Fs=1/dt; % Sampling frequency
 Freq = [-n_t/2:1:n_t/2-1]*(Fs)*1/n_t; % Frequency Axis
@@ -38,19 +35,14 @@ ylabel('$f[-]$','Interpreter','Latex','fontsize',18)
 set(gcf,'color','w')
 drawnow
 
-
-% This matrix shows that there are phenomena at different scales.
-% this is shown in Fig. 24 of the article.  We set our splitting vector as
-% in the article. 
+% For the commenting of this part, refer to the same file from exercise 1.
 
 
-F_V=[0.4 10 20]; % This will generate four scales: H_A, H_H_1, H_H_2, H_H_3. See Sec. 3.2
+F_V=[0.4 10 20]; 
+Keep=[1 1 1]; 
+Nf=[180 180 180]; 
 
-Keep=[1 1 1]; %These are the band-pass you want to keep (Approximation is always kept).
-Nf=[180 180 180]; % This vector collects the length of the filter kernels.
-
-% We can visualize where these are acting
-F_Bank_r = F_V*2/Fs; %(Fs/2 mapped to 1)
+F_Bank_r = F_V*2/Fs; 
 M=length(F_Bank_r);
 HFIG=figure(11);
 % Extract the diagonal of K_F
@@ -96,8 +88,7 @@ PSI_M = mPOD(K,dt,Nf,F_V,Keep,'symmetric');
 
 save('Psis_mPOD.mat','PSI_M')
    
-% To make a comparison later, we also compute the POD basis
-% Temporal structures are eigenvectors of K
+
 [PSI_P,Lambda_P]=svd(K,'econ');
 % The POD has the unique feature of providing the amplitude of the modes
 % with no need of projection. The amplitudes are:

@@ -5,7 +5,7 @@
 
 close all; clc; clear all
  %% 1 . Data Preparation
-% This dataset is composed from three modesm which we can construct
+% This dataset is composed of three modes which we can construct
 % separately. These modes are orthogonal in space and in time: that is,
 % they are already POD modes.... will the POD recognize some POD modes when
 % you provide some? The answer is no: if they have same (actually similar)
@@ -19,27 +19,22 @@ xyspan2 = linspace(-L/2,L/2,m+1);
 xyspan = xyspan2(1:m);
 [Xg,Yg] = meshgrid(xyspan,xyspan); % Grid for the test case
 %% Build Source 1 
-sigma_Y=5;
-sigma_X=5;
-
+sigma_Y=5; sigma_X=5; % Spreading of the spatial Gaussian (they are all equal)
 % Mesh info
-dt=0.01;
-n_t=512;
-n_x=m;
-n_y=m;
+dt=0.01; n_t=512; n_x=m; n_y=m; % Parameters of the Space/Time Mesh
 % Prepare dataset 1
-D_1=zeros(n_x*n_y,n_t);
-t=(0:1:n_t-1)*dt;
+D_1=zeros(n_x*n_y,n_t); % Initialize the Data Matrix
+t=(0:1:n_t-1)*dt; % Prepare the time sequence
 
 % Parameters for the Gaussians
-offset = 0.5;
 offset2=-10;
 S1 = exp(-((Xg+offset2)/sigma_X).^2 - ((Yg-offset2).^2/sigma_Y.^2));
-S1=S1/norm(S1(:));
-S_1_t=sin(2*pi*15*t);
-S_1_t=S_1_t.*exp(-(t-3).^20/2);
-S_1_t=S_1_t/norm(S_1_t); % Normalize to ensure equal energy
-% 
+S1=S1/norm(S1(:)); % Normalize the spatial structure
+S_1_t=sin(2*pi*15*t); % Define temporal structure
+S_1_t=S_1_t.*exp(-(t-3).^20/2); % //
+S_1_t=S_1_t/norm(S_1_t); % Normalize the temporal structure
+
+% To visualize this spatial structure uncomment the following
 % HFIG=figure(1);
 % pcolor(Xg,Yg,S1)
 % colorbar
@@ -47,10 +42,10 @@ S_1_t=S_1_t/norm(S_1_t); % Normalize to ensure equal energy
 % daspect([1 1 1])
 
 close all
-for i=1:1:n_t
+for i=1:1:n_t % Loop over time
     
     S_time= S_1_t(i);
-    S_Space=S_time*S1;
+    S_Space=S_time*S1; % Make the Spatial structure evolve
     % Assembly D1 Matrix
     D1(:,i)=reshape(S_Space,[numel(S_Space),1]); 
 %    figure(1) % If you want to see this mode
@@ -65,29 +60,26 @@ for i=1:1:n_t
 end
 
 %% Build Source 2--------------------------------------------
-
-sigma_Y=5;
-sigma_X=5;
-
-offset = 0.5;
+% Repeat the same construction but with different time evolution and
+% different spatial location.
 offset2=10;
 S2 = exp(-((Xg+offset2)/sigma_X).^2 - ((Yg-offset2).^2/sigma_Y.^2));
 S2=S2/norm(S2(:));
 S_2_t=1*sin(2*pi*0.1*t-pi/3);
-S_2_t=S_2_t/norm(S_2_t); %% normalize to have equal importance
+S_2_t=S_2_t/norm(S_2_t); 
 
-% 
+% To visualize this spatial structure uncomment the following
 % HFIG=figure(1);
 % pcolor(Xg,Yg,S2)
 % colorbar
 % shading interp
 % daspect([1 1 1])
 close all
-for i=1:1:n_t
+
+for i=1:1:n_t % This is a repetition of the previous loop for Mode 2
     
     S_time= S_2_t(i);
     S_Space=S_time*S2;
-    % Assembly D2 Matrix
     D2(:,i)=reshape(S_Space,[numel(S_Space),1]);
 %    figure(1) % If you want to see this mode
 %    pcolor(X,Y,S_Space)
@@ -102,44 +94,39 @@ end
 
 
 %% Build Source 3--------------------------------------------
-
-sigma_Y=5;
-sigma_X=5;
-
-offset = 0;
+% Same as before, but different temporal structure an location
 offset2=0;
 S3 = exp(-((Xg+offset2)/sigma_X).^2 - ((Yg-offset2).^2/sigma_Y.^2));
 S3=S3/norm(S3(:));
 S_3_t=(t-mean(t)).^2.*sin(2*pi*7*t);
-S_3_t=-S_3_t/norm(S_3_t); %% Important: This is the key!!1
-% plot(t,S_3_t)
-% 
+S_3_t=-S_3_t/norm(S_3_t); 
 
 
-% To make it funnier, take orthogonalize the temporal basis also
+% To make it funnier, take orthogonalize the temporal basis also.
 [Q R]=qr([S_1_t;S_2_t; S_3_t]');
+% This is a small variant from the original paper, but is further stress
+% the point: right now we have modes that are orthogonal in space
+% and time. This means that they are already POD modes.
+
+% If R is approximately equal to the identiy, the original basis was
+% already orthogonal.
+
+
 % Have a look at the results
 % plot(Q(:,1))
 % hold on
 % plot(Q(:,2))
 % hold on
 % plot(Q(:,3))
-%  plot(S_3_t)
 
+% We for the temporal structures to be orthonormal
 T1=Q(:,1);
 T2=Q(:,2);
 T3=Q(:,3);
 
 
-
-
-% HFIG=figure(1);
-% pcolor(Xg,Yg,S3)
-% colorbar
-% shading interp
-% daspect([1 1 1])
 close all
-for i=1:1:n_t
+for i=1:1:n_t % Repeat the usual loop in time.
     
     S_time= S_3_t(i);
     S_Space=S_time*S3;
@@ -215,7 +202,6 @@ D=1/MAX*D;
 
 % Save the Data file and all the info about spatial/time discretization
 save('Data.mat','D','t','dt','n_t','Xg','Yg')
-
 
 %% Visualize entire evolution (Optional)
 % We create a gif to illustrate what data we are dealing with

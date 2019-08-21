@@ -16,10 +16,7 @@ load('Correlation_K.mat') % Load the correlation matrix K
 
 
 %% Study the frequency content of K
-% We plot || K_hat || to look for frequencies
-% This could be done via Matrix Multiplication but we use fft2 for fast
-% computation. If you want to see the algebraic form of the code,
-% do not hesitate to contact me at menez@vki.ac.be
+%For the comments of this part look at the same file from exercise 1
 
 Fs=1/dt; % Sampling frequency
 Freq = [-n_t/2:1:n_t/2-1]*(Fs)*1/n_t; % Frequency Axis

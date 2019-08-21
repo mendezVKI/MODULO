@@ -47,7 +47,7 @@ Sigma_M = diag(Sigma_VV); % Amplitude for mPOD Basis
 
 
 
-% First 3 Modes Results mPOD
+% Show some exemplary modes for mPOD. We take from 2 to 7.
 HFIG=figure(1);
 HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.65 0.75];
@@ -97,7 +97,9 @@ print(HFIG,'Results_mPOD_1.png','-dpng')
 
 
 
-% First 3 Modes Results mPOD
+
+
+% Show some exemplary modes for mPOD. We take from 2 to 7.
 HFIG=figure(2);
 HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.65 0.75];
@@ -163,7 +165,8 @@ for i=1:1:R
 end
 
 
-% First 3 Modes Results POD
+
+% Show some exemplary modes for POD. We take from 2 to 7.
 HFIG=figure(3);
 HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.65 0.75];
@@ -210,7 +213,9 @@ end
 
 print(HFIG,'Results_POD_1.png','-dpng')
 
-% First 3 Modes Results POD
+
+% Show some exemplary modes for POD. We take from 2 to 7.
+
 HFIG=figure(4);
 HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.65 0.75];
