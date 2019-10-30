@@ -7,7 +7,8 @@ close all; clc; clear all
 % 1 . Data Preparation
 % If not done yet, unzip the folder provided with the TR_piv data.
 disp('Unzipping Folder TR_PIV')
-unzip('TR_PIV','TR_PIV');
+unzip('TR_PIV_1','TR_PIV');
+unzip('TR_PIV_2','TR_PIV');
 disp('Folder Ready')
 
 
