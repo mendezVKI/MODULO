@@ -32,7 +32,7 @@ for i=1:5
 end
 
 STEP_F=exp(-(t-T_A_F).^2/5000);
-%plot(t,STEP_S); hold on; plot(t,STEP_F)
+plot(t,STEP_S); hold on; plot(t,STEP_F)
 
 % 2. Initialize Matrices:
  n = [1:1:20]; N=length(n) ;%Modes to include in summation :
@@ -50,7 +50,7 @@ STEP_F=exp(-(t-T_A_F).^2/5000);
  % 3. Construct Spatial Eigenfunction basis (Fast Scale)
  for i=1:length(n)
      
-     N=2*n(i)-1; % odd number in the series
+     N=2*n(i)-1 % odd number in the series
      % Pulsation Mode 1
      Y_n1(:,i)=cos(N*pi*y/2); % Spatial Eigenfunction basis
      A_n1(i,i) =(16*Pa_1)/(N*pi*sqrt((2*W_1)^4+N^4*pi^4)); % Amplitudes 
