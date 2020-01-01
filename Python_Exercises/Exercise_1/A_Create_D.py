@@ -9,6 +9,7 @@ This is the first version of the Ex 1- Same structure as in the Matlab exercise.
 import numpy as np
 import matplotlib.pyplot as plt
 
+Anim=False
 ## Set Up and Create Data Matrix D
 
 # 1 . Data Preparation
@@ -106,11 +107,13 @@ D=u_A_r_1+u_A_r_2+u_M #Complete analytical Solution
 # Save as numpy array all the data
 np.savez('Data',D=D,t=t,dt=dt,n_t=n_t,y=y,dy=dy,n_y=n_y)
  
-
 from Others import Animation
+
+if Anim:
 ## Visualize entire evolution (Optional)
-Animate=Animation('Data.npz','Exercise_1.gif')
-    
+ Animate=Animation('Data.npz','Exercise_1.gif')
+else:
+ print('No animation requested')    
     
     
     

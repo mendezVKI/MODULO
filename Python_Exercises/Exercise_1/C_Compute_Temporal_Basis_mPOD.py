@@ -124,7 +124,7 @@ plt.savefig('Frequency_Splitting.pdf', dpi=100)
 
 Ex=201
 # Compute the mPOD Temporal Basis
-PSI_M = mPOD_K(K,dt,Nf,Ex,F_V,Keep,'nearest');
+PSI_M = mPOD_K(K,dt,Nf,Ex,F_V,Keep,'nearest','reduced');
 
 
 # Save as numpy array all the data

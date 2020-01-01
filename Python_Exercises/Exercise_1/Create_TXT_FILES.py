@@ -24,11 +24,11 @@ if not os.path.exists(Fol_Out):
     os.mkdir(Fol_Out)
 
 # Save the Mesh file
-Name=Fol_Out+os.sep + 'Mesh.txt'
-np.savetxt(Name, y, fmt="%s")
+Name=Fol_Out+os.sep + 'Mesh.dat'
+np.savetxt(Name, np.around(y,6), fmt="%s",header="mesh", comments='')
 
 for k in range(0,n_t):
-   u=D[:,k]
-   Name=Fol_Out+os.sep + 'EX_1_Step%03d' % (k)+'.txt'
-   np.savetxt(Name, u, fmt="%s")
+   u=np.around(D[:,k],4)
+   Name=Fol_Out+os.sep + 'EX_1_Step%03d' % (k)+'.dat'
+   np.savetxt(Name, u, fmt="%s",header="data", comments='')
    print('Export '+str(k)+' of '+ str(n_t))
