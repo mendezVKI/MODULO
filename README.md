@@ -12,7 +12,7 @@ The theoretical foundation of the decomposition is described in
 
 The pre-prints of these articles are available from my RG page: https://www.researchgate.net/profile/Miguel_Mendez5
 
-Currently, this folder contains four exercises in Matlab. These include 1D and 2D cases with both scalar and vectorial quantities.
+Currently, this folder contains four exercises. Of these two are done both in Matlab and in Python, while the remaining ones are only available in Matlab. The exercises include 1D and 2D cases with both scalar and vectorial quantities.
 An example of processing on video sequences is currently in preparation.
 
 All the codes so far assume that the dataset is equally spaced both in space (i.e. along a Cartesian grid) and in time.
@@ -21,12 +21,16 @@ TR-PIV or video sequences satisfy these conditions easily. Other simple exercise
 The proposed exercises are the following:
 
 1- Decomposition of the velocity profile of a pulsating Poiseuille flow (1D, scalar). The theoretical background for the analytical solution is described in M.A. Mendez,J.-M Buchlin, VKI-TN 215, 2016, pdf available at https://www.researchgate.net/publication/304538821_Notes_on_2D_Pulsatile_Poiseuille_Flows_An_Introduction_to_Eigenfunction_Expansion_and_Complex_Variables_using_Matlab/stats.
+(Available in Python and Matlab)
 
 2- Decomposition of a Synthetic Test case
+(Available only Matlab)
 
 3- Decomposition of the Vorticity field of a 2D simulation in Matlab.
+(Available only Matlab)
 
 4- Decomposition of a TR-PIV measurement of an impinging jet.
+(Available in Python and Matlab)
 
 Exercises 2,3 and 4 are taken from the article at https://arxiv.org/abs/1804.09646 .
 
@@ -35,6 +39,6 @@ The do list currently includes:
 
 1- Prepare a stand-alone application with an .exe installer that requires no Matlab. This is currently under development by Ir. D. Ninni.
 
-2- Prepare a folder with the codes and the exercises in Python.
+2- Finish the exercises in Python and clean the codes.
 
 3- Extend the analysis to cases that do not have Cartesian grids, hence requiring weighted inner products.
