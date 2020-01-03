@@ -40,12 +40,12 @@ def Animation(npz_F,Giff_NAME):
      fig, ax = plt.subplots(figsize=(8,12))
      plt.subplot(2, 1, 1)
      plt.plot(y,Profile)
-     plt.xlabel('$y $',fontsize=22)
-     plt.ylabel('$\hat{u}(\hat(y)) $',fontsize=22)
-     plt.rc('text', usetex=True)      # This is Miguel's customization
+     plt.xlabel('$y $',fontsize=26)
+     plt.ylabel('$\hat{u}(\hat{y}) $',fontsize=26)
+     plt.rc('text', usetex=True)      
      plt.rc('font', family='serif')
-     plt.rc('xtick',labelsize=18)
-     plt.rc('ytick',labelsize=18)
+     plt.rc('xtick',labelsize=26)
+     plt.rc('ytick',labelsize=26)
      # plt.title('Eigen_Function_Sol_N',fontsize=18)
      plt.xlim([-1,1])
      plt.ylim([-2,4]) 
@@ -61,13 +61,13 @@ def Animation(npz_F,Giff_NAME):
      plt.plot(t,D[int(np.floor(n_y/2)),:],'k--')
      plt.plot(t[k],D[int(np.floor(n_y/2)),k],'ko',markersize=9,mfc='red')
      
-     plt.xlabel('t[-]',fontsize=18)
-     plt.ylabel('$\hat{u}(\hat(y)=0,t) $',fontsize=18)
-     plt.title('Centerline Vel Evolution',fontsize=16)
+     plt.xlabel('t[-]',fontsize=26)
+     plt.ylabel('$\hat{u}(\hat{y}=0,t) $',fontsize=26)
+     plt.title('Centerline Vel Evolution',fontsize=22)
      plt.tight_layout(pad=0.8, w_pad=0.5, h_pad=1.0)
      
      NameOUT=Fol_Out + os.sep + 'Im%03d' % (k) + '.png'
-     plt.savefig(NameOUT, dpi=100)      
+     plt.savefig(NameOUT, dpi=200)      
      plt.close(fig)
      print('Image n ' + str(k) + ' of ' + str(n_t))
     
@@ -89,3 +89,7 @@ def Animation(npz_F,Giff_NAME):
     shutil.rmtree(Fol_Out) 
     return 'Gif Created'
    
+    
+# Define Complete POD
+
+

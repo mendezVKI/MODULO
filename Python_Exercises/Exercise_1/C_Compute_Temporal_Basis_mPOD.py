@@ -54,15 +54,15 @@ plt.tight_layout()
 # spectra. (See Sec. 3.1-3.2 of the article)
 
 # A good example is :
-F_V=np.array([0.1,0.25]) # This will generate three scales: H_A, H_H_1, H_H_2. See Sec. 3.2
-Keep=np.array([1,1]) #These are the band-pass you want to keep (Approximation is always kept).
+F_V=np.array([0.05,0.11,0.25]) # This will generate three scales: H_A, H_H_1, H_H_2. See Sec. 3.2
+Keep=np.array([1,1,1]) #These are the band-pass you want to keep (Approximation is always kept).
 # If Keep=[1 0], then we will remove the highest portion of the spectra (H_H_2)
 # If Keep=[0 1], then we will remove the intermediate portion (H_H_1)
 # The current version does not allow to remove the Approximation (the low).
 # If you are willing to do that you could do it in two steps: 
 # First you compute the approximation using Keep=[0,0]. Then you remove it
 # from the original data.
-Nf=np.array([201,201]); # This vector collects the length of the filter kernels.
+Nf=np.array([501,501,501]); # This vector collects the length of the filter kernels.
 # Observe that Nf could be set as it is usually done in Wavelet Theory.
 # For example, using eq. A.5.
 
@@ -114,7 +114,10 @@ for m in range(0,len(Keep)):
        List_h.append(h1d_H)
        plt.plot(Freq,np.fft.fftshift(np.abs(np.fft.fft(h1d_H,n_t))),linewidth=1.5)
        
-plt.xlim([0,0.4])    
+plt.xlim([0,0.4])  
+plt.rc('text', usetex=True)      # This is Miguel's customization
+plt.rc('font', family='serif')
+
 plt.xlabel('$\hat{f}[-]$',fontsize=18)
 plt.ylabel('Normalized Spectra',fontsize=18)
 
@@ -122,7 +125,7 @@ plt.tight_layout()
 plt.savefig('Frequency_Splitting.pdf', dpi=100)  
 
 
-Ex=201
+Ex=601 # This must be at least as Nf.
 # Compute the mPOD Temporal Basis
 PSI_M = mPOD_K(K,dt,Nf,Ex,F_V,Keep,'nearest','reduced');
 

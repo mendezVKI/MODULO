@@ -9,7 +9,7 @@ This is the first version of the Ex 1- Same structure as in the Matlab exercise.
 import numpy as np
 import matplotlib.pyplot as plt
 
-Anim=False
+Anim=True
 ## Set Up and Create Data Matrix D
 
 # 1 . Data Preparation
@@ -80,21 +80,24 @@ u_A_r_2=np.linalg.multi_dot([Y_n2,A_n2,np.transpose(T_n2)])
 fig, ax = plt.subplots(figsize=(8,5))
 plt.rc('text', usetex=True)      # This is Miguel's customization
 plt.rc('font', family='serif')
-plt.rc('xtick',labelsize=18)
-plt.rc('ytick',labelsize=18)
-plt.plot(t,u_A_r_2[int(np.floor(n_y/2)),:],'ro:')
-plt.plot(t,u_A_r_1[int(np.floor(n_y/2)),:],'ko:')
-plt.xlabel('Dimensionless Time',fontsize=18)
-plt.ylabel('Dimensionless Vel',fontsize=18)
-plt.tight_layout()
-plt.title('Centerline Vel Evolution',fontsize=16)
-plt.savefig('Centerline_Evolution.png', dpi=100)      
+plt.rc('xtick',labelsize=22)
+plt.rc('ytick',labelsize=22)
+plt.plot(t,u_A_r_2[int(np.floor(n_y/2)),:],'r-')
+plt.plot(t,u_A_r_1[int(np.floor(n_y/2)),:],'k-')
+plt.xlabel('$\hat{t}$',fontsize=22)
+plt.ylabel('$\hat{u}(\hat{y}=0,t)$',fontsize=22)
+plt.title('Centerline Vel Evolution',fontsize=20)
+plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
+pos1 = ax.get_position() # get the original position 
+pos2 = [pos1.x0 + 0.01, pos1.y0 + 0.01,  pos1.width *0.95, pos1.height *0.95] 
+ax.set_position(pos2) # set a new position
+plt.savefig('Centerline_Evolution.png', dpi=300)     
 plt.close(fig)
  
 #Assembly the Data Matrix for the test Case
 u_Mb=0.5*(1-y**2) #Compute the mean Flow
 u_M=np.transpose(np.tile(u_Mb,(n_t,1))) #Repeat mean to obtain a matrix
-D=u_A_r_1+u_A_r_2+u_M #Complete analytical Solution
+D=u_A_r_1+u_A_r_2+u_M #Complete analytical Solution (also adding back the mean)
 
  
 # Obs: In constructing D, it is better to avoid windowing problems.
