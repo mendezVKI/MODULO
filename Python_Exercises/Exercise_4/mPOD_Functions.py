@@ -48,10 +48,11 @@ def Bound_EXT(S,Ex,boundaries):
         S_extend[0:Ex]=LEFT 
         S_extend[len(S_extend)-Ex:len(S_extend)]=RIGHT
      elif boundaries=="extrap":
-        LEFT=S[len(S)-Ex:len(S)] # Wrap on the Left
-        RIGHT=S[0:Ex] # Wrap on the Right
-        S_extend[0:Ex]=LEFT 
+        LEFT=np.ones(Ex)*S[0] # Prepare the constant on the left
+        RIGHT=np.ones(Ex)*S[len(S)-1] # Prepare the constant on the Right
+        S_extend[0:Ex]=LEFT
         S_extend[len(S_extend)-Ex:len(S_extend)]=RIGHT
+        print('Not active yet, replaced by nearest')
      return S_extend
 
 def conv_m(K,h,Ex,boundaries):  
@@ -117,6 +118,10 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
     :return: PSI_M: the mPOD temporal structures
     
     """
+    if Ex<np.max(Nf):
+     raise ValueError("Ex must be larger or equal to Nf") 
+     return -1
+    
    # Convert F_V in radiants
     Fs=1/dt
     F_Bank_r = F_V*2/Fs #(Fs/2 mapped to 1)
@@ -125,7 +130,9 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
     # Loop over the scales to show the transfer functions
     Psi_M=np.array([])
     Lambda_M=np.array([])
-              
+    n_t=K.shape[1]
+    Ks=np.zeros((n_t,n_t,M+1))
+          
  # Now you could filter and then compute the eigenvectors   
     for m in range(0,M):
        # Generate the 1d filter for this 
@@ -138,6 +145,7 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
        # Filter K_LP
        print('Filtering Largest Scale')
        K_L=conv_m(K,h_A,Ex,boundaries)
+       Ks[:,:,m]=K_L # First large scale
        print('Diagonalizing Largest Scale')
        R_K=np.linalg.matrix_rank(K_L, tol=None, hermitian=True)
        Psi_P, Lambda_P, _ = svds(K_L,R_K)
@@ -147,6 +155,7 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
        h1d_H= firwin(Nf[m],[F_Bank_r[m],F_Bank_r[m+1]],pass_zero=False) # Band-pass
        print('Filtering H Scale '+str(m+1)+'/'+str(M))
        K_H=conv_m(K,h1d_H,Ex,boundaries)
+       Ks[:,:,m+1]=K_H # First band pass
        print('Diagonalizing H Scale '+str(m+1)+'/'+str(M))
        R_K=np.linalg.matrix_rank(K_H, tol=None, hermitian=True)
        Psi_P, Lambda_P, _ = svds(K_H,R_K) # Diagonalize scale
@@ -160,6 +169,7 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
         h1d_H= firwin(Nf[m],[F_Bank_r[m],F_Bank_r[m+1]],pass_zero=False) # Band-pass
         print('Filtering H Scale '+str(m+1)+'/'+str(M))
         K_H=conv_m(K,h1d_H,Ex,boundaries)
+        Ks[:,:,m+1]=K_H # Intermediate band-pass
         print('Diagonalizing H Scale '+str(m+1)+'/'+str(M))
         R_K=np.linalg.matrix_rank(K_H, tol=None, hermitian=True)
         Psi_P, Lambda_P, _ = svds(K_H,R_K) # Diagonalize scale
@@ -173,6 +183,7 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
         h1d_H = firwin(Nf[m],F_Bank_r[m],pass_zero=False)
         print('Filtering H Scale '+str(m+1)+'/ '+str(M))
         K_H=conv_m(K,h1d_H,Ex,boundaries)
+        Ks[:,:,m+1]=K_H # Last (high pass) scale
         print('Diagonalizing H Scale '+str(m+1)+'/ '+str(M))
         R_K=np.linalg.matrix_rank(K_H, tol=None, hermitian=True)
         Psi_P, Lambda_P, _ = svds(K_H,R_K) # Diagonalize scale
@@ -186,9 +197,8 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
     # Now we complete the basis via re-orghotonalization
     print('QR Polishing...')
     PSI_M,R=np.linalg.qr(Psi_M,mode=MODE)
-    print('Done!')
-    
-    return PSI_M        
+    print('Done! Preparing to return')
+    return PSI_M,Ks       
     
 
 

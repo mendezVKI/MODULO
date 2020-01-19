@@ -18,6 +18,7 @@ from Others import Plot_Field
 # Load Data
 data = np.load('Data.npz')
 D=data['D']; t=data['t']; dt=data['dt']; n_t=data['n_t'];
+Fs=1/dt
 Xg=data['Xg']; Yg=data['Yg']; X_S=data['X_S']; Y_S=data['Y_S']
 n_y,n_x=Yg.shape; nxny=n_x*n_y; n_s=nxny*2
 
@@ -44,7 +45,7 @@ Indices=np.flipud(np.argsort(SIGMA_M)) # find indices for sorting in decreasing 
 Sorted_Sigmas=SIGMA_M[Indices] # Sort all the sigmas
 Phi_M=PHI_M[:,Indices] # Sorted Spatial Structures Matrix
 Psi_M=Psi_M[:,Indices] # Sorted Temporal Structures Matrix
-Sigma_M=np.diag(Sorted_Sigmas) # Sorted Amplitude Matrix
+Sigma_M=Sorted_Sigmas # Sorted Amplitude Matrix
   
 # Show some exemplary modes for mPOD. 
 
@@ -156,12 +157,11 @@ for i in range(0,R):
   #Normalize the columns of C to get spatial modes
   Phi_P[:,i] = PHI_P_SIGMA_P[:,i]/Sigma_P[i]
   
-Sigma_P=np.diag(Sorted_Sigmas) # Sorted Amplitude Matrix
  
 fig = plt.subplots(figsize=(14,8))
    # fig, (ax1, ax2) = plt.subplots(2, 1, sharey=True,figsize=(10,8))
 
-plt.rc('text', usetex=True)      # This is Miguel's customization
+plt.rc('text', usetex=True)      
 plt.rc('font', family='serif')
    
 for j in range(1,4):
@@ -248,3 +248,35 @@ for j in range(1,4):
 plt.savefig('Results_POD_4_6.pdf', dpi=100)      
 
  
+
+plt.close(fig='all')
+# Amplitude Modes POD vs mPOD
+RR=np.arange(1,Sigma_P.shape[0]+1)
+## DFT Spectra and convergence
+fig, ax = plt.subplots(figsize=(6,3))
+plt.rc('text', usetex=True)     
+plt.rc('font', family='serif')
+plt.rc('xtick',labelsize=12)
+plt.rc('ytick',labelsize=12)
+sigma_P_v=(Sigma_P)/(n_s*n_t)*1000
+sigma_M_v=(Sigma_M)/(n_s*n_t)*1000
+plt.plot(RR,sigma_P_v,'ko',label='POD')
+plt.plot(RR,sigma_M_v,'rs',label='mPOD')
+plt.legend(fontsize=20,loc='upper right') 
+plt.xlabel('$r$',fontsize=12)
+plt.xlim(0.5,1001)
+plt.xscale('log')
+plt.ylabel('$\sigma_{\mathcal{P}r}/\sigma_{\mathcal{M}r}*1000$',fontsize=14)
+plt.title('POD vs mPOD Amplitudes ',fontsize=16)
+plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
+#pos1 = ax.get_position() # get the original position 
+#pos2 = [pos1.x0 + 0.01, pos1.y0 + 0.01,  pos1.width *0.95, pos1.height *0.95] 
+#ax.set_position(pos2) # set a new position
+plt.savefig('POD_mPOD_Amplitude.png', dpi=200)     
+plt.close(fig)
+
+
+
+
+
+

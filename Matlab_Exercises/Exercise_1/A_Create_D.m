@@ -49,7 +49,6 @@ plot(t,STEP_S); hold on; plot(t,STEP_F)
 
  % 3. Construct Spatial Eigenfunction basis (Fast Scale)
  for i=1:length(n)
-     
      N=2*n(i)-1 % odd number in the series
      % Pulsation Mode 1
      Y_n1(:,i)=cos(N*pi*y/2); % Spatial Eigenfunction basis
@@ -79,7 +78,7 @@ end
  print(HFIG,'Introduced_Temporal_Structures.png','-dpng')
  
 % Assembly the Data Matrix for the test Case
- u_Mb=(1-y.^2).^0.5;%Compute the mean Flow
+ u_Mb=0.5*(1-y.^2);%Compute the mean Flow
  u_M=repmat(u_Mb,length(t),1);%Repeat mean to obtain a matrix
  D=u_A_r_1+u_A_r_2+u_M';%Complete analytical Solution
  
@@ -93,7 +92,7 @@ end
 
 save('Data.mat','D','t','dt','n_t','y','dy','n_y')
  
- 
+ return
 %% Visualize entire evolution (Optional)
 
 filename='Exercise_1.gif';

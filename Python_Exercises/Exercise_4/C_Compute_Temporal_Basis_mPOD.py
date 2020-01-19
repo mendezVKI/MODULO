@@ -32,23 +32,32 @@ K=data['K']
 # but we use fft2 for fast computation. If you want to see the algebraic form of the code,
 # do not hesitate to contact me at mendez@vki.ac.be
 
-plt.ion() # To enable interactive plotting
+plt.ioff() # To enable interactive plotting
 Fs=1/dt; # Sampling frequency
 Freq=np.fft.fftshift(np.fft.fftfreq(int(n_t)))*Fs # Frequency Axis
 # Compute the 2D FFT of K
-K_HAT_ABS=np.abs(np.fft.fftshift(np.fft.fft2(K-np.mean(K))));
+K_HAT_ABS=np.fliplr(np.abs(np.fft.fftshift(np.fft.fft2(K-np.mean(K)))));
 
-fig, ax = plt.subplots(figsize=(5,5))
+fig, ax = plt.subplots(figsize=(4,4))
+#ax.set_xlim([-0.5,0.5])
+#ax.set_ylim([-0.5,0.5])
+plt.rc('text', usetex=True)      
+plt.rc('font', family='serif')
+plt.rc('xtick',labelsize=12)
+plt.rc('ytick',labelsize=12)
 plt.pcolor(Freq,Freq,K_HAT_ABS/np.size(D)) # We normalize the result
-plt.ylabel('$\hat{f}[-]$',fontsize=18)
-plt.xlabel('$\hat{f}[-]$',fontsize=18)
+ax.set_aspect('equal') # Set equal aspect ratio
+ax.set_xlabel('$\hat{f}[Hz]$',fontsize=14)
+ax.set_ylabel('$\hat{f}[Hz]$',fontsize=14)
+ax.set_xticks(np.arange(-600,610,200))
+ax.set_yticks(np.arange(-600,610,200))
+ax.set_xlim(-600,600)
+ax.set_ylim(-600,600)
 plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
 plt.clim(0,0.5) # From here  downward is just for plotting purposes
-plt.xticks(np.arange(-600,610,200))
-plt.yticks(np.arange(-600,610,200))
-plt.axis('equal')
-plt.ylim([-600,600]);plt.xlim([-600,600])
 plt.tight_layout()
+plt.savefig('Correlation_Spectra.png', dpi=100)  
+
 
 # This matrix shows that there are two dominant frequencies in the problem.
 # We set a frequency splitting to divide these two portions of the
@@ -57,12 +66,17 @@ plt.tight_layout()
 H=4/1000; # Stand off distance nozzle to plate
 U0=6.5; # Mean velocity of the jet at the outlet
 
-F_V=np.array([100,200,300,400]); # This will generate four scales: H_A, H_H_1, H_H_2, H_H_3. See Sec. 3.2
-St=F_V*H/U0;
 
-Keep=np.array([1,1,1,1]); #These are the band-pass you want to keep (Approximation is always kept).
-Nf=np.array([201,201,201,201]); # This vector collects the length of the filter kernels.
+ST_V=np.array([0.1,0.2,0.5]) # Define scales based on St
+F_V=ST_V*U0/H
 
+Keep=np.array([1,1,1]); #These are the band-pass you want to keep (Approximation is always kept).
+Nf=np.array([201,201,201]); # This vector collects the length of the filter kernels.
+
+Ex=203 # This must be at least as Nf.
+#These are the number of points that will be padded on the two sides of the signal
+#following the specified BC.
+##
 
 # We can visualize where these are acting
 F_Bank_r = F_V*2/Fs; #(Fs/2 mapped to 1)
@@ -73,8 +87,8 @@ M=len(F_Bank_r); # Number of scales
 fig, ax = plt.subplots(figsize=(8,5))
 plt.rc('text', usetex=True)      # This is Miguel's customization
 #plt.rc('font', family='serif')
-plt.rc('xtick',labelsize=18)
-plt.rc('ytick',labelsize=18)
+plt.rc('xtick',labelsize=16)
+plt.rc('ytick',labelsize=16)
 
 # Extract the diagonal of K_F
 K_HAT_ABS=np.fliplr(np.abs(np.fft.fftshift(np.fft.fft2(K-np.mean(K)))));
@@ -113,17 +127,43 @@ for m in range(0,len(Keep)):
        plt.plot(Freq,np.fft.fftshift(np.abs(np.fft.fft(h1d_H,n_t))),linewidth=1.5)
        
 plt.xlim([0,600])    
-plt.xlabel('$\hat{f}[Hz]$',fontsize=18)
+plt.xlabel('$f[Hz]$',fontsize=18)
 plt.ylabel('Normalized Spectra',fontsize=18)
 
+
 plt.tight_layout()
-plt.savefig('Frequency_Splitting.pdf', dpi=100)  
+plt.savefig('Frequency_Splitting.png', dpi=200)  
 
 
-Ex=201
 # Compute the mPOD Temporal Basis
-PSI_M = mPOD_K(K,dt,Nf,Ex,F_V,Keep,'nearest','reduced');
+PSI_M,Ks = mPOD_K(K,dt,Nf,Ex,F_V,Keep,'nearest','reduced');
 
+# Save the correlation matrices of each scale:
+for i in range(0,Ks.shape[2]):
+ K=Ks[:,:,i]
+ K_HAT_ABS=np.fliplr(np.abs(np.fft.fftshift(np.fft.fft2(K-np.mean(K)))));
+
+ fig, ax = plt.subplots(figsize=(4,4))
+ #ax.set_xlim([-0.5,0.5])
+ #ax.set_ylim([-0.5,0.5])
+ plt.rc('text', usetex=True)      
+ plt.rc('font', family='serif')
+ plt.rc('xtick',labelsize=12)
+ plt.rc('ytick',labelsize=12)
+ plt.pcolor(Freq,Freq,K_HAT_ABS/np.size(D)) # We normalize the result
+ ax.set_aspect('equal') # Set equal aspect ratio
+ ax.set_xlabel('${f}[Hz]$',fontsize=14)
+ ax.set_ylabel('${f}[Hz]$',fontsize=14)
+ ax.set_xticks(np.arange(-600,610,200))
+ ax.set_yticks(np.arange(-600,610,200))
+ ax.set_xlim(-600,600)
+ ax.set_ylim(-600,600)
+ plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
+ plt.clim(0,0.5) # From here  downward is just for plotting purposes
+ plt.tight_layout()
+ Name='CS_Scale_'+str(i+1)
+ print('Saving Fig '+Name)
+ plt.savefig(Name, dpi=200) 
 
 # Save as numpy array all the data
 np.savez('Psis_mPOD',PSI_M=PSI_M)

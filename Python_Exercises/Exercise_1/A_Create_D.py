@@ -9,16 +9,12 @@ This is the first version of the Ex 1- Same structure as in the Matlab exercise.
 import numpy as np
 import matplotlib.pyplot as plt
 
-Anim=True
+Anim=False
 ## Set Up and Create Data Matrix D
 
 # 1 . Data Preparation
-dt =0.5
-t =np.arange(0,620+dt,dt)
-n_t=len(t); #Time Discretization
-dy =0.01; 
-y=np.arange(-1,1+dy,dy) 
-n_y=len(y); #Space Discretization
+dt =0.5; t =np.arange(0,620+dt,dt); n_t=len(t); #Time Discretization
+dy =0.01; y=np.arange(-1,1+dy,dy); n_y=len(y); #Space Discretization
 
 # Set the parameters of the two pressure pulsation
 W_1=4      # Womersley 1
@@ -44,6 +40,11 @@ for i in range(0,4):
   
 # Create also the second kind of smoothed STEP
 STEP_F=np.exp(-(t-T_A_F)**2/5000);  
+# Check them
+#plt.plot(t,STEP_S) 
+#plt.plot(t,STEP_F)
+
+
   
   
  # 2. Initialize Matrices:
@@ -60,8 +61,10 @@ T_n2=np.zeros((n_t,N)) #Initialize Temporal Basis
 U_A2=np.zeros((n_t,n_y)) #Initialize PDE solution
     
 # 3. Construct Spatial Eigenfunction basis (Fast Scale)
-for i in range(0,19):     
+ns=np.zeros(n.shape)
+for i in range(0,20):     
   N=2*i+1; # odd number in the series
+  ns[i]=N
   # Pulsation Mode 1
   Y_n1[:,i]=np.cos(N*np.pi*y/2) # Spatial Eigenfunction basis
   A_n1[i,i] =(16*Pa_1)/(N*np.pi*np.sqrt((2*W_1)**4+N**4*np.pi**4)); # Amplitudes 

@@ -68,7 +68,7 @@ def Plot_Field(X_S,Y_S,V_X,V_Y,PLOT,Step,Scale):
    # non-zero gradient. The other will have zero gradient only on the change.
    IND_X=np.where(GRAD_X!=0); DAT=IND_X[0]; n_y=DAT[0]+1;
    nxny=X_S.shape[0] # is the to be doubled at the end we will have n_s=2 * n_x * n_y
-   n_s=2*nxny
+   #n_s=2*nxny
    # Reshaping the grid from the data
    n_x=(nxny//(n_y)) # Carefull with integer and float!
    Xg=np.transpose(X_S.reshape((n_x,n_y)))
@@ -131,7 +131,7 @@ def Animation(npz_F,Giff_NAME):
 
     
     # Prepare Animation of the analytical solution
-    for k in range(0,200,1):
+    for k in range(0,400,1):
      Dat=D[:,k]
      V_X_m=Dat[0:nxny]
      V_Y_m=Dat[nxny::]
@@ -161,6 +161,7 @@ def Animation(npz_F,Giff_NAME):
      ax.set_yticks(np.arange(10,30,5))
      ax.set_xlim([0,35])
      ax.set_ylim(10,29)
+     plt.clim(0,6)
      ax.invert_yaxis() # Invert Axis for plotting purpose
      plt.show()
    
@@ -174,14 +175,14 @@ def Animation(npz_F,Giff_NAME):
 
     images = []
 
-    for k in range(0,200,1):
+    for k in range(0,400,1):
       MEX = 'Preparing Im ' + str(k) 
       print(MEX)    
       NameOUT=Fol_Out + os.sep + 'Im%03d' % (k) + '.png'
       images.append(imageio.imread(NameOUT))
     
     # Now we can assembly the video and clean the folder of png's (optional)
-    imageio.mimsave(Giff_NAME, images, duration=0.1)
+    imageio.mimsave(Giff_NAME, images, duration=0.05)
     import shutil  # nice and powerfull tool to delete a folder and its content
 
     shutil.rmtree(Fol_Out) 

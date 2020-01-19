@@ -12,7 +12,7 @@ import os
 from Others import Plot_Field_TEXT
 from Others import Plot_Field
 
-Anim=False # Decide if you want to construct animation of the data or not
+Anim=True # Decide if you want to construct animation of the data or not
 
 # Extract all the Zip Files
 FOLDER='TR_PIV_FOL'
