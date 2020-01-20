@@ -23,8 +23,7 @@ D=data['D']; t=data['t']; dt=data['dt']; n_t=data['n_t'];
 Xg=data['Xg']; Yg=data['Yg']
 n_y,n_x=Yg.shape; nxny=n_x*n_y
 # Load the correlation matrix
-data=np.load('Correlation_K.npz')
-K=data['K']
+
 
 ## Study the frequency content of K
 ## We plot || K_hat || to look for frequencies
@@ -170,6 +169,8 @@ np.savez('Psis_mPOD',PSI_M=PSI_M)
  
 # To make a comparison later, we also compute the POD basis
 # Temporal structures are eigenvectors of K
+data=np.load('Correlation_K.npz')
+K=data['K']
 Psi_P, Lambda_P, _ = np.linalg.svd(K)
 # The POD has the unique feature of providing the amplitude of the modes
 # with no need of projection. The amplitudes are:

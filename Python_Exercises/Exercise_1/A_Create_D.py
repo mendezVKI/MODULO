@@ -120,6 +120,13 @@ if Anim:
  Animate=Animation('Data.npz','Exercise_1.gif')
 else:
  print('No animation requested')    
-    
-    
+#    
+## Export Signal Centerline for other exercises  
+#Signal=D[100,:] 
+#fs=2000; dt=1/fs
+#t_k=np.arange(0,dt*len(Signal),dt)
+#np.savez('Signal_1D',d=Signal,t_k=t_k)
+
+
+
     

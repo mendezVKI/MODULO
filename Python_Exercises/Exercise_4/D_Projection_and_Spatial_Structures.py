@@ -49,94 +49,37 @@ Sigma_M=Sorted_Sigmas # Sorted Amplitude Matrix
   
 # Show some exemplary modes for mPOD. 
 
-fig = plt.subplots(figsize=(14,8))
-   # fig, (ax1, ax2) = plt.subplots(2, 1, sharey=True,figsize=(10,8))
-
-plt.rc('text', usetex=True)      # This is Miguel's customization
-plt.rc('font', family='serif')
-   
-for j in range(1,4):
- ax=plt.subplot(3,2,2*j)
- Signal=Psi_M[:,j-1]-np.mean(Psi_M[:,j-1])
- Signal_FFT = np.fft.fft(Signal)/np.sqrt(n_t) # Compute the DFT
- Freqs=np.fft.fftfreq(len(Signal))*Fs # Compute the frequency bins
- plt.plot(Freqs,np.abs(Signal_FFT),linewidth=1.5)    
- plt.xlim([2,1050])
- plt.xscale('log')
- #ax.set_xticks([10, 50,150,300, 600])
- #ax.get_xaxis().get_major_formatter().labelOnlyBase = False
- plt.xlabel('$f[Hz]$',fontsize=18)
- String_y='$\widehat{\psi}_{\mathcal{M}'+str(j)+'}$'
- plt.ylabel(String_y,fontsize=18)
- #plt.tight_layout(pad=1.1, w_pad=1, h_pad=1.0)
- plt.tight_layout()
- 
-
-for j in range(1,4):
- ax=plt.subplot(3,2,2*j-1)
+for j in range(1,6):
+ plt.close(fig='all') 
+ fig, ax3= plt.subplots(figsize=(5,7))   
+ ax=plt.subplot(2,1,1)
  V_X=Phi_M[0:nxny,j-1]
  V_Y=Phi_M[nxny::,j-1]
  Plot_Field(X_S,Y_S,V_X,V_Y,True,2,0.8)
  ax.set_aspect('equal') # Set equal aspect ratio
-# ax.set_xlabel('$x[mm]$',fontsize=16)
-# ax.set_ylabel('$y[mm]$',fontsize=16)
-#ax.set_title('Velocity Field via TR-PIV',fontsize=18)
  ax.set_xticks(np.arange(0,40,10))
  ax.set_yticks(np.arange(10,30,5))
  ax.set_xlim([0,35])
  ax.set_ylim([10,29])
  ax.invert_yaxis() # Invert Axis for plotting purpose
- String_y='$\phi_{\mathcal{M}'+str(j)+'}$'
+ String_y='$\phi_{\mathcal{P}'+str(j)+'}$'
  plt.title(String_y,fontsize=18)
- plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
+# plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
  
-    
-plt.savefig('Results_mPOD_1_3.pdf', dpi=100)      
-
-
-fig = plt.subplots(figsize=(14,8))
-   # fig, (ax1, ax2) = plt.subplots(2, 1, sharey=True,figsize=(10,8))
-
-plt.rc('text', usetex=True)      # This is Miguel's customization
-plt.rc('font', family='serif')
-   
-for j in range(1,4):
- ax=plt.subplot(3,2,2*j)
- Signal=Psi_M[:,j-1+3]-np.mean(Psi_M[:,j-1])
- Signal_FFT = np.fft.fft(Signal)/np.sqrt(n_t) # Compute the DFT
- Freqs=np.fft.fftfreq(len(Signal))*Fs # Compute the frequency bins
- plt.plot(Freqs,np.abs(Signal_FFT),linewidth=1.5)    
- plt.xlim([2,1050])
- plt.xscale('log')
- #ax.set_xticks([10, 50,150,300, 600])
- #ax.get_xaxis().get_major_formatter().labelOnlyBase = False
- plt.xlabel('$f[Hz]$',fontsize=18)
- String_y='$\widehat{\psi}_{\mathcal{M}'+str(j+3)+'}$'
+ ax=plt.subplot(2,1,2)
+ Signal=Psi_M[:,j-1]
+ s_h=np.abs((np.fft.fft(Signal-Signal.mean())))
+ Freqs=np.fft.fftfreq(int(n_t))*Fs
+ plt.plot(Freqs*(4/1000)/6.5,s_h,'-',linewidth=1.5)
+ plt.xlim(0,0.38)    
+ plt.xlabel('$St[-]$',fontsize=18)
+ String_y='$\widehat{\psi}_{\mathcal{M}'+str(j)+'}$'
  plt.ylabel(String_y,fontsize=18)
- #plt.tight_layout(pad=1.1, w_pad=1, h_pad=1.0)
- plt.tight_layout()
- 
-
-for j in range(1,4):
- ax=plt.subplot(3,2,2*j-1)
- V_X=Phi_M[0:nxny,j-1+3]
- V_Y=Phi_M[nxny::,j-1+3]
- Plot_Field(X_S,Y_S,V_X,V_Y,True,2,0.8)
- ax.set_aspect('equal') # Set equal aspect ratio
-# ax.set_xlabel('$x[mm]$',fontsize=16)
-# ax.set_ylabel('$y[mm]$',fontsize=16)
-#ax.set_title('Velocity Field via TR-PIV',fontsize=18)
- ax.set_xticks(np.arange(0,40,10))
- ax.set_yticks(np.arange(10,30,5))
- ax.set_xlim([0,35])
- ax.set_ylim([10,29])
- ax.invert_yaxis() # Invert Axis for plotting purpose
- String_y='$\phi_{\mathcal{M}'+str(j+3)+'}$'
- plt.title(String_y,fontsize=18)
  plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
- 
-    
-plt.savefig('Results_mPOD_4_6.pdf', dpi=100)      
+ Name='mPOD_Mode_'+str(j)+'.png'
+ print(Name+' Saved')
+ plt.savefig(Name, dpi=300)  
+
 
 
 # Compute the spatial basis for the POD
@@ -157,39 +100,14 @@ for i in range(0,R):
   #Normalize the columns of C to get spatial modes
   Phi_P[:,i] = PHI_P_SIGMA_P[:,i]/Sigma_P[i]
   
- 
-fig = plt.subplots(figsize=(14,8))
-   # fig, (ax1, ax2) = plt.subplots(2, 1, sharey=True,figsize=(10,8))
-
-plt.rc('text', usetex=True)      
-plt.rc('font', family='serif')
-   
-for j in range(1,4):
- ax=plt.subplot(3,2,2*j)
- Signal=Psi_P[:,j-1]-np.mean(Psi_P[:,j-1])
- Signal_FFT = np.fft.fft(Signal)/np.sqrt(n_t) # Compute the DFT
- Freqs=np.fft.fftfreq(len(Signal))*Fs # Compute the frequency bins
- plt.plot(Freqs,np.abs(Signal_FFT),linewidth=1.5)    
- plt.xlim([2,1050])
- plt.xscale('log')
- #ax.set_xticks([10, 50,150,300, 600])
- #ax.get_xaxis().get_major_formatter().labelOnlyBase = False
- plt.xlabel('$f[Hz]$',fontsize=18)
- String_y='$\widehat{\psi}_{\mathcal{P}'+str(j)+'}$'
- plt.ylabel(String_y,fontsize=18)
- #plt.tight_layout(pad=1.1, w_pad=1, h_pad=1.0)
- plt.tight_layout()
- 
-
-for j in range(1,4):
- ax=plt.subplot(3,2,2*j-1)
+for j in range(1,10):
+ plt.close(fig='all') 
+ fig, ax3= plt.subplots(figsize=(5,7))   
+ ax=plt.subplot(2,1,1)
  V_X=Phi_P[0:nxny,j-1]
  V_Y=Phi_P[nxny::,j-1]
  Plot_Field(X_S,Y_S,V_X,V_Y,True,2,0.8)
  ax.set_aspect('equal') # Set equal aspect ratio
-# ax.set_xlabel('$x[mm]$',fontsize=16)
-# ax.set_ylabel('$y[mm]$',fontsize=16)
-#ax.set_title('Velocity Field via TR-PIV',fontsize=18)
  ax.set_xticks(np.arange(0,40,10))
  ax.set_yticks(np.arange(10,30,5))
  ax.set_xlim([0,35])
@@ -197,56 +115,21 @@ for j in range(1,4):
  ax.invert_yaxis() # Invert Axis for plotting purpose
  String_y='$\phi_{\mathcal{P}'+str(j)+'}$'
  plt.title(String_y,fontsize=18)
- plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
+# plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
  
-    
-plt.savefig('Results_POD_1_3.pdf', dpi=100)      
-
- 
-fig = plt.subplots(figsize=(14,8))
-   # fig, (ax1, ax2) = plt.subplots(2, 1, sharey=True,figsize=(10,8))
-
-plt.rc('text', usetex=True)      # This is Miguel's customization
-plt.rc('font', family='serif')
-   
-for j in range(1,4):
- ax=plt.subplot(3,2,2*j)
- Signal=Psi_P[:,j-1+3]-np.mean(Psi_P[:,j-1])
- Signal_FFT = np.fft.fft(Signal)/np.sqrt(n_t) # Compute the DFT
- Freqs=np.fft.fftfreq(len(Signal))*Fs # Compute the frequency bins
- plt.plot(Freqs,np.abs(Signal_FFT),linewidth=1.5)    
- plt.xlim([2,1050])
- plt.xscale('log')
- #ax.set_xticks([10, 50,150,300, 600])
- #ax.get_xaxis().get_major_formatter().labelOnlyBase = False
- plt.xlabel('$f[Hz]$',fontsize=18)
- String_y='$\widehat{\psi}_{\mathcal{P}'+str(j+3)+'}$'
+ ax=plt.subplot(2,1,2)
+ Signal=Psi_P[:,j-1]
+ s_h=np.abs((np.fft.fft(Signal-Signal.mean())))
+ Freqs=np.fft.fftfreq(int(n_t))*Fs
+ plt.plot(Freqs*(4/1000)/6.5,s_h,'-',linewidth=1.5)
+ plt.xlim(0,0.38)    
+ plt.xlabel('$St[-]$',fontsize=18)
+ String_y='$\widehat{\psi}_{\mathcal{P}'+str(j)+'}$'
  plt.ylabel(String_y,fontsize=18)
- #plt.tight_layout(pad=1.1, w_pad=1, h_pad=1.0)
- plt.tight_layout()
- 
-
-for j in range(1,4):
- ax=plt.subplot(3,2,2*j-1)
- V_X=Phi_P[0:nxny,j-1+3]
- V_Y=Phi_P[nxny::,j-1+3]
- Plot_Field(X_S,Y_S,V_X,V_Y,True,2,0.8)
- ax.set_aspect('equal') # Set equal aspect ratio
-# ax.set_xlabel('$x[mm]$',fontsize=16)
-# ax.set_ylabel('$y[mm]$',fontsize=16)
-#ax.set_title('Velocity Field via TR-PIV',fontsize=18)
- ax.set_xticks(np.arange(0,40,10))
- ax.set_yticks(np.arange(10,30,5))
- ax.set_xlim([0,35])
- ax.set_ylim([10,29])
- ax.invert_yaxis() # Invert Axis for plotting purpose
- String_y='$\phi_{\mathcal{P}'+str(j+3)+'}$'
- plt.title(String_y,fontsize=18)
  plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
- 
-    
-plt.savefig('Results_POD_4_6.pdf', dpi=100)      
-
+ Name='POD_Mode_'+str(j)+'.png'
+ print(Name+' Saved')
+ plt.savefig(Name, dpi=300)  
  
 
 plt.close(fig='all')
