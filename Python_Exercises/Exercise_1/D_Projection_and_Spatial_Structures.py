@@ -46,7 +46,7 @@ Phi_M=PHI_M[:,Indices] # Sorted Spatial Structures Matrix
 Psi_M=Psi_M[:,Indices] # Sorted Temporal Structures Matrix
 Sigma_M=Sorted_Sigmas_M # Sorted Amplitude Matrix
   
-# Show some exemplary modes for mPOD. We take from 2 to 7.
+# Show some exemplary modes for mPOD. We take from 2 to 5.
 Fs=2 # Sampling frequency
 n_t=int(n_t)
 Freqs=np.fft.fftfreq(n_t)*Fs # Compute the frequency bins
@@ -144,19 +144,19 @@ for j in range(1,5):
 plt.close(fig='all')
 # Amplitude Modes POD vs mPOD
 ## DFT Spectra and convergence
-fig, ax = plt.subplots(figsize=(6,3))
+fig, ax = plt.subplots(figsize=(8,5))
 plt.rc('text', usetex=True)     
 plt.rc('font', family='serif')
-plt.rc('xtick',labelsize=12)
-plt.rc('ytick',labelsize=12)
-plt.plot(np.arange(1,len(Sigma_P)+1,1),Sigma_P/(n_y*n_t)*1000,'ko',label='POD')
-plt.plot(np.arange(1,len(Sorted_Sigmas_M)+1,1),Sorted_Sigmas_M/(n_y*n_t)*1000,'rs',label='mPOD')
+plt.rc('xtick',labelsize=22)
+plt.rc('ytick',labelsize=22)
+plt.plot(np.arange(1,len(Sigma_P)+1,1),Sigma_P/((n_y*n_t)**0.5),'ko',label='POD')
+plt.plot(np.arange(1,len(Sorted_Sigmas_M)+1,1),Sorted_Sigmas_M/((n_y*n_t)**0.5),'rs',label='mPOD')
 plt.legend(fontsize=20,loc='upper right') 
-plt.xlabel('$r$',fontsize=12)
+plt.xlabel('$r$',fontsize=20)
 plt.xlim(-0.1,10)
 plt.xticks(np.arange(1,30,1))
 plt.xscale('linear')
-plt.ylabel('$\sigma_{\mathcal{P}r},\sigma_{\mathcal{M}r}*1000$',fontsize=14)
+plt.ylabel('$\sigma_{\mathcal{P}r},\sigma_{\mathcal{M}r}$',fontsize=14)
 plt.title('POD vs mPOD Amplitudes ',fontsize=16)
 plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
 #pos1 = ax.get_position() # get the original position 
@@ -166,6 +166,29 @@ plt.savefig('POD_mPOD_Amplitude.png', dpi=200)
 plt.close(fig)
 
 
+plt.close(fig='all')
+# Amplitude Modes POD only (for Video 2)
+## DFT Spectra and convergence
+fig, ax = plt.subplots(figsize=(8,5))
+plt.rc('text', usetex=True)     
+plt.rc('font', family='serif')
+plt.rc('xtick',labelsize=22)
+plt.rc('ytick',labelsize=22)
+plt.plot(np.arange(1,len(Sigma_P)+1,1),Sigma_P/((n_y*n_t)**0.5),'ko',label='POD')
+plt.legend(fontsize=20,loc='upper right') 
+plt.xlabel('$r$',fontsize=20)
+plt.xlim(-0.1,10)
+plt.xticks(np.arange(1,30,1))
+plt.xscale('linear')
+plt.ylabel('$\sigma_{\mathcal{P}r}$',fontsize=20)
+plt.title('POD vs mPOD Amplitudes ',fontsize=20)
+plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
+#pos1 = ax.get_position() # get the original position 
+#pos2 = [pos1.x0 + 0.01, pos1.y0 + 0.01,  pos1.width *0.95, pos1.height *0.95] 
+#ax.set_position(pos2) # set a new position
+plt.savefig('POD_Amplitude.png', dpi=200)     
+plt.close(fig)
+
 
 
 ####### DFT ########
@@ -174,27 +197,29 @@ print('Compute also the DFT')
 PSI_F=np.fft.fft(np.eye(n_t))/np.sqrt(n_t) # Prepare the Fourier Matrix.
 print('Projecting Data')
 #D_Complex=D+1j*np.zeros(D.shape)
-PHI_SIGMA=np.dot(D,np.conj(PSI_F)) # This is PHI * SIGMA
+#PHI_SIGMA=np.dot(D,np.conj(PSI_F)) # This is PHI * SIGMA
+PHI_SIGMA=np.conj(np.fft.fft(D,n_t,1))/(n_t**0.5)
+
 PHI_F=np.zeros((D.shape[0],n_t),dtype=complex) # Initialize the PHI_F MATRIX
 SIGMA_F=np.zeros(n_t) # Initialize the SIGMA_F MATRIX
 # Now we proceed with the normalization. This is also intense so we time it
 for r in range(0,n_t): # Loop over the PHI_SIGMA to normalize
-  MEX='Proj '+str(r)+' /'+str(n_t) 
+  MEX='Proj '+str(r+1)+' /'+str(n_t) 
   print(MEX)
   SIGMA_F[r]=abs(np.vdot(PHI_SIGMA[:,r],PHI_SIGMA[:,r]))**0.5
   PHI_F[:,r]=PHI_SIGMA[:,r]/SIGMA_F[r]
 
-Sigma_F_n=SIGMA_F/(n_y*n_t) # Carefull with the normalization
+Sigma_F_n=SIGMA_F/(n_y*n_t)**0.5 # Carefull with the normalization
 
 
 fig, ax = plt.subplots(figsize=(8,5))
-plt.plot(np.fft.fftshift(Freqs),np.fft.fftshift(Sigma_F_n)*1000,'ko')
+plt.plot(np.fft.fftshift(Freqs),np.fft.fftshift(Sigma_F_n),'ko')
 plt.rc('text', usetex=True)      
 plt.rc('font', family='serif')
 plt.rc('xtick',labelsize=22)
 plt.rc('ytick',labelsize=22)
 plt.xlabel('$f[-] $',fontsize=20)
-plt.ylabel('$\sigma_{\mathcal{F}r}*1000$',fontsize=20)
+plt.ylabel('$\sigma_{\mathcal{F}r}$',fontsize=20)
 # plt.title('Eigen_Function_Sol_N',fontsize=18)
 plt.xlim([-0.5,0.5])
 plt.tight_layout()
@@ -210,6 +235,9 @@ Phi_F=PHI_F[:,Indices] # Sorted Spatial Structures Matrix
 Psi_F=PSI_F[:,Indices] # Sorted Temporal Structures Matrix
 SIGMA_F=np.diag(Sorted_Sigmas) # Sorted Amplitude Matrix
 
+Sorted_Sigmas_S=Sorted_Sigmas/((n_y*n_t)**0.5)
+
+
 RR=np.arange(1,n_t+1)
 ## DFT Spectra and convergence
 fig, ax = plt.subplots(figsize=(8,5))
@@ -217,11 +245,11 @@ plt.rc('text', usetex=True)      # This is Miguel's customization
 plt.rc('font', family='serif')
 plt.rc('xtick',labelsize=22)
 plt.rc('ytick',labelsize=22)
-plt.plot(RR,Sorted_Sigmas/(n_y*n_t)*1000,'ko')
+plt.plot(RR,Sorted_Sigmas/(n_y*n_t)**0.5,'ko')
 plt.xlabel('$r$',fontsize=22)
-plt.xlim(0.5,1001)
+plt.xlim(0.8,1001)
 plt.xscale('log')
-plt.ylabel('$\sigma_{\mathcal{F}r}* 1000$',fontsize=22)
+plt.ylabel('$\sigma_{\mathcal{F}r}$',fontsize=22)
 plt.title('DFT Amplitudes ',fontsize=20)
 plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
 #pos1 = ax.get_position() # get the original position 

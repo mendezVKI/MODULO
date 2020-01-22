@@ -35,7 +35,7 @@ plt.ioff() # To enable interactive plotting
 Fs=1/dt; # Sampling frequency
 Freq=np.fft.fftshift(np.fft.fftfreq(int(n_t)))*Fs # Frequency Axis
 # Compute the 2D FFT of K
-K_HAT_ABS=np.fliplr(np.abs(np.fft.fftshift(np.fft.fft2(K-np.mean(K)))));
+K_HAT_ABS=np.fliplr(np.abs(np.fft.fftshift(np.fft.fft2(data['K']-np.mean(data['K'])))));
 
 fig, ax = plt.subplots(figsize=(4,4))
 #ax.set_xlim([-0.5,0.5])

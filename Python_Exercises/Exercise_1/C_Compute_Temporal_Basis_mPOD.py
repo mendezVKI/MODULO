@@ -22,9 +22,6 @@ plt.ioff() # Avoid showing the plot (just check the printed results!)
 data = np.load('Data.npz')
 D=data['D']; t=data['t']; dt=data['dt']; n_t=data['n_t']
 y=data['y']; dy=data['dy']; n_y=data['n_y']
-# Load the correlation matrix
-data=np.load('Correlation_K.npz')
-K=data['K']
 
 ## Study the frequency content of K
 ## We plot || K_hat || to look for frequencies
@@ -141,7 +138,7 @@ plt.savefig('Frequency_Splitting.png', dpi=200)
 
 
 # Compute the mPOD Temporal Basis
-PSI_M,Ks = mPOD_K(K,dt,Nf,Ex,F_V,Keep,'nearest','reduced');
+PSI_M,Ks = mPOD_K(data['K'],dt,Nf,Ex,F_V,Keep,'nearest','reduced');
 
 # Save the correlation matrices of each scale:
 for i in range(0,Ks.shape[2]):
@@ -177,7 +174,9 @@ np.savez('Psis_mPOD',PSI_M=PSI_M)
  
 # To make a comparison later, we also compute the POD basis
 # Temporal structures are eigenvectors of K
-K=data['K'] # 
+# Load the correlation matrix
+
+K=data['D']
 Psi_P,Lambda_P,_=np.linalg.svd(K)
 # The POD has the unique feature of providing the amplitude of the modes
 # with no need of projection. The amplitudes are:

@@ -79,26 +79,21 @@ for j in range(1,6):
  Name='mPOD_Mode_'+str(j)+'.png'
  print(Name+' Saved')
  plt.savefig(Name, dpi=300)  
-
-# save POD onto a csv
-import os
-FOL='POD'; os.mkdir(FOL)
-np.savetxt(FOL+'/SIGMA.csv',Sigma_P)
-np.savetxt(FOL+'/phi_P_1_u.csv',Phi_P[0:nxny,0].reshape())
-np.savetxt(FOL+'/phi_P_1_v.csv',np.reshape(Phi_P[nxny::,0]))
-
-np.savetxt(FOL+'/phi_P_2_u.csv',np.reshape(Phi_P[0:nxny,0]))
-np.savetxt(FOL+'/phi_P_2_v.csv',np.reshape(Phi_P[nxny::,0]))
-
-np.savetxt(FOL+'/phi_P_3_u.csv',np.reshape(Phi_P[0:nxny,0]))
-np.savetxt(FOL+'/phi_P_3_v.csv',np.reshape(Phi_P[nxny::,0]))
-
-
-
-
-np.savetxt(FOL+'/phi_P_2.csv',Phi_P[:,1])
-np.savetxt(FOL+'/psi_P_1.csv',Psi_P[:,0])
-np.savetxt(FOL+'/psi_P_2.csv',Psi_P[:,1])
+#
+## save POD onto a csv
+#import os
+#FOL='mPOD'; os.mkdir(FOL)
+#np.savetxt(FOL+'/SIGMA.csv',Sigma_M)
+#np.savetxt(FOL+'/phi_M_1_u.csv',Phi_M[0:nxny,0].reshape(n_x,n_y),delimiter=',')
+#np.savetxt(FOL+'/phi_M_1_v.csv',Phi_M[nxny::,0].reshape(n_x,n_y),delimiter=',')
+#np.savetxt(FOL+'/phi_M_2_u.csv',Phi_M[0:nxny,1].reshape(n_x,n_y),delimiter=',')
+#np.savetxt(FOL+'/phi_M_2_v.csv',Phi_M[nxny::,1].reshape(n_x,n_y),delimiter=',')
+#np.savetxt(FOL+'/phi_M_3_u.csv',Phi_M[0:nxny,2].reshape(n_x,n_y),delimiter=',')
+#np.savetxt(FOL+'/phi_M_3_v.csv',Phi_M[nxny::,2].reshape(n_x,n_y),delimiter=',')
+#
+#np.savetxt(FOL+'/psi_M_1.csv',Psi_M[:,0])
+#np.savetxt(FOL+'/psi_M_2.csv',Psi_M[:,1])
+#np.savetxt(FOL+'/psi_M_3.csv',Psi_M[:,3])
 
 
 # Compute the spatial basis for the POD
@@ -153,22 +148,23 @@ for j in range(1,10):
 
 plt.close(fig='all')
 # Amplitude Modes POD vs mPOD
-RR=np.arange(1,Sigma_P.shape[0]+1)
+RR_P=np.arange(1,Sigma_P.shape[0]+1)
+RR_M=np.arange(1,Sigma_M.shape[0]+1)
 ## DFT Spectra and convergence
 fig, ax = plt.subplots(figsize=(6,3))
 plt.rc('text', usetex=True)     
 plt.rc('font', family='serif')
 plt.rc('xtick',labelsize=12)
 plt.rc('ytick',labelsize=12)
-sigma_P_v=(Sigma_P)/(n_s*n_t)*1000
-sigma_M_v=(Sigma_M)/(n_s*n_t)*1000
-plt.plot(RR,sigma_P_v,'ko',label='POD')
-plt.plot(RR,sigma_M_v,'rs',label='mPOD')
+sigma_P_v=(Sigma_P)/((n_s*n_t)**0.5)
+sigma_M_v=(Sigma_M)/((n_s*n_t)**0.5)
+plt.plot(RR_P,sigma_P_v,'ko',label='POD')
+plt.plot(RR_M,sigma_M_v,'rs',label='mPOD')
 plt.legend(fontsize=20,loc='upper right') 
 plt.xlabel('$r$',fontsize=12)
 plt.xlim(0.5,1001)
 plt.xscale('log')
-plt.ylabel('$\sigma_{\mathcal{P}r}/\sigma_{\mathcal{M}r}*1000$',fontsize=14)
+plt.ylabel('$\sigma_{\mathcal{P}r},\sigma_{\mathcal{M}r}*1000$',fontsize=14)
 plt.title('POD vs mPOD Amplitudes ',fontsize=16)
 plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
 #pos1 = ax.get_position() # get the original position 
@@ -177,7 +173,67 @@ plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
 plt.savefig('POD_mPOD_Amplitude.png', dpi=200)     
 plt.close(fig)
 
+#
+#FOL='POD'; os.mkdir(FOL)
+#np.savetxt(FOL+'/SIGMA.csv',Sigma_P)
+#np.savetxt(FOL+'/phi_P_1_u.csv',Phi_P[0:nxny,0].reshape(n_x,n_y),delimiter=',')
+#np.savetxt(FOL+'/phi_P_1_v.csv',Phi_P[nxny::,0].reshape(n_x,n_y),delimiter=',')
+#np.savetxt(FOL+'/phi_P_2_u.csv',Phi_P[0:nxny,1].reshape(n_x,n_y),delimiter=',')
+#np.savetxt(FOL+'/phi_P_2_v.csv',Phi_P[nxny::,1].reshape(n_x,n_y),delimiter=',')
+#np.savetxt(FOL+'/phi_P_3_u.csv',Phi_P[0:nxny,2].reshape(n_x,n_y),delimiter=',')
+#np.savetxt(FOL+'/phi_P_3_v.csv',Phi_P[nxny::,2].reshape(n_x,n_y),delimiter=',')
+#
+#np.savetxt(FOL+'/psi_P_1.csv',Psi_P[:,0])
+#np.savetxt(FOL+'/psi_P_2.csv',Psi_P[:,1])
+#np.savetxt(FOL+'/psi_P_3.csv',Psi_P[:,3])
 
+# Finally, perform also the DFT
+n_t=int(n_t)
+Freqs=np.fft.fftfreq(n_t)*Fs # Compute the frequency bins
+####### DFT ########
+## For comparison putposes we also perform here a DFT.
+print('Compute also the DFT')
+PSI_F=np.fft.fft(np.eye(n_t))/np.sqrt(n_t) # Prepare the Fourier Matrix.
+print('Projecting Data')
+#D_Complex=D+1j*np.zeros(D.shape)
+# Method 1 (didactic!)
+PHI_SIGMA=np.dot(D,np.conj(PSI_F)) # This is PHI * SIGMA
+
+# Method 2
+#PHI_SIGMA=np.conj(np.fft.fft(D,n_t,1))/(n_t**0.5)
+
+PHI_F=np.zeros((D.shape[0],n_t),dtype=complex) # Initialize the PHI_F MATRIX
+SIGMA_F=np.zeros(n_t) # Initialize the SIGMA_F MATRIX
+
+# Now we proceed with the normalization. This is also intense so we time it
+for r in range(0,n_t): # Loop over the PHI_SIGMA to normalize
+  MEX='Proj '+str(r)+' /'+str(n_t) 
+  print(MEX)
+  SIGMA_F[r]=abs(np.vdot(PHI_SIGMA[:,r],PHI_SIGMA[:,r]))**0.5
+  PHI_F[:,r]=PHI_SIGMA[:,r]/SIGMA_F[r]
+
+Sigma_F_n=SIGMA_F/(n_y*n_t) # Carefull with the normalization
+
+Indices=np.flipud(np.argsort(SIGMA_F)) # find indices for sorting in decreasing order
+Sorted_Sigmas=SIGMA_F[Indices] # Sort all the sigmas
+Sorted_Freqs=Freqs[Indices] # Sort all the frequencies accordingly.
+Phi_F=PHI_F[:,Indices] # Sorted Spatial Structures Matrix
+Psi_F=PSI_F[:,Indices] # Sorted Temporal Structures Matrix
+SIGMA_F=np.diag(Sorted_Sigmas) # Sorted Amplitude Matrix
+
+
+#
+#FOL='DFT_product'; os.mkdir(FOL)
+#SIGMA_F_OUT=np.zeros((len(Freqs),2));
+#SIGMA_F_OUT[:,0]=Freqs; SIGMA_F_OUT[:,1]=Sigma_F_n
+#np.savetxt(FOL+'/SIGMA.csv',Sigma_P)
+#np.savetxt(FOL+'/phi_F_1_u_R.csv',np.real(Phi_P[0:nxny,0].reshape(n_x,n_y)),delimiter=',')
+#np.savetxt(FOL+'/phi_F_1_v_R.csv',np.real(Phi_P[nxny::,0].reshape(n_x,n_y)),delimiter=',')
+#np.savetxt(FOL+'/phi_F_2_u_R.csv',np.real(Phi_P[0:nxny,1].reshape(n_x,n_y)),delimiter=',')
+#np.savetxt(FOL+'/phi_F_2_v_R.csv',np.real(Phi_P[nxny::,1].reshape(n_x,n_y)),delimiter=',')
+#np.savetxt(FOL+'/phi_F_3_u_R.csv',np.real(Phi_P[0:nxny,2].reshape(n_x,n_y)),delimiter=',')
+#np.savetxt(FOL+'/phi_F_3_v_R.csv',np.real(Phi_P[nxny::,2].reshape(n_x,n_y)),delimiter=',')
+#
 
 
 
