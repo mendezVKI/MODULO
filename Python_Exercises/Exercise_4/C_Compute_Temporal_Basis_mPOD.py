@@ -31,6 +31,9 @@ n_y,n_x=Yg.shape; nxny=n_x*n_y
 # but we use fft2 for fast computation. If you want to see the algebraic form of the code,
 # do not hesitate to contact me at mendez@vki.ac.be
 
+data=np.load('Correlation_K.npz')
+K=data['K']
+
 plt.ioff() # To enable interactive plotting
 Fs=1/dt; # Sampling frequency
 Freq=np.fft.fftshift(np.fft.fftfreq(int(n_t)))*Fs # Frequency Axis

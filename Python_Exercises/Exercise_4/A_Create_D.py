@@ -15,16 +15,20 @@ from Others import Plot_Field
 Anim=False # Decide if you want to construct animation of the data or not
 
 # Extract all the Zip Files
-FOLDER='TR_PIV_FOL'
+FOLDER='Ex_4_TR_PIV_Jet'
 
 # First we unzip the file 
+import urllib.request
+print('Downloading Data for Ex 4...')
+url = 'https://osf.io/c28de/download'
+urllib.request.urlretrieve(url, 'Ex_4_TR_PIV.zip')
+print('Download Completed! I prepare data Folder')
+# Unzip the file 
 from zipfile import ZipFile
-for k in range(1,5):
-    print('Extracting Folder '+str(k)+'/4')
-    String='../../DATA_EXERCISES/Ex_4_TR_PIV_'+str(k)+'.zip'
-    zf = ZipFile(String,'r')
-    zf.extractall(FOLDER)
-    zf.close()
+String='Ex_4_TR_PIV.zip'
+zf = ZipFile(String,'r')
+zf.extractall('./')
+zf.close()
 
 
 ## Set Up and Create Data Matrix D

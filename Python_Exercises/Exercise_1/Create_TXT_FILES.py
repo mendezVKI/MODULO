@@ -19,7 +19,7 @@ n_y=data['n_y']
 
 Fol_Out='Exercise_1_txts'
 import os
-Fol_Out = 'TXT_OUTPUTS_EXERCISE_1'
+Fol_Out = 'Ex_1_1D_Analytical'
 if not os.path.exists(Fol_Out):
     os.mkdir(Fol_Out)
 
