@@ -194,11 +194,11 @@ plt.close(fig)
 ####### DFT ########
 ## For comparison putposes we also perform here a DFT.
 print('Compute also the DFT')
-PSI_F=np.fft.fft(np.eye(n_t))/np.sqrt(n_t) # Prepare the Fourier Matrix.
+PSI_F=np.conj(np.fft.fft(np.eye(n_t)))/np.sqrt(n_t) # Prepare the Fourier Matrix.
 print('Projecting Data')
 #D_Complex=D+1j*np.zeros(D.shape)
 #PHI_SIGMA=np.dot(D,np.conj(PSI_F)) # This is PHI * SIGMA
-PHI_SIGMA=np.conj(np.fft.fft(D,n_t,1))/(n_t**0.5)
+PHI_SIGMA=np.fft.fft(D,n_t,1)/(n_t**0.5)
 
 PHI_F=np.zeros((D.shape[0],n_t),dtype=complex) # Initialize the PHI_F MATRIX
 SIGMA_F=np.zeros(n_t) # Initialize the SIGMA_F MATRIX
