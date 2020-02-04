@@ -7,14 +7,12 @@ close all; clc; clear all
 % 1 . Data Preparation
 % If not done yet, unzip the folder provided with the TR_piv data.
 disp('Unzipping Folder TR_PIV')
-unzip('../../DATA_EXERCISES/Ex_4_TR_PIV_1','TR_PIV'); % Merge all the files in one folder
-unzip('../../DATA_EXERCISES/Ex_4_TR_PIV_2','TR_PIV');
-unzip('../../DATA_EXERCISES/Ex_4_TR_PIV_3','TR_PIV');
-unzip('../../DATA_EXERCISES/Ex_4_TR_PIV_4','TR_PIV');
+websave('Ex_4_TR_PIV.zip','https://osf.io/c28de/download');
+unzip('Ex_4_TR_PIV.zip','Data');
 disp('Folder Ready')
 
 
-FOLDER='TR_PIV';
+FOLDER='Data/Ex_4_TR_PIV_Jet';
 n_t=2000; % number of steps.
 Fs=2000; dt=1/Fs; % This data was sampled at 2kHz.
 t=[0:1:n_t-1]*dt; % prepare the time axis
