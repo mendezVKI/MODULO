@@ -19,10 +19,10 @@ def Bound_EXT(S,Ex,boundaries):
     :param S: The Input signal
     :param Nf: The Size of the Kernel (must be an odd number!) 
     :param boundaries: The type of extension:
-            ‘reflect’ (d c b a | a b c d | d c b a)    
-            ‘nearest’ (a a a a | a b c d | d d d d)    
-            ‘wrap’ (a b c d | a b c d | a b c d)
-            ‘extrap’ Extrapolation
+         ‘reflect’ (d c b a | a b c d | d c b a)       The input is extended by reflecting about the edge of the last pixel.
+            ‘nearest’ (a a a a | a b c d | d d d d)    The input is extended by replicating the last pixel.
+            ‘wrap’ (a b c d | a b c d | a b c d)       The input is extended by wrapping around to the opposite edge.
+            ‘extrap’ Extrapolation (not yet available) The input is extended via linear extrapolation.
             
    
     """
@@ -67,7 +67,7 @@ def conv_m(K,h,Ex,boundaries):
             ‘reflect’ (d c b a | a b c d | d c b a)    The input is extended by reflecting about the edge of the last pixel.
             ‘nearest’ (a a a a | a b c d | d d d d)    The input is extended by replicating the last pixel.
             ‘wrap’ (a b c d | a b c d | a b c d)       The input is extended by wrapping around to the opposite edge.
-   
+            ‘extrap’ Extrapolation (not yet available)
     """
     # Filter along the raws
      n_t=np.shape(K)[0]
@@ -152,7 +152,12 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
        Psi_M=Psi_P # In the first scale we take it as is
        Lambda_M=Lambda_P
        
-       h1d_H= firwin(Nf[m],[F_Bank_r[m],F_Bank_r[m+1]],pass_zero=False) # Band-pass
+        # Construct first band pass
+       if M>1:
+        h1d_H= firwin(Nf[m],[F_Bank_r[m],F_Bank_r[m+1]],pass_zero=False) # Band-pass
+       else:
+        h1d_H= firwin(Nf[m],F_Bank_r[m],pass_zero=False) # Band-pass
+  
        print('Filtering H Scale '+str(m+1)+'/'+str(M))
        K_H=conv_m(K,h1d_H,Ex,boundaries)
        Ks[:,:,m+1]=K_H # First band pass
@@ -197,7 +202,8 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
     # Now we complete the basis via re-orghotonalization
     print('QR Polishing...')
     PSI_M,R=np.linalg.qr(Psi_M,mode=MODE)
-    print('Done! Preparing to return')
+    print('Done!')
+    
     return PSI_M,Ks       
     
 
