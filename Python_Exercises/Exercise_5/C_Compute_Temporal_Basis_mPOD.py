@@ -19,11 +19,14 @@ from mPOD_Functions import mPOD_K
 
 # Load all the dataset and the correlation matrix
 data = np.load('Data.npz')
-D=data['D']; t=data['t']; dt=data['dt']; n_t=data['n_t'];
+#D=data['D']; 
+t=data['t']; dt=data['dt']; n_t=data['n_t'];
 Xg=data['Xg']; Yg=data['Yg']
 n_y,n_x=Yg.shape; nxny=n_x*n_y
 # Load the correlation matrix
 
+
+ 
 
 ## Study the frequency content of K
 ## We plot || K_hat || to look for frequencies
@@ -34,51 +37,43 @@ n_y,n_x=Yg.shape; nxny=n_x*n_y
 data=np.load('Correlation_K.npz')
 K=data['K']
 
-plt.ioff() # To enable interactive plotting
+#plt.ioff() # To enable interactive plotting
 Fs=1/dt; # Sampling frequency
 Freq=np.fft.fftshift(np.fft.fftfreq(int(n_t)))*Fs # Frequency Axis
-# Compute the 2D FFT of K
-K_HAT_ABS=np.fliplr(np.abs(np.fft.fftshift(np.fft.fft2(data['K']-np.mean(data['K'])))));
-
-fig, ax = plt.subplots(figsize=(4,4))
-#ax.set_xlim([-0.5,0.5])
-#ax.set_ylim([-0.5,0.5])
-plt.rc('text', usetex=True)      
-plt.rc('font', family='serif')
-plt.rc('xtick',labelsize=12)
-plt.rc('ytick',labelsize=12)
-plt.pcolor(Freq,Freq,K_HAT_ABS/np.size(D)) # We normalize the result
-ax.set_aspect('equal') # Set equal aspect ratio
-ax.set_xlabel('$\hat{f}[Hz]$',fontsize=14)
-ax.set_ylabel('$\hat{f}[Hz]$',fontsize=14)
-ax.set_xticks(np.arange(-600,610,200))
-ax.set_yticks(np.arange(-600,610,200))
-ax.set_xlim(-600,600)
-ax.set_ylim(-600,600)
-plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
-plt.clim(0,0.5) # From here  downward is just for plotting purposes
-plt.tight_layout()
-plt.savefig('Correlation_Spectra.png', dpi=100)  
+## Compute the 2D FFT of K
+#K_HAT_ABS=np.fliplr(np.abs(np.fft.fftshift(np.fft.fft2(data['K']-np.mean(data['K'])))));
+##
+#fig, ax = plt.subplots(figsize=(4,4))
+##ax.set_xlim([-0.5,0.5])
+##ax.set_ylim([-0.5,0.5])
+#plt.rc('text', usetex=True)      
+#plt.rc('font', family='serif')
+#plt.rc('xtick',labelsize=12)
+#plt.rc('ytick',labelsize=12)
+#plt.pcolor(Freq,Freq,K_HAT_ABS/np.size(D)) # We normalize the result
+#ax.set_aspect('equal') # Set equal aspect ratio
+#ax.set_xlabel('$\hat{f}[Hz]$',fontsize=14)
+#ax.set_ylabel('$\hat{f}[Hz]$',fontsize=14)
+#ax.set_xticks(np.arange(0,800,200))
+#ax.set_yticks(np.arange(0,800,200))
+#ax.set_xlim(0,800)
+#ax.set_ylim(0,800)
+#plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
+##plt.clim(0,0.5) # From here  downward is just for plotting purposes
+#plt.tight_layout()
+#plt.savefig('Correlation_Spectra.png', dpi=100)  
 
 
 # This matrix shows that there are two dominant frequencies in the problem.
 # We set a frequency splitting to divide these two portions of the
 # spectra. (See Sec. 3.1-3.2 of the article)
 
-H=4/1000; # Stand off distance nozzle to plate
-U0=6.5; # Mean velocity of the jet at the outlet
 
+F_V=np.array([10,290,320,430,470])
+Nf=np.array([1201,801,801,801,801]); # This vector collects the length of the filter kernels.
+Keep=np.array([1,0,1,1,0])
+Ex=1203
 
-ST_V=np.array([0.1,0.2,0.25,0.4]) # Define scales based on St
-F_V=ST_V*U0/H
-
-Keep=np.array([1,1,1,1]); #These are the band-pass you want to keep (Approximation is always kept).
-Nf=np.array([201,201,201,201]); # This vector collects the length of the filter kernels.
-
-Ex=203 # This must be at least as Nf.
-#These are the number of points that will be padded on the two sides of the signal
-#following the specified BC.
-##
 
 # We can visualize where these are acting
 F_Bank_r = F_V*2/Fs; #(Fs/2 mapped to 1)
@@ -128,7 +123,7 @@ for m in range(0,len(Keep)):
        List_h.append(h1d_H)
        plt.plot(Freq,np.fft.fftshift(np.abs(np.fft.fft(h1d_H,n_t))),linewidth=1.5)
        
-plt.xlim([0,600])    
+plt.xlim([0,800])    
 plt.xlabel('$f[Hz]$',fontsize=18)
 plt.ylabel('Normalized Spectra',fontsize=18)
 

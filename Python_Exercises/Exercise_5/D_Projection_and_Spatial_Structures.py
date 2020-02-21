@@ -55,14 +55,14 @@ for j in range(1,12):
  ax=plt.subplot(2,1,1)
  V_X=Phi_M[0:nxny,j-1]
  V_Y=Phi_M[nxny::,j-1]
- Plot_Field(X_S,Y_S,V_X,V_Y,True,1,1.5)
+ Plot_Field(X_S,Y_S,V_X,V_Y,True,2,1)
  ax.set_aspect('equal') # Set equal aspect ratio
  ax.set_xticks(np.arange(0,40,10))
  ax.set_yticks(np.arange(10,30,5))
  ax.set_xlim([0,35])
  ax.set_ylim([10,29])
  ax.invert_yaxis() # Invert Axis for plotting purpose
- String_y='$\phi_{\mathcal{M}'+str(j)+'}$'
+ String_y='$\phi_{\mathcal{P}'+str(j)+'}$'
  plt.title(String_y,fontsize=18)
 # plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
  
@@ -114,13 +114,13 @@ for i in range(0,R):
   #Normalize the columns of C to get spatial modes
   Phi_P[:,i] = PHI_P_SIGMA_P[:,i]/Sigma_P[i]
   
-for j in range(1,10):
+for j in range(1,14):
  plt.close(fig='all') 
  fig, ax3= plt.subplots(figsize=(5,7))   
  ax=plt.subplot(2,1,1)
  V_X=Phi_P[0:nxny,j-1]
  V_Y=Phi_P[nxny::,j-1]
- Plot_Field(X_S,Y_S,V_X,V_Y,True,1,1.5)
+ Plot_Field(X_S,Y_S,V_X,V_Y,True,2,0.8)
  ax.set_aspect('equal') # Set equal aspect ratio
  ax.set_xticks(np.arange(0,40,10))
  ax.set_yticks(np.arange(10,30,5))

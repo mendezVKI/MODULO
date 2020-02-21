@@ -8,8 +8,7 @@ Created on Mon Dec 30 20:33:42 2019
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-def Plot_Field_TEXT(File):  
+def Plot_Field_TEXT_Cylinder(File,Name_Mesh):  
    """
    This function plots the vector field from the TR-PIV in Exercise 4.
       
@@ -23,45 +22,48 @@ def Plot_Field_TEXT(File):
    Dat=DATA[1:,:] # Here we remove the first raw, containing the header
    nxny=Dat.shape[0] # is the to be doubled at the end we will have n_s=2 * n_x * n_y
    n_s=2*nxny
-   ## 1. Reconstruct Mesh from file
-   X_S=Dat[:,0];
-   Y_S=Dat[:,1];
+   ## 1. Reconstruct Mesh from file Name_Mesh
+   DATA_mesh=np.genfromtxt(Name_Mesh);
+   Dat_mesh=DATA_mesh[1:,:]
+   X_S=Dat_mesh[:,0];
+   Y_S=Dat_mesh[:,1];
    # Reshape also the velocity components
-   V_X=Dat[:,2] # U component
-   V_Y=Dat[:,3] # V component
+   V_X=Dat[:,0] # U component
+   V_Y=Dat[:,1] # V component
    # Put both components as fields in the grid
-   Xg,Yg,Vxg,Vyg,Magn=Plot_Field(X_S,Y_S,V_X,V_Y,False,2,0.6)
+   Xg,Yg,Vxg,Vyg,Magn=Plot_Field_Cylinder(X_S,Y_S,V_X,V_Y,False,2,0.6)
    # Show this particular step
-   fig, ax = plt.subplots(figsize=(8, 5)) # This creates the figure
+   fig, ax = plt.subplots(figsize=(5, 3)) # This creates the figure
    # Or you can plot it as streamlines
-   plt.contourf(Xg,Yg,Magn)
+   CL=plt.contourf(Xg,Yg,Magn,levels=np.arange(0,18,2))
    # One possibility is to use quiver
-   STEPx=2
-   STEPy=2
+   STEPx=1;  STEPy=1
    plt.quiver(Xg[::STEPx,::STEPy],Yg[::STEPx,::STEPy],\
-               Vxg[::STEPx,::STEPy],-Vyg[::STEPx,::STEPy],color='k') # Create a quiver (arrows) plot
-    
-   plt.rc('text', usetex=True)      # This is Miguel's customization
+               Vxg[::STEPx,::STEPy],Vyg[::STEPx,::STEPy],color='k')
+   plt.rc('text', usetex=True)      
    plt.rc('font', family='serif')
-   plt.rc('xtick',labelsize=16)
-   plt.rc('ytick',labelsize=16)
+   plt.rc('xtick',labelsize=12)
+   plt.rc('ytick',labelsize=12)
+   plt.colorbar(CL)
    ax.set_aspect('equal') # Set equal aspect ratio
-   ax.set_xlabel('$x[mm]$',fontsize=16)
-   ax.set_ylabel('$y[mm]$',fontsize=16)
-   ax.set_title('Velocity Field via TR-PIV',fontsize=18)
-   ax.set_xticks(np.arange(0,40,10))
-   ax.set_yticks(np.arange(10,30,5))
-   ax.set_xlim([0,35])
-   ax.set_ylim(10,29)
-   ax.invert_yaxis() # Invert Axis for plotting purpose
+   ax.set_xlabel('$x[mm]$',fontsize=13)
+   ax.set_ylabel('$y[mm]$',fontsize=13)
+   ax.set_title('Tutorial 2: Cylinder Wake',fontsize=16)
+   ax.set_xticks(np.arange(0,70,10))
+   ax.set_yticks(np.arange(-10,11,10))
+   ax.set_xlim([0,50])
+   ax.set_ylim(-10,10)
+   circle = plt.Circle((0,0),2.5,fill=True,color='r',edgecolor='k',alpha=0.5)
+   plt.gcf().gca().add_artist(circle)
+   plt.tight_layout()
    plt.show()
    Name[len(Name)-12:len(Name)]+' Plotted'
-   return n_s, Xg, Yg, Vxg, -Vyg, X_S, Y_S
+   return n_s, Xg, Yg, Vxg, Vyg, X_S, Y_S
 
 
-def Plot_Field(X_S,Y_S,V_X,V_Y,PLOT,Step,Scale):
- # Number of n_X/n_Y from forward differences
-   GRAD_X=np.diff(X_S) 
+def Plot_Field_Cylinder(X_S,Y_S,V_X,V_Y,PLOT,Step,Scale):
+  # Number of n_X/n_Y from forward differences
+   GRAD_X=np.diff(Y_S) 
    #GRAD_Y=np.diff(Y_S);
    # Depending on the reshaping performed, one of the two will start with
    # non-zero gradient. The other will have zero gradient only on the change.
@@ -76,11 +78,11 @@ def Plot_Field(X_S,Y_S,V_X,V_Y,PLOT,Step,Scale):
    Vxg=np.transpose(V_X.reshape((n_x,n_y)))
    Vyg=np.transpose(V_Y.reshape((n_x,n_y)))
    Magn=np.transpose(Mod.reshape((n_x,n_y)))
+  
    if PLOT:
    # Show this particular step
 #    fig, ax = plt.subplots(figsize=(8, 5)) # This creates the figure
-    # Or you can plot it as streamlines
-    #plt.contour(Xg,Yg,Magn)
+    plt.contourf(Xg,Yg,Magn)
     # One possibility is to use quiver
     STEPx=Step
     STEPy=Step
@@ -103,7 +105,7 @@ def Plot_Field(X_S,Y_S,V_X,V_Y,PLOT,Step,Scale):
 #    plt.show()
        
    return Xg,Yg,Vxg,Vyg,Magn  
-
+   
 
 
 # Define the function to produce a gif file
