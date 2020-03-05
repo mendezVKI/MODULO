@@ -92,8 +92,10 @@ set(gcf,'color','w')
 print(HFIG,'Frequency_Splitting.png','-dpng')
 
 % Compute the mPOD Temporal Basis
-PSI_M = mPOD(K,dt,Nf,F_V,Keep,'symmetric');
+PSI_M = mPOD_FAST(K,dt,Nf,F_V,Keep,'symmetric');
 
+% Check that this is equivalent to this
+%PSI_M2 = mPOD(K,dt,Nf,F_V,Keep,'symmetric');
 
 save('Psis_mPOD.mat','PSI_M')
    
