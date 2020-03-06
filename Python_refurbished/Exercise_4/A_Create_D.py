@@ -24,10 +24,9 @@ def performA():
 
  # Extract all the Zip Files
 
- # FOLDER='short'
  FOLDER='Ex_4_TR_PIV_Jet'
- # url = 'https://osf.io/c28de/download'
- # download_data(url=url,destination=FOLDER)
+ url = 'https://osf.io/c28de/download'
+ download_data(url=url,destination=FOLDER)
 
  ## Set Up and Create Data Matrix D
  # 1 . Data Preparation
@@ -49,8 +48,6 @@ def performA():
 
  # Save as numpy array all the data
  np.savez('Data.npz',D=D,t=t,dt=dt,n_t=n_t, Xg=Xg,Yg=Yg,X_S=X_S,Y_S=Y_S)
-
- write_matrix_to_textfile(D, 'output.txt')
 
  # For a stationary test case like this, you might want to remove the mean
  D_MEAN=np.mean(D,1) # Temporal average (along the columns)
