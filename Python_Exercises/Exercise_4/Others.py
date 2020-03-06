@@ -54,7 +54,7 @@ def Plot_Field_TEXT(File):
    ax.set_xlim([0,35])
    ax.set_ylim(10,29)
    ax.invert_yaxis() # Invert Axis for plotting purpose
-   plt.show()
+   #plt.show()
    Name[len(Name)-12:len(Name)]+' Plotted'
    return n_s, Xg, Yg, Vxg, -Vyg, X_S, Y_S
 
@@ -162,7 +162,7 @@ def Animation(npz_F,Giff_NAME):
      ax.set_ylim(10,29)
      plt.clim(0,6)
      ax.invert_yaxis() # Invert Axis for plotting purpose
-     plt.show()
+     #plt.show()
    
      NameOUT=Fol_Out + os.sep + 'Im%03d' % (k) + '.png'
      plt.savefig(NameOUT, dpi=100)      
