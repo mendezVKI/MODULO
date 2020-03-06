@@ -22,11 +22,11 @@ class MyProgressBar():
 def download_data(url, destination, force = False):
     # check if it has been downloaded before
     isdir = os.path.isdir(destination)
-    if not isdir | force: # if it does not exist or you force it, download it
+    if (not isdir) | force: # if it does not exist or you force it, download it
         zip_file = destination+'.zip'
-        print('Downloading Data for'+'destination')
+        print('Downloading Data for '+destination)
         urllib.request.urlretrieve(url, zip_file,MyProgressBar())
-        print('Download Completed! I prepare data Folder')
+        print('Download Completed! Preparing data Folder')
         # Unzip the file
         zf = ZipFile(zip_file,'r'); zf.extractall('./'); zf.close()
     else:
