@@ -31,7 +31,7 @@ def performA():
  ## Set Up and Create Data Matrix D
  # 1 . Data Preparation
  # For info, these data were collected with the following parameters
- n_t=20 # number of steps.
+ n_t=2000 # number of steps.
  Fs=2000 # Sampling frequency
  dt=1/Fs # This data was sampled at 2kHz.
  t=np.linspace(0,dt*(n_t-1),n_t) # prepare the time axis#
@@ -43,8 +43,7 @@ def performA():
  ####################### 1. CONSTRUCT THE DATA MATRIX D #################
 
  # D = load_from_columns(D, 'Res*',folder=FOLDER, skip_lines=1, columns_in_order=[2,3])
- data_read = load_from_columns_parallel('Res*',FOLDER, (2,3), skip_lines=1, timesteps = n_t)
- D = np.array(data_read).transpose()
+ D = load_from_columns_parallel('Res*',FOLDER, (2,3), skip_lines=1, timesteps = n_t, verbose=False)
 
  # Save as numpy array all the data
  np.savez('Data.npz',D=D,t=t,dt=dt,n_t=n_t, Xg=Xg,Yg=Yg,X_S=X_S,Y_S=Y_S)

@@ -13,6 +13,7 @@ from Others import Plot_Field_Cylinder
 from Others import Plot_Field_TEXT_Cylinder
 from src.download_data import download_data
 from src.load_data_methods import load_from_columns
+from src.load_data_methods import load_from_columns_parallel
 
 Anim=False # Decide if you want to construct animation of the data or not
 
@@ -32,8 +33,8 @@ url = 'https://osf.io/qa8d4/download'
 download_data(url=url, destination=folder, force = False)
 
 # Construct Time discretization
-n_t=13200; Fs=3000; dt=1/Fs 
-n_t=10000; Fs=3000; dt=1/Fs
+n_t=13200; Fs=3000; dt=1/Fs
+n_t=2000; Fs=3000; dt=1/Fs
 t=np.linspace(0,dt*(n_t-1),n_t) # prepare the time axis# 
 
 
@@ -51,13 +52,13 @@ nxny=int(n_s/2)
 # Initialize the data matrix D
 D=np.zeros([n_s,n_t])
 #####################################################################
-PROBE=np.zeros(n_t)
 
+# D = load_from_columns(D, 'Res*',folder=folder, skip_lines=1, columns_in_order=[0,1], timesteps=n_t)
+D = load_from_columns_parallel('Res*',folder=folder, skip_lines=1, columns_in_order=[0,1], timesteps=n_t)
 
-D = load_from_columns(D, 'Res*',folder=folder, skip_lines=1, columns_in_order=[0,1])
-
-# PROBE[k]=np.sqrt(V_X[4]**2+V_Y[4]**2)
-  
+V_X = D[4,:]
+V_Y = D[int(n_s/2+4),:]
+PROBE=np.sqrt(V_X**2+V_Y**2)
 
 # Plot velocity in the top corner
 fig, ax = plt.subplots(figsize=(6, 3)) # This creates the figure
@@ -65,7 +66,7 @@ plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 plt.rc('xtick',labelsize=13)
 plt.rc('ytick',labelsize=13)
-# plt.plot(t,PROBE,'k',)
+plt.plot(t,PROBE,'k',)
 plt.xlabel('$t[s]$',fontsize=16)
 plt.ylabel('$U_{\infty}[m/s]$',fontsize=16)
 ax.spines['top'].set_visible(False)

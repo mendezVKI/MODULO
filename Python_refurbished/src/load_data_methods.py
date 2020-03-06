@@ -28,7 +28,9 @@ def timing(f):
     return wrapper
 
 
-def load_from_columns_single_file(file, folder, columns_in_order, skip_lines):
+def load_from_columns_single_file(file, folder, columns_in_order, skip_lines, verbose=False):
+  if verbose:
+    print(file)
   DATA = np.genfromtxt(folder + os.sep + file, skip_header=skip_lines)  # Here we have the four colums
   columns_in_order = list(columns_in_order)
   D3 = DATA[:, columns_in_order] # grab the selected columns
@@ -36,7 +38,7 @@ def load_from_columns_single_file(file, folder, columns_in_order, skip_lines):
   return D3
 
 
-def load_from_columns_parallel(pattern_file,folder, columns_in_order, skip_lines, timesteps = None):
+def load_from_columns_parallel(pattern_file,folder, columns_in_order, skip_lines, timesteps = None, verbose=False):
   files_to_load = [os.path.basename(f) for f in sorted(glob.glob(folder + os.sep + '*'+pattern_file+'*'))]
   if timesteps is not None:
     files_to_load = files_to_load[:timesteps] # select only the first n_t files
@@ -45,11 +47,11 @@ def load_from_columns_parallel(pattern_file,folder, columns_in_order, skip_lines
 
   print('Loading files in parallel using: ' + str(cpu_count) +' processes')
 
-  job_args = [(filename, folder, columns_in_order, skip_lines) for filename in files_to_load]
+  job_args = [(filename, folder, columns_in_order, skip_lines, verbose) for filename in files_to_load]
   with Pool(processes=cpu_count) as pool:
      result = pool.map(auxiliary_function_parallel, job_args)
 
-
+  result = np.array(result).transpose()
   return result
 
 def auxiliary_function_parallel(args):
@@ -57,16 +59,19 @@ def auxiliary_function_parallel(args):
   return load_from_columns_single_file(*args)
 
 
-def load_from_columns(D_init, pattern_file,folder, skip_lines, columns_in_order):
+def load_from_columns(D_init, pattern_file,folder, skip_lines, columns_in_order,timesteps = None, verbose=False):
 
   files_to_load = [os.path.basename(f) for f in sorted(glob.glob(folder + os.sep + '*'+pattern_file+'*'))]
-
+  if timesteps is not None:
+    files_to_load = files_to_load[:timesteps] # select only the first n_t files
   # print(files_to_load)
   for k, file in enumerate(tqdm(files_to_load)):
     # Read data from a file
-    DATA = np.genfromtxt(folder + os.sep + file, skip_header=skip_lines) # Here we have the four colums
-    D1 = DATA[:,columns_in_order]
-    D_init[:, k] = np.concatenate(D1, axis=0)  # Reshape and assign
+    # DATA = np.genfromtxt(folder + os.sep + file, skip_header=skip_lines) # Here we have the four colums
+    D1 = load_from_columns_single_file(file, folder, columns_in_order, skip_lines)
+    print(file)
+    # D_init[:, k] = np.concatenate(D1, axis=0)  # Reshape and assign
+    D_init[:, k] = D1  # Reshape and assign
 
   return D_init
 
