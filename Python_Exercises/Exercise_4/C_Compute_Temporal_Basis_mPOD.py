@@ -14,8 +14,9 @@ Created on Tue Dec 31 01:11:36 2019
 
 import numpy as np
 import matplotlib.pyplot as plt
+from mPOD_Functions import mPOD_K_FAST
 from mPOD_Functions import mPOD_K
-
+from mPOD_Functions import mPOD_K_SAVE_M
 
 # Load all the dataset and the correlation matrix
 data = np.load('Data.npz')
@@ -138,34 +139,65 @@ plt.savefig('Frequency_Splitting.png', dpi=200)
 
 
 # Compute the mPOD Temporal Basis
-PSI_M,Ks = mPOD_K(K,dt,Nf,Ex,F_V,Keep,'nearest','reduced');
+#PSI_M,K_tilde = mPOD_K_FAST(K,dt,Nf,Ex,F_V,Keep,'nearest','reduced');
+#PSI_M,Ks = mPOD_K(K,dt,Nf,Ex,F_V,Keep,'nearest','reduced');
+PSI_M = mPOD_K_SAVE_M(K,dt,Nf,Ex,F_V,Keep,'nearest','reduced');
 
-# Save the correlation matrices of each scale:
-for i in range(0,Ks.shape[2]):
- K=Ks[:,:,i]
- K_HAT_ABS=np.fliplr(np.abs(np.fft.fftshift(np.fft.fft2(K-np.mean(K)))));
 
- fig, ax = plt.subplots(figsize=(4,4))
- #ax.set_xlim([-0.5,0.5])
- #ax.set_ylim([-0.5,0.5])
- plt.rc('text', usetex=True)      
- plt.rc('font', family='serif')
- plt.rc('xtick',labelsize=12)
- plt.rc('ytick',labelsize=12)
- plt.pcolor(Freq,Freq,K_HAT_ABS/np.size(D)) # We normalize the result
- ax.set_aspect('equal') # Set equal aspect ratio
- ax.set_xlabel('${f}[Hz]$',fontsize=14)
- ax.set_ylabel('${f}[Hz]$',fontsize=14)
- ax.set_xticks(np.arange(-600,610,200))
- ax.set_yticks(np.arange(-600,610,200))
- ax.set_xlim(-600,600)
- ax.set_ylim(-600,600)
- plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
- plt.clim(0,0.5) # From here  downward is just for plotting purposes
- plt.tight_layout()
- Name='CS_Scale_'+str(i+1)
- print('Saving Fig '+Name)
- plt.savefig(Name, dpi=200) 
+#CHECK=np.dot(np.transpose(PSI_M2),PSI_M2)
+#fig, ax = plt.subplots(figsize=(4,4))
+#plt.imshow(CHECK)
+#KK=K_tilde
+#K_HAT_ABS=np.fliplr(np.abs(np.fft.fftshift(np.fft.fft2(KK-np.mean(KK)))));
+#plt.matshow(K_HAT_ABS/np.size(D))
+#plt.clim(0,0.5)
+#plt.show()
+#
+#KK=Ks[:,:,0]
+#K_HAT_ABS2=np.fliplr(np.abs(np.fft.fftshift(np.fft.fft2(KK-np.mean(KK)))));
+#plt.matshow(K_HAT_ABS/np.size(D))
+#
+#
+#plt.plot(K_HAT_ABS2[:,1000])
+#plt.plot(K_HAT_ABS[:,1000])
+#plt.show()
+
+
+#plt.figure(1)
+#plt.matshow(K_HAT_ABS/np.size(D))
+#plt.clim(0,0.5)
+#plt.show()
+#plt.figure(2)
+#plt.plot(K_HAT_ABS[:,1000]/np.size(D))
+#plt.show()
+
+
+## Save the correlation matrices of each scale:
+#for i in range(0,Ks.shape[2]):
+# K=Ks[:,:,i]
+# K_HAT_ABS=np.fliplr(np.abs(np.fft.fftshift(np.fft.fft2(K-np.mean(K)))));
+#
+# fig, ax = plt.subplots(figsize=(4,4))
+# #ax.set_xlim([-0.5,0.5])
+# #ax.set_ylim([-0.5,0.5])
+# plt.rc('text', usetex=True)      
+# plt.rc('font', family='serif')
+# plt.rc('xtick',labelsize=12)
+# plt.rc('ytick',labelsize=12)
+# plt.matshow(Freq,Freq,K_HAT_ABS/np.size(D)) # We normalize the result
+# ax.set_aspect('equal') # Set equal aspect ratio
+# ax.set_xlabel('${f}[Hz]$',fontsize=14)
+# ax.set_ylabel('${f}[Hz]$',fontsize=14)
+# ax.set_xticks(np.arange(-600,610,200))
+# ax.set_yticks(np.arange(-600,610,200))
+# ax.set_xlim(-600,600)
+# ax.set_ylim(-600,600)
+# plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
+# plt.clim(0,0.5) # From here  downward is just for plotting purposes
+# plt.tight_layout()
+# Name='CS_Scale_'+str(i+1)
+# print('Saving Fig '+Name)
+# plt.savefig(Name, dpi=200) 
 
 # Save as numpy array all the data
 np.savez('Psis_mPOD',PSI_M=PSI_M)

@@ -11,7 +11,6 @@ Created on Wed Jan  1 14:01:17 2020
 # Given the temporal Basis for the POD and the mPOD we compute their
 # spatial structures
 
-
 import numpy as np
 import matplotlib.pyplot as plt
 from Others import Plot_Field
@@ -96,7 +95,9 @@ for j in range(1,12):
 #np.savetxt(FOL+'/psi_M_3.csv',Psi_M[:,3])
 
 
-# Compute the spatial basis for the POD
+#%%  Compute the spatial basis for the POD
+
+
 
 # Load POD basis
 data=np.load('Psis_POD.npz')

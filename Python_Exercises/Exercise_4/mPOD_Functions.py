@@ -95,7 +95,7 @@ def conv_m(K,h,Ex,boundaries):
      return K_F2
 
 
-# Define the function to produce a gif file
+# This is the mPOD from the article
 def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
     """
     This function computes the Psi_M for the mPOD
@@ -206,7 +206,198 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
     
     return PSI_M,Ks       
     
+# This is the mPOD with minimal Memory
+def mPOD_K_SAVE_M(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
+    """
+    This function computes the Psi_M for the mPOD
+    taking as input:
+      
+    :param K: The Temporal Correlation Matrix
+    :param dt: The Time step 
+    :param Nf: Nf the vector with order (must be odd!) of the kernels
+    :param Ex: This is about the BC extension (must be odd!) of the signal before the convolution
+    :param F_V: Frequency splitting vector
+    :boundaries: this is a string defining the treatment for the BC
+                 Options are (from scipy.ndimage.convolve):                  
+            ‘reflect’ (d c b a | a b c d | d c b a)    The input is extended by reflecting about the edge of the last pixel.
+            ‘nearest’ (a a a a | a b c d | d d d d)    The input is extended by replicating the last pixel.
+            ‘wrap’ (a b c d | a b c d | a b c d)       The input is extended by wrapping around to the opposite edge.
+    :MODE: this is about the final QR. Options
+            ‘reduced’ In this case the final basis will not necessarely be full
+            ‘complete’ In this case the final basis will always be full
+            
+    :return: PSI_M: the mPOD temporal structures
+    
+    """
+    if Ex<np.max(Nf):
+     raise ValueError("Ex must be larger or equal to Nf") 
+     return -1
+    
+   # Convert F_V in radiants
+    Fs=1/dt
+    F_Bank_r = F_V*2/Fs #(Fs/2 mapped to 1)
+    M=len(F_Bank_r) # Number of scales
+    
+    # Loop over the scales to show the transfer functions
+    Psi_M=np.array([])
+    Lambda_M=np.array([])
+                 
+ # Now you could filter and then compute the eigenvectors   
+    for m in range(0,M):
+       # Generate the 1d filter for this 
+      if m<1:
+       #Low Pass Filter
+       h_A=firwin(Nf[m], F_Bank_r[m], window='hamming')
+       #h_A2d=np.outer(h_A,h_A) # Create 2D Kernel
+       # First Band Pass Filter
+       # Create 1D Kernel
+       # Filter K_LP
+       print('Filtering Largest Scale')
+       K_L=conv_m(K,h_A,Ex,boundaries)
+       print('Diagonalizing Largest Scale')
+       R_K=np.linalg.matrix_rank(K_L, tol=None, hermitian=True)
+       Psi_P, Lambda_P, _ = svds(K_L,R_K)
+       Psi_M=Psi_P # In the first scale we take it as is
+       Lambda_M=Lambda_P
+       
+        # Construct first band pass
+       if M>1:
+        h1d_H= firwin(Nf[m],[F_Bank_r[m],F_Bank_r[m+1]],pass_zero=False) # Band-pass
+       else:
+        h1d_H= firwin(Nf[m],F_Bank_r[m],pass_zero=False) # Band-pass
+  
+       print('Filtering H Scale '+str(m+1)+'/'+str(M))
+       K_H=conv_m(K,h1d_H,Ex,boundaries)
+       print('Diagonalizing H Scale '+str(m+1)+'/'+str(M))
+       R_K=np.linalg.matrix_rank(K_H, tol=None, hermitian=True)
+       Psi_P, Lambda_P, _ = svds(K_H,R_K) # Diagonalize scale
+       Psi_M=np.concatenate((Psi_M, Psi_P), axis=1) # append to the previous
+       Lambda_M=np.concatenate((Lambda_M, Lambda_P), axis=0)
+        #method = signal.choose_conv_method(K, h2d, mode='same')
+      elif m>0 and m<M-1:         
+       if Keep[m]==1:
+       # print(m)
+       # This is the 1d Kernel for Band pass
+        h1d_H= firwin(Nf[m],[F_Bank_r[m],F_Bank_r[m+1]],pass_zero=False) # Band-pass
+        print('Filtering H Scale '+str(m+1)+'/'+str(M))
+        K_H=conv_m(K,h1d_H,Ex,boundaries)
+        print('Diagonalizing H Scale '+str(m+1)+'/'+str(M))
+        R_K=np.linalg.matrix_rank(K_H, tol=None, hermitian=True)
+        Psi_P, Lambda_P, _ = svds(K_H,R_K) # Diagonalize scale
+        Psi_M=np.concatenate((Psi_M, Psi_P), axis=1) # append to the previous
+        Lambda_M=np.concatenate((Lambda_M, Lambda_P), axis=0)
+       else: 
+        print('Scale Jumped') 
+      else:
+       if Keep[m]==1:
+     # This is the 1d Kernel for High Pass (last scale)
+        h1d_H = firwin(Nf[m],F_Bank_r[m],pass_zero=False)
+        print('Filtering H Scale '+str(m+1)+'/ '+str(M))
+        K_H=conv_m(K,h1d_H,Ex,boundaries)
+        print('Diagonalizing H Scale '+str(m+1)+'/ '+str(M))
+        R_K=np.linalg.matrix_rank(K_H, tol=None, hermitian=True)
+        Psi_P, Lambda_P, _ = svds(K_H,R_K) # Diagonalize scale
+        Psi_M=np.concatenate((Psi_M, Psi_P), axis=1) # append to the previous
+        Lambda_M=np.concatenate((Lambda_M, Lambda_P), axis=0)
+       else:
+        print('Scale Jumped')
+    # Now Order the Scales
+    Indices=np.flip(np.argsort(Lambda_M)) # find indices for sorting in decreasing order
+    Psi_M=Psi_M[:,Indices] # Sort the temporal structures
+    # Now we complete the basis via re-orghotonalization
+    print('QR Polishing...')
+    PSI_M,R=np.linalg.qr(Psi_M,mode=MODE)
+    print('Done!')
+    
+    return PSI_M    
 
-
-
+def mPOD_K_FAST(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
+    """
+    This function computes the Psi_M for the mPOD
+    taking as input:
+      
+    :param K: The Temporal Correlation Matrix
+    :param dt: The Time step 
+    :param Nf: Nf the vector with order (must be odd!) of the kernels
+    :param Ex: This is about the BC extension (must be odd!) of the signal before the convolution
+    :param F_V: Frequency splitting vector
+    :boundaries: this is a string defining the treatment for the BC
+                 Options are (from scipy.ndimage.convolve):                  
+            ‘reflect’ (d c b a | a b c d | d c b a)    The input is extended by reflecting about the edge of the last pixel.
+            ‘nearest’ (a a a a | a b c d | d d d d)    The input is extended by replicating the last pixel.
+            ‘wrap’ (a b c d | a b c d | a b c d)       The input is extended by wrapping around to the opposite edge.
+    :MODE: this is about the final QR. Options
+            ‘reduced’ In this case the final basis will not necessarely be full
+            ‘complete’ In this case the final basis will always be full
+            
+    :return: PSI_M: the mPOD temporal structures
+    
+    """
+    if Ex<np.max(Nf):
+     raise ValueError("Ex must be larger or equal to Nf") 
+     return -1
+    
+   # Convert F_V in radiants
+    Fs=1/dt
+    F_Bank_r = F_V*2/Fs #(Fs/2 mapped to 1)
+    M=len(F_Bank_r) # Number of scales
+    
+    # Loop over the scales to show the transfer functions
+    Psi_M=np.array([])
+    Lambda_M=np.array([])
+    n_t=K.shape[1]
+    K_tilde=np.zeros((n_t,n_t)) # Filtered K
+          
+ # Now you could filter and then compute the eigenvectors   
+    for m in range(0,M):
+       # Generate the 1d filter for this 
+      if m<1:
+       #Low Pass Filter
+       h_A=firwin(Nf[m], F_Bank_r[m], window='hamming')
+       #h_A2d=np.outer(h_A,h_A) # Create 2D Kernel
+       # First Band Pass Filter
+       # Create 1D Kernel
+       # Filter K_LP
+       print('Filtering Largest Scale')
+       K_L=conv_m(K,h_A,Ex,boundaries)
+       K_tilde=K_L # Start Mounting K_tilde ##################
+       # Construct first band pass
+       if M>1:
+        h1d_H= firwin(Nf[m],[F_Bank_r[m],F_Bank_r[m+1]],pass_zero=False) # Band-pass
+       else:
+        h1d_H= firwin(Nf[m],F_Bank_r[m],pass_zero=False) # Band-pass
+  
+       print('Filtering H Scale '+str(m+1)+'/'+str(M))
+       K_H=conv_m(K,h1d_H,Ex,boundaries)
+       K_tilde=K_tilde+K_H # Start Mounting K_tilde ##################
+       #method = signal.choose_conv_method(K, h2d, mode='same')
+      elif m>0 and m<M-1:         
+       if Keep[m]==1:
+       # print(m)
+       # This is the 1d Kernel for Band pass
+        h1d_H= firwin(Nf[m],[F_Bank_r[m],F_Bank_r[m+1]],pass_zero=False) # Band-pass
+        print('Filtering H Scale '+str(m+1)+'/'+str(M))
+        K_H=conv_m(K,h1d_H,Ex,boundaries)
+        K_tilde=K_tilde+K_H # Start Mounting K_tilde ##################         
+       else: 
+        print('Scale Jumped') 
+      else:
+       if Keep[m]==1:
+     # This is the 1d Kernel for High Pass (last scale)
+        h1d_H = firwin(Nf[m],F_Bank_r[m],pass_zero=False)
+        print('Filtering H Scale '+str(m+1)+'/ '+str(M))
+        K_H=conv_m(K,h1d_H,Ex,boundaries)
+        K_tilde=K_tilde+K_H # Start Mounting K_tilde ##################
+       else:
+        print('Scale Jumped')
+        
+    # Compute the mPOD Basis
+    print('Diagonalizing...')
+    Lambda_M,Psi_M = np.linalg.eigh(K_tilde)
+    # Now we complete the basis via re-orghotonalization
+    #print('QR Polishing...')
+    #PSI_M,R=np.linalg.qr(Psi_M,mode=MODE)
+    print('Done!')
+    
+    return Psi_M,K_tilde    
 
