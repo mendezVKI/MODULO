@@ -109,7 +109,7 @@ disp('Mounting the global basis...')
 PSI_M = [Psi_L(:,1:end)];
 Sigma_v_M = [diag(Sigma_L(1:1:end,1:1:end))];
 
-for ll=2:1:length(Sigma_H)+1
+for ll=2:1:length(Ind)+1
     
     PSI_M = [PSI_M, Psi_H{ll-1}(:,1:end)];
     Sigma_v_M = [Sigma_v_M;diag(Sigma_H{ll-1}(1:1:end,1:1:end))];
