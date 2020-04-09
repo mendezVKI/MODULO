@@ -7,7 +7,8 @@ close all; clc; clear all
 % 1 . Data Preparation
 % If not done yet, unzip the folder provided with the TR_piv data.
 disp('Unzipping Folder Data')
-unzip('CFD_Vortices_com','Data');
+websave('CFD_Vortices.zip','https://osf.io/zgujk/download');
+unzip('CFD_Vortices.zip','Data');
 disp('Folder Ready')
 
 % IMPORTANT: To keep the size of the GitHub folder within a reasonable

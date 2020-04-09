@@ -1,4 +1,11 @@
 
+In this folder, we propose the usual exercises and codes using Python.
+
+
+I have started learning Python for a few months, so the codes are definitely 'suboptimal.'
+
+Suggestions are welcome; for the moment, I favor readability over compactness.
+
 Work in Progress!
 
 
