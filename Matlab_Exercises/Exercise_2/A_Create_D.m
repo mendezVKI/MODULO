@@ -157,7 +157,7 @@ for j=1:3
     
     subplot(3,2,2*j-1)
     % Reconstruct the Spatial structure
-    pcolor(Xg,Yg,eval(['S',num2str(j)]));
+    pcolor(Xg',Yg',eval(['S',num2str(j)]));
     shading interp
     daspect([1 1 1])
     ylim([-19 19])  
@@ -215,7 +215,7 @@ for k=1:5:NA
     
     disp(['Animating ',num2str(k),' of ',num2str(NA)])
 
-    pcolor(Xg,Yg,reshape(D(:,k),[n_x,n_y]));
+    pcolor(Xg',Yg',reshape(D(:,k),[n_y,n_x]));
     shading interp
     daspect([1 1 1])
     ylim([-19 19])  
