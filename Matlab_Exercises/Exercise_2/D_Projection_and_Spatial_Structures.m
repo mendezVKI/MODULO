@@ -57,8 +57,8 @@ for j=1:3
     
     subplot(3,2,2*j-1)
     % Reconstruct the Spatial structure
-    S=reshape(Phi_M(:,j),[n_x,n_y]);
-    pcolor(Xg,Yg,S);
+    S=reshape(Phi_M(:,j),[n_y,n_x]);
+    pcolor(Xg',Yg',S);
     shading interp
     daspect([1 1 1])
     ylim([-19 19])  
@@ -117,8 +117,8 @@ for j=1:3
     
     subplot(3,2,2*j-1)
     % Reconstruct the Spatial structure
-    S=reshape(Phi_P(:,j),[n_x,n_y]);
-    pcolor(Xg,Yg,S);
+    S=reshape(Phi_P(:,j),[n_y,n_x]);
+    pcolor(Xg',Yg',S);
     shading interp
     daspect([1 1 1])
     ylim([-19 19])  
