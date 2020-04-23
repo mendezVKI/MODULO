@@ -13,7 +13,7 @@ More info on the test case is presented in
  
 
 
-the paper preprint is available at 
+The preprint is available at 
 
 https://arxiv.org/abs/2001.01971
 
