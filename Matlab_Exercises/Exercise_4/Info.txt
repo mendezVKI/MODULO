@@ -20,7 +20,7 @@ the paper preprint is available at
 https://arxiv.org/abs/1804.09646
 
 
-About the data from the from the Tr-PIV analysis: the sampling frequency is 2kHz.
+About the data from the Tr-PIV analysis: the sampling frequency is 2kHz.
 Each file contains the X and Y coordinates (in mm) in the first two coulmns; the U and V components in m/s in the third and fourth.
 
 
