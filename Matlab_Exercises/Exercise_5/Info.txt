@@ -2,16 +2,12 @@
 
 
 This exercise presents an example of the use of mPOD and POD with memory saving option on a 2D vector dataset.
-This dataset is the TR-PIV of a flow past a cylinder.
+This dataset is the TR-PIV of the flow past a cylinder in transient conditions.
 More info on the test case is presented in 
 
+	Miguel A Mendez, David Hess, Bo B Watz, Jean-Marie Buchlin, 
 	Multiscale Proper Orthogonal Decomposition (mPOD) of TR-PIV data-- 
 	a Case Study on Stationary and Transient Cylinder Wake Flows
-    
-
-    Miguel A Mendez, David Hess, Bo B Watz, Jean-Marie Buchlin
- 
-
 
 The preprint is available at 
 
