@@ -12,7 +12,7 @@ The theoretical foundation of the decomposition is described in
 
 The pre-prints of these articles are available from my RG page: https://www.researchgate.net/profile/Miguel_Mendez5
 
-Currently, this folder contains four exercises. Of these two are done both in Matlab and in Python, while the remaining ones are only available in Matlab. The exercises include 1D and 2D cases with both scalar and vectorial quantities.
+Currently, this folder contains ffive exercises. Of these, two are done both in Matlab and in Python, while the remaining ones are only available in Matlab. The exercises include 1D and 2D cases with both scalar and vectorial quantities.
 An example of processing on video sequences is currently in preparation.
 
 All the codes so far assume that the dataset is equally spaced both in space (i.e. along a Cartesian grid) and in time.
