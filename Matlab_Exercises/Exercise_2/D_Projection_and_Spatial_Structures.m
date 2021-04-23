@@ -47,7 +47,7 @@ Sigma_M = diag(Sigma_VV); % Amplitude for mPOD Basis
 
 
 
-% Show some exemplary modes for mPOD. We take from 2 to 7.
+% Show some exemplary modes for mPOD. We take from 1 to 3.
 HFIG=figure(1);
 HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.65 0.75];
@@ -57,8 +57,8 @@ for j=1:3
     
     subplot(3,2,2*j-1)
     % Reconstruct the Spatial structure
-    S=reshape(Phi_M(:,j),[n_x,n_y]);
-    pcolor(Xg,Yg,S);
+    S=reshape(Phi_M(:,j),[n_y,n_x]);
+    pcolor(Xg',Yg',S);
     shading interp
     daspect([1 1 1])
     ylim([-19 19])  
@@ -108,7 +108,7 @@ for i=1:1:R
 end
 
 
-% Show some exemplary modes for POD. We take from 2 to 7.
+% Show some exemplary modes for POD. We take from 1 to 3.
 HFIG=figure(3);
 HFIG.Units='normalized';
 HFIG.Position=[0.1 0.1 0.65 0.75];
@@ -117,8 +117,8 @@ for j=1:3
     
     subplot(3,2,2*j-1)
     % Reconstruct the Spatial structure
-    S=reshape(Phi_P(:,j),[n_x,n_y]);
-    pcolor(Xg,Yg,S);
+    S=reshape(Phi_P(:,j),[n_y,n_x]);
+    pcolor(Xg',Yg',S);
     shading interp
     daspect([1 1 1])
     ylim([-19 19])  

@@ -36,20 +36,25 @@ for m=1:1:M
     
     disp(['Preparing Kernel ',num2str(m),' of ',num2str(M)]);
     
-    if m==1
-       h1d_L = fir1(Nf(m),F_Bank_r(m),'low')'; % 1d Kernel for Low Pass
-       h_A = h1d_L*h1d_L'; % 2d Kernel for Low Pass (Approximation)
-       h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
-       h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for Low Pass (Diagonal Detail)
-    elseif  m>1 && m<M 
-       % This is the 1d Kernel for Band pass
-       h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
-       h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for Low Pass (Diagonal Detail)
+    if (m==1 && M>1)
+        h1d_L = fir1(Nf(m),F_Bank_r(m),'low')'; % 1d Kernel for Low Pass
+        h_A = h1d_L*h1d_L'; % 2d Kernel for Low Pass (Approximation)
+        h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
+        h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for Low Pass (Diagonal Detail)
+    elseif (m==1 && M==1)
+        h1d_L = fir1(Nf(m),F_Bank_r(m),'low')'; % 1d Kernel for Low Pass
+        h_A = h1d_L*h1d_L'; % 2d Kernel for Low Pass (Approximation)
+        h1d_H{m} = fir1(Nf(m),[F_Bank_r(m)],'high')';
+        h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for Low Pass (Diagonal Detail)
+    elseif  m>1 && m<M
+        % This is the 1d Kernel for Band pass
+        h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
+        h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for Low Pass (Diagonal Detail)
     else
-       % This is the 1d Kernel for High Pass (last scale)
-       h1d_H{m} = fir1(Nf(m),[F_Bank_r(m)],'high')';
-       h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for High Pass (finest scale)
-    end    
+        % This is the 1d Kernel for High Pass (last scale)
+        h1d_H{m} = fir1(Nf(m),[F_Bank_r(m)],'high')';
+        h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for High Pass (finest scale)
+    end   
     
 end
 
@@ -109,7 +114,7 @@ disp('Mounting the global basis...')
 PSI_M = [Psi_L(:,1:end)];
 Sigma_v_M = [diag(Sigma_L(1:1:end,1:1:end))];
 
-for ll=2:1:length(Sigma_H)+1
+for ll=2:1:length(Ind)+1
     
     PSI_M = [PSI_M, Psi_H{ll-1}(:,1:end)];
     Sigma_v_M = [Sigma_v_M;diag(Sigma_H{ll-1}(1:1:end,1:1:end))];

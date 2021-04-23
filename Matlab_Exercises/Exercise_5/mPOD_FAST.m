@@ -1,4 +1,4 @@
-function PSI_M_Final = mPOD(K,dt,Nf,F_V,Keep,BC)
+function PSI_M_Final = mPOD_FAST(K,dt,Nf,F_V,Keep,BC)
 %mPOD is the function to compute the Multiscale Proper Orthogonal
 %Decomposition
 %% Input Parameters
@@ -36,25 +36,20 @@ for m=1:1:M
     
     disp(['Preparing Kernel ',num2str(m),' of ',num2str(M)]);
     
-    if (m==1 && M>1)
-        h1d_L = fir1(Nf(m),F_Bank_r(m),'low')'; % 1d Kernel for Low Pass
-        h_A = h1d_L*h1d_L'; % 2d Kernel for Low Pass (Approximation)
-        h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
-        h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for Low Pass (Diagonal Detail)
-    elseif (m==1 && M==1)
-        h1d_L = fir1(Nf(m),F_Bank_r(m),'low')'; % 1d Kernel for Low Pass
-        h_A = h1d_L*h1d_L'; % 2d Kernel for Low Pass (Approximation)
-        h1d_H{m} = fir1(Nf(m),[F_Bank_r(m)],'high')';
-        h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for Low Pass (Diagonal Detail)
-    elseif  m>1 && m<M
-        % This is the 1d Kernel for Band pass
-        h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
-        h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for Low Pass (Diagonal Detail)
+    if m==1
+       h1d_L = fir1(Nf(m),F_Bank_r(m),'low')'; % 1d Kernel for Low Pass
+       h_A = h1d_L*h1d_L'; % 2d Kernel for Low Pass (Approximation)
+       h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
+       h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for Low Pass (Diagonal Detail)
+    elseif  m>1 && m<M 
+       % This is the 1d Kernel for Band pass
+       h1d_H{m} = fir1(Nf(m),[F_Bank_r(m),F_Bank_r(m+1)],'bandpass')';
+       h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for Low Pass (Diagonal Detail)
     else
-        % This is the 1d Kernel for High Pass (last scale)
-        h1d_H{m} = fir1(Nf(m),[F_Bank_r(m)],'high')';
-        h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for High Pass (finest scale)
-    end   
+       % This is the 1d Kernel for High Pass (last scale)
+       h1d_H{m} = fir1(Nf(m),[F_Bank_r(m)],'high')';
+       h_D{m} = h1d_H{m}*h1d_H{m}'; % 2d Kernel for High Pass (finest scale)
+    end    
     
 end
 
@@ -84,46 +79,17 @@ for ll=1:1:length(Ind)
     
 end
 
-%% 3. Diagonalize all the Scales
-disp('Eigenspace of K_L')
-% Estimate the span of its eigenbasis from the frequency content
-[h,~] = freqz(h1d_L,size(K_L,1));             
-H=abs(h)/max(abs(h));
-N_S=length(find(H>0.05));
-[Psi_L Sigma_L ~] = svds(K_L,rank(K_L));
-% Release some memory
-clear K_L
-
-
-for ll=1:1:length(Ind)
-    
-    MEX = ['Eigenspace of K_H',num2str(Ind(ll))];
-    disp(MEX)
-    % Repeat the previous estimation and diagonalization for all the scales     
-    [h,w] = freqz(h1d_H{ll},n_t); 
-    H=abs(h)/max(abs(h));
-    N_S=length(find(H>0.1));
-    [Psi_H{ll} Sigma_H{ll} ~] = svds(K_H{Ind(ll)},rank(K_H{Ind(ll)}));
-    % Release some memory
-    K_H{Ind(ll)}={};
-    
+%% Mount single K
+K_mPOD=K_L;
+Ind=find(Keep==1);
+for ll=1:1:size(K_H,2)
+    K_mPOD=K_mPOD+ K_H{ll};    
 end
 
-%% 4. Mount the global mPOD basis
-disp('Mounting the global basis...')
-PSI_M = [Psi_L(:,1:end)];
-Sigma_v_M = [diag(Sigma_L(1:1:end,1:1:end))];
+%% 3. Check spectra of this
+% imagesc(abs(fftshift(fft2(K_mPOD-mean(K_mPOD(:))))))
+[PSI_Mo Sigma_M ~] = svd(K_mPOD);
 
-for ll=2:1:length(Ind)+1
-    
-    PSI_M = [PSI_M, Psi_H{ll-1}(:,1:end)];
-    Sigma_v_M = [Sigma_v_M;diag(Sigma_H{ll-1}(1:1:end,1:1:end))];
-    
-end
-
-%Sort energies descending order
-[Sort_SM,Perm] = sort(Sigma_v_M,'descend');
-PSI_Mo = PSI_M(:,Perm);
 %First reinforce orthogonality (Phase-correction)
 [Q R]=qr(PSI_Mo,0); % The matrix R should be as close as possible to Identiy.
 PSI_M_Final=Q;

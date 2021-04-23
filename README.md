@@ -12,7 +12,7 @@ The theoretical foundation of the decomposition is described in
 
 The pre-prints of these articles are available from my RG page: https://www.researchgate.net/profile/Miguel_Mendez5
 
-Currently, this folder contains four exercises. Of these two are done both in Matlab and in Python, while the remaining ones are only available in Matlab. The exercises include 1D and 2D cases with both scalar and vectorial quantities.
+Currently, this folder contains ffive exercises. Of these, two are done both in Matlab and in Python, while the remaining ones are only available in Matlab. The exercises include 1D and 2D cases with both scalar and vectorial quantities.
 An example of processing on video sequences is currently in preparation.
 
 All the codes so far assume that the dataset is equally spaced both in space (i.e. along a Cartesian grid) and in time.
@@ -24,21 +24,24 @@ The proposed exercises are the following:
 (Available in Python and Matlab)
 
 2- Decomposition of a Synthetic Test case
-(Available only Matlab)
+(Available only in Matlab)
 
 3- Decomposition of the Vorticity field of a 2D simulation in Matlab.
-(Available only Matlab)
+(Available only in Matlab)
 
 4- Decomposition of a TR-PIV measurement of an impinging jet.
 (Available in Python and Matlab)
 
-Exercises 2,3 and 4 are taken from the article at https://arxiv.org/abs/1804.09646 .
+5- Decomposition of a TR-PIV measurement of a flow past a cylinder.
+(Available only in Matlab)
 
+Exercises 2,3 and 4 are taken from the article at https://arxiv.org/abs/1804.09646 .
+Exercise 5 is available at https://arxiv.org/abs/2001.01971 .
+
+The standalone application is available in the section "Release" of this repository.
 
 The do list currently includes:
 
-1- Prepare a stand-alone application with an .exe installer that requires no Matlab. This is currently under development by Ir. D. Ninni.
+1- Finish the exercises in Python and clean the codes.
 
-2- Finish the exercises in Python and clean the codes.
-
-3- Extend the analysis to cases that do not have Cartesian grids, hence requiring weighted inner products.
+2- Extend the analysis to cases that do not have Cartesian grids, hence requiring weighted inner products.

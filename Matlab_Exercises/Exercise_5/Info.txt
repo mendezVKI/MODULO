@@ -1,2 +1,31 @@
 
-Cylinder Test Case to upload asap
+
+
+This exercise presents an example of the use of mPOD and POD with memory saving option on a 2D vector dataset.
+This dataset is the TR-PIV of the flow past a cylinder in transient conditions.
+More info on the test case is presented in 
+
+	Miguel A Mendez, David Hess, Bo B Watz, Jean-Marie Buchlin, 
+	Multiscale Proper Orthogonal Decomposition (mPOD) of TR-PIV data-- 
+	a Case Study on Stationary and Transient Cylinder Wake Flows
+
+The preprint is available at 
+
+https://arxiv.org/abs/2001.01971
+
+About the data from the from the Tr-PIV analysis: the sampling frequency is 3kHz.
+MESH.dat contains the X and Y coordinates (in mm). Each file called Res*.dat containes the U and V components in m/s .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
