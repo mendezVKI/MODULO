@@ -4,7 +4,7 @@ MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institut
 The theoretical foundation of the decomposition is described in
 - M.A. Mendez, M. Balabane, J.-M. Buchlin, Multiscale Proper Orthogonal Decomposition of Complex Fluid Flows, Journal of Fluid Mechanics, Vol 870, July 2019, pp. 988-1036. The pre-print is available at https://arxiv.org/abs/1804.09646
 
- Example of applications of the decomposition to TR-PIV data are shown in
+ Example of applications of the mPOD are shown in
 
  -  M.A. Mendez, M.T. Scelzo, J.-M. Buchlin, Multiscale Modal Analysis of an Oscillating Impinging Gas Jet, Experimental Thermal and Fluid Science, Vol 91, February 2018, pp. 256-276 (https://doi.org/10.1016/j.expthermflusci.2017.10.032).
  -  M.A. Mendez, A. Gosset, J.-M. Buchlin, Experimental Analysis of the Stability of the Jet Wiping Process, Part II: Multiscale Modal Analysis of the Gas Jet-Liquid Film Interaction, Experimental Thermal and Fluid Science, Vol 106, September 2019, pp. 48-67 (https://doi.org/10.1016/j.expthermflusci.2019.03.004).
