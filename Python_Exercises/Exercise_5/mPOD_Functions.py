@@ -96,7 +96,7 @@ def conv_m(K,h,Ex,boundaries):
 
 
 # Define the function to produce a gif file
-def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
+def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE,SAVE_KS):
     """
     This function computes the Psi_M for the mPOD
     taking as input:
@@ -114,6 +114,7 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
     :MODE: this is about the final QR. Options
             ‘reduced’ In this case the final basis will not necessarely be full
             ‘complete’ In this case the final basis will always be full
+    :SAVE_KS: This is 1 or 0. If 1, you will save and store all the intermediate scales
             
     :return: PSI_M: the mPOD temporal structures
     
@@ -131,7 +132,10 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
     Psi_M=np.array([])
     Lambda_M=np.array([])
     n_t=K.shape[1]
-    Ks=np.zeros((n_t,n_t,M+1))
+    if SAVE_KS==1:
+     Ks=np.zeros((n_t,n_t,M+1))
+    else:
+     print('No Ks prepared')
           
  # Now you could filter and then compute the eigenvectors   
     for m in range(0,M):
@@ -145,7 +149,11 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
        # Filter K_LP
        print('Filtering Largest Scale')
        K_L=conv_m(K,h_A,Ex,boundaries)
-       Ks[:,:,m]=K_L # First large scale
+       
+       if SAVE_KS==1:
+         Ks[:,:,m]=K_L # First large scale
+       else:
+         Ks=K_L 
        print('Diagonalizing Largest Scale')
        R_K=np.linalg.matrix_rank(K_L, tol=None, hermitian=True)
        Lambda_P,Psi_P= np.linalg.eigh(K_L)
@@ -160,7 +168,10 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
   
        print('Filtering H Scale '+str(m+1)+'/'+str(M))
        K_H=conv_m(K,h1d_H,Ex,boundaries)
-       Ks[:,:,m+1]=K_H # First band pass
+       if SAVE_KS==1:
+         Ks[:,:,m+1]=K_H # Last (high pass) scale
+       else:
+         Ks=K_H 
        print('Diagonalizing H Scale '+str(m+1)+'/'+str(M))
        R_K=np.linalg.matrix_rank(K_H, tol=None, hermitian=True)
 #       Psi_P, Lambda_P, _ = svds(K_H,R_K) # Diagonalize scale
@@ -178,7 +189,10 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
         h1d_H= firwin(Nf[m],[F_Bank_r[m],F_Bank_r[m+1]],pass_zero=False) # Band-pass
         print('Filtering H Scale '+str(m+1)+'/'+str(M))
         K_H=conv_m(K,h1d_H,Ex,boundaries)
-        Ks[:,:,m+1]=K_H # Intermediate band-pass
+        if SAVE_KS==1:
+         Ks[:,:,m+1]=K_H # Last (high pass) scale
+        else:
+         Ks=K_H 
         print('Diagonalizing H Scale '+str(m+1)+'/'+str(M))
         R_K=np.linalg.matrix_rank(K_H, tol=None, hermitian=True)
 #        Psi_P, Lambda_P, _ = svds(K_H,R_K) # Diagonalize scale
@@ -194,7 +208,10 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
         h1d_H = firwin(Nf[m],F_Bank_r[m],pass_zero=False)
         print('Filtering H Scale '+str(m+1)+'/ '+str(M))
         K_H=conv_m(K,h1d_H,Ex,boundaries)
-        Ks[:,:,m+1]=K_H # Last (high pass) scale
+        if SAVE_KS==1:
+         Ks[:,:,m+1]=K_H # Last (high pass) scale
+        else:
+         Ks=K_H   
         print('Diagonalizing H Scale '+str(m+1)+'/ '+str(M))
         R_K=np.linalg.matrix_rank(K_H, tol=None, hermitian=True)
        # Psi_P, Lambda_P, _ = svds(K_H,R_K) # Diagonalize scale
@@ -212,9 +229,10 @@ def mPOD_K(K,dt,Nf,Ex,F_V,Keep,boundaries,MODE):
     print('QR Polishing...')
     PSI_M,R=np.linalg.qr(Psi_M,mode=MODE)
     print('Done!')
-    
-    return PSI_M,Ks       
-    
+    if SAVE_KS==1:
+     return PSI_M,Ks       
+    else:
+     return PSI_M   
 
 
 

@@ -54,11 +54,24 @@ for m=1:1:M
 end
 
 
+
+% SUM_T=abs(freqz2(h_D{1},[n_t n_t]))+...
+%     abs(freqz2(h_D{2},[n_t n_t]))+...
+%     abs(freqz2(h_D{3},[n_t n_t]))+...
+%     abs(freqz2(h_D{4},[n_t n_t]));
+% 
 % Freq=[-n_t/2:1:n_t/2-1]*(Fs)*1/n_t;
 % %%%Visualize some of them if you want (comment/uncomment)
 % Hfig=figure(11)
-% pcolor(Freq,Freq,abs(freqz2(h_D{1},[n_t n_t])));
+% pcolor(Freq,Freq,SUM_T);
 % shading interp; daspect([1 1 1])
+% 
+% Hfig=figure(12)
+% pcolor(Freq,Freq,freqz2(h_D{1},[n_t n_t]));
+% shading interp; daspect([1 1 1])
+
+
+
 % xlim([-1 1])
 % ylim([-1 1])
 

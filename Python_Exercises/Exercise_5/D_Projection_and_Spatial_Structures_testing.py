@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jan  1 14:01:17 2020
+Updated on 15 May 2020
 
 @author: mendez
 """
@@ -9,7 +9,8 @@ Created on Wed Jan  1 14:01:17 2020
 ## D. Compute Projection.
 
 # Given the temporal Basis for the POD and the mPOD we compute their
-# spatial structures
+# spatial structures. We mount it block by block.
+#  Code to be re-cleaned and re-commented.
 
 
 import numpy as np
@@ -18,7 +19,7 @@ from Others import Plot_Field_Cylinder
 # Load Data
 data = np.load('D1.npz')
 D=data['D']; t=data['t']; dt=data['dt']; n_t=data['n_t'];
-Fs=1/dt
+Fs=1/dt; N_B=data['N_B'] # load also number of partitions
 Xg=data['Xg']; Yg=data['Yg']; X_S=data['X_S']; Y_S=data['Y_S']
 n_y,n_x=Yg.shape; nxny=n_x*n_y; n_s=nxny*2
 
@@ -26,13 +27,46 @@ n_y,n_x=Yg.shape; nxny=n_x*n_y; n_s=nxny*2
 data=np.load('Psis_mPOD.npz')
 Psi_M=data['PSI_M']
  
-# Compute the spatial basis for mPOD 
+#%% Compute the spatial basis for mPOD 
 # Projection from Eq. 2.6
 R=Psi_M.shape[1];
-PHI_M_SIGMA_M=np.dot(D,(Psi_M))
-# Initialize the output
+
+import math
+n_t_B=math.floor(n_t/(N_B-1))
+n_T_R= n_t-n_t_B*(N_B-1)# Reminder in the last partition
+# This creates a new index (for the partitions):
+
+if n_T_R==0:
+# You will have N_B partitions with n_t_B entries each
+ n_PAR=N_B
+ Indices=np.zeros(n_PAR) 
+ Indices[0:N_B]=np.arange(N_B)*n_t_B; 
+else:
+#You will have N_B partitions with n_t_B entries each + 1 partition with   
+ n_PAR=N_B+1 
+ Indices=np.zeros(n_PAR)
+ Indices[0:N_B]=np.arange(N_B)*n_t_B; Indices[n_PAR-1]=n_t 
+ 
+ 
+#%% Construct the partitions.
+# In this simplified version we take the full matrix 
+# This is very memory demanding. 
+# The full algorithm is yet to be ported from MODULO.
+# Work in progress... for the moment I keep it like this
 PHI_M=np.zeros((n_s,R))
 SIGMA_M=np.zeros((R))
+D_F=np.zeros((n_s,n_t))
+
+for j in range(1,len(Indices)):
+  R1=int(Indices[j-1]); R2=int(Indices[j])
+  String='D'+str(j)+'.npz' 
+  data = np.load(String); D=data['D'];  D_F[:,R1:R2]=D
+  print('Filling Block n_B='+str(j)) 
+  
+PHI_M_SIGMA_M=np.dot(D_F,Psi_M)
+# Initialize the output
+PHI_M=np.zeros((n_s,R))
+SIGMA_M=np.zeros(R,)
 
 for i in range(0,R):     
   print('Completing mPOD Mode '+str(i))
@@ -41,62 +75,66 @@ for i in range(0,R):
   #Normalize the columns of C to get spatial modes
   PHI_M[:,i] = PHI_M_SIGMA_M[:,i]/SIGMA_M[i]
   
-Indices=np.flipud(np.argsort(SIGMA_M)) # find indices for sorting in decreasing order
-Sorted_Sigmas=SIGMA_M[Indices] # Sort all the sigmas
-Phi_M=PHI_M[:,Indices] # Sorted Spatial Structures Matrix
-Psi_M=Psi_M[:,Indices] # Sorted Temporal Structures Matrix
+  
+# V_X=D_FF[0:nxny,j-1]
+# V_Y=D_FF[nxny::,j-1]
+# Plot_Field_Cylinder(X_S,Y_S,V_X,V_Y,True,2,200)
+  
+Ind=(np.argsort(SIGMA_M)) # find indices for sorting in decreasing order
+Sorted_Sigmas=SIGMA_M[Ind] # Sort all the sigmas
+Phi_M_c=PHI_M[:,Ind] # Sorted Spatial Structures Matrix
+Psi_M_c=Psi_M[:,Ind] # Sorted Temporal Structures Matrix
 Sigma_M=Sorted_Sigmas # Sorted Amplitude Matrix
   
-# Show some exemplary modes for mPOD. 
+np.savez('Results',Phi_M=Phi_M_c,Sigma_M=Sigma_M,Psi_M=Psi_M_c)
 
-for j in range(1,12):
+#%% Plot Some examplary Modes
+data = np.load('Results.npz')
+Phi_M=data['Phi_M']
+Psi_M=data['Psi_M']
+Sigma_M=data['Sigma_M']
+
+# Show modes
+for j in range(1,6):
  plt.close(fig='all') 
- fig, ax3= plt.subplots(figsize=(5,7))   
+ fig, ax3= plt.subplots(figsize=(5,5))   
  ax=plt.subplot(2,1,1)
+ plt.rc('text', usetex=True)    
+ plt.rc('font', family='serif')
+ plt.rc('xtick',labelsize=12)
+ plt.rc('ytick',labelsize=12)
  V_X=Phi_M[0:nxny,j-1]
  V_Y=Phi_M[nxny::,j-1]
- Plot_Field(X_S,Y_S,V_X,V_Y,True,2,1)
+ Plot_Field_Cylinder(X_S,Y_S,V_X,V_Y,True,1,2)
+# plt.quiver(X_S,Y_S,V_X,V_Y)
  ax.set_aspect('equal') # Set equal aspect ratio
- ax.set_xticks(np.arange(0,40,10))
- ax.set_yticks(np.arange(10,30,5))
- ax.set_xlim([0,35])
- ax.set_ylim([10,29])
- ax.invert_yaxis() # Invert Axis for plotting purpose
- String_y='$\phi_{\mathcal{P}'+str(j)+'}$'
+ ax.set_xlabel('$x[mm]$',fontsize=13)
+ ax.set_ylabel('$y[mm]$',fontsize=13)
+ ax.set_title('Tutorial 2: Cylinder Wake',fontsize=16)
+ ax.set_xticks(np.arange(0,70,10))
+ ax.set_yticks(np.arange(-10,11,10))
+ ax.set_xlim([0,50])
+ ax.set_ylim(-10,10)
+ circle = plt.Circle((0,0),2.5,fill=True,color='r',edgecolor='k',alpha=0.5)
+ plt.gcf().gca().add_artist(circle)
+ String_y='$\phi_{\mathcal{M}'+str(j)+'}$'
  plt.title(String_y,fontsize=18)
-# plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
+ plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
  
  ax=plt.subplot(2,1,2)
- Signal=Psi_M[:,j-1]
- s_h=np.abs((np.fft.fft(Signal-Signal.mean())))
- Freqs=np.fft.fftfreq(int(n_t))*Fs
- plt.plot(Freqs*(4/1000)/6.5,s_h,'-',linewidth=1.5)
- plt.xlim(0,0.5)    
- plt.xlabel('$St[-]$',fontsize=18)
- String_y='$\widehat{\psi}_{\mathcal{M}'+str(j)+'}$'
+ Signal=Psi_M[:,j-1] 
+ plt.plot(t,Signal,'-',linewidth=1.5)  
+ plt.xlabel('$t_k[s]$',fontsize=13)
+ String_y='${\psi}_{\mathcal{M}'+str(j)+'}(t_k)$'
  plt.ylabel(String_y,fontsize=18)
  plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
- Name='mPOD_Mode_'+str(j)+'.png'
+ Name='C_mPOD_Mode_'+str(j)+'.png'
  print(Name+' Saved')
- plt.savefig(Name, dpi=300)  
-#
-## save POD onto a csv
-#import os
-#FOL='mPOD'; os.mkdir(FOL)
-#np.savetxt(FOL+'/SIGMA.csv',Sigma_M)
-#np.savetxt(FOL+'/phi_M_1_u.csv',Phi_M[0:nxny,0].reshape(n_x,n_y),delimiter=',')
-#np.savetxt(FOL+'/phi_M_1_v.csv',Phi_M[nxny::,0].reshape(n_x,n_y),delimiter=',')
-#np.savetxt(FOL+'/phi_M_2_u.csv',Phi_M[0:nxny,1].reshape(n_x,n_y),delimiter=',')
-#np.savetxt(FOL+'/phi_M_2_v.csv',Phi_M[nxny::,1].reshape(n_x,n_y),delimiter=',')
-#np.savetxt(FOL+'/phi_M_3_u.csv',Phi_M[0:nxny,2].reshape(n_x,n_y),delimiter=',')
-#np.savetxt(FOL+'/phi_M_3_v.csv',Phi_M[nxny::,2].reshape(n_x,n_y),delimiter=',')
-#
-#np.savetxt(FOL+'/psi_M_1.csv',Psi_M[:,0])
-#np.savetxt(FOL+'/psi_M_2.csv',Psi_M[:,1])
-#np.savetxt(FOL+'/psi_M_3.csv',Psi_M[:,3])
+ plt.savefig(Name, dpi=300) 
 
 
-# Compute the spatial basis for the POD
+
+#%% Compute the spatial basis for the POD
 
 # Load POD basis
 data=np.load('Psis_POD.npz')

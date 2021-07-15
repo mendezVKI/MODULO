@@ -107,7 +107,6 @@ def Plot_Field_Cylinder(X_S,Y_S,V_X,V_Y,PLOT,Step,Scale):
    return Xg,Yg,Vxg,Vyg,Magn  
    
 
-
 # Define the function to produce a gif file
 def Animation(npz_F,Giff_NAME):
     """

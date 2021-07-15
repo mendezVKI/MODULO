@@ -18,7 +18,7 @@ from mPOD_Functions import mPOD_K
 
 
 # Load all the dataset and the correlation matrix
-data = np.load('Data.npz')
+data = np.load('D1.npz')
 #D=data['D']; 
 t=data['t']; dt=data['dt']; n_t=data['n_t'];
 Xg=data['Xg']; Yg=data['Yg']
@@ -71,7 +71,7 @@ Freq=np.fft.fftshift(np.fft.fftfreq(int(n_t)))*Fs # Frequency Axis
 
 F_V=np.array([10,290,320,430,470])
 Nf=np.array([1201,801,801,801,801]); # This vector collects the length of the filter kernels.
-Keep=np.array([1,0,1,1,0])
+Keep=np.array([0,1,0,1,0])
 Ex=1203
 
 
@@ -129,38 +129,13 @@ plt.ylabel('Normalized Spectra',fontsize=18)
 
 
 plt.tight_layout()
+plt.show()
 plt.savefig('Frequency_Splitting.png', dpi=200)  
 
 
 # Compute the mPOD Temporal Basis
-PSI_M,Ks = mPOD_K(K,dt,Nf,Ex,F_V,Keep,'nearest','reduced');
+PSI_M= mPOD_K(K,dt,Nf,Ex,F_V,Keep,'nearest','reduced',0);
 
-# Save the correlation matrices of each scale:
-for i in range(0,Ks.shape[2]):
- K=Ks[:,:,i]
- K_HAT_ABS=np.fliplr(np.abs(np.fft.fftshift(np.fft.fft2(K-np.mean(K)))));
-
- fig, ax = plt.subplots(figsize=(4,4))
- #ax.set_xlim([-0.5,0.5])
- #ax.set_ylim([-0.5,0.5])
- plt.rc('text', usetex=True)      
- plt.rc('font', family='serif')
- plt.rc('xtick',labelsize=12)
- plt.rc('ytick',labelsize=12)
- plt.pcolor(Freq,Freq,K_HAT_ABS/np.size(D)) # We normalize the result
- ax.set_aspect('equal') # Set equal aspect ratio
- ax.set_xlabel('${f}[Hz]$',fontsize=14)
- ax.set_ylabel('${f}[Hz]$',fontsize=14)
- ax.set_xticks(np.arange(-600,610,200))
- ax.set_yticks(np.arange(-600,610,200))
- ax.set_xlim(-600,600)
- ax.set_ylim(-600,600)
- plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
- plt.clim(0,0.5) # From here  downward is just for plotting purposes
- plt.tight_layout()
- Name='CS_Scale_'+str(i+1)
- print('Saving Fig '+Name)
- plt.savefig(Name, dpi=200) 
 
 # Save as numpy array all the data
 np.savez('Psis_mPOD',PSI_M=PSI_M)

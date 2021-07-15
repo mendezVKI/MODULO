@@ -1,5 +1,5 @@
 
-
+return
 % This runs all the scripts for the exercise 4
 
 

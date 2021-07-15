@@ -12,8 +12,7 @@ Created on Sun Feb  2 15:11:03 2020
 # You can access the data as follows
 
 
-
-# Exercise 1
+#%% Exercise 1
 import urllib.request
 print('Downloading Data for Ex 1...')
 url = 'https://osf.io/zqrp5/download'
@@ -25,11 +24,26 @@ String='Ex_1_1D_Analytical.zip'
 zf = ZipFile(String,'r')
 zf.extractall('Ex_1_1D_Analytical')
 zf.close()
+print('Done!')
 
 
 
+#%% Exercise 2
+import urllib.request
+print('Downloading Data for Ex 2...')
+url = 'https://osf.io/jhfmn/download'
+urllib.request.urlretrieve(url, 'Ex_2_Synthetic.zip')
+print('Download Completed! I prepare data Folder')
+# Unzip the file 
+from zipfile import ZipFile
+String='Ex_2_Synthetic.zip'
+zf = ZipFile(String,'r')
+zf.extractall('Ex_2_Synthetic')
+zf.close()
+print('Done!')
 
-# Exercise 3
+
+#%% Exercise 3
 import urllib.request
 print('Downloading Data for Ex 3...')
 url = 'https://osf.io/zgujk/download'
@@ -41,8 +55,9 @@ String='Ex_3_CFD_Vortices.zip'
 zf = ZipFile(String,'r')
 zf.extractall('Ex_3_CFD_Vortices')
 zf.close()
+print('Done!')
 
-# Exercise 4
+#%% Exercise 4
 import urllib.request
 print('Downloading Data for Ex 4...')
 url = 'https://osf.io/c28de/download'
@@ -52,10 +67,24 @@ print('Download Completed! I prepare data Folder')
 from zipfile import ZipFile
 String='Ex_4_TR_PIV_Jet.zip'
 zf = ZipFile(String,'r')
-zf.extractall('Exercise_4/Ex_4_TR_PIV_Jet')
+zf.extractall('Ex_4_TR_PIV_Jet')
 zf.close()
+print('Done!')
 
 
+#%% Exercise 5
+import urllib.request
+print('Downloading Data for Ex 5...')
+url = 'https://osf.io/47ftd/download'
+urllib.request.urlretrieve(url, 'Ex_5_TR_PIV_Cylinder.zip')
+print('Download Completed! I prepare data Folder')
+# Unzip the file 
+from zipfile import ZipFile
+String='Ex_5_TR_PIV_Cylinder.zip'
+zf = ZipFile(String,'r')
+zf.extractall('Ex_5_TR_PIV_Cylinder')
+zf.close()
+print('Done!')
 
 
 
