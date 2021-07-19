@@ -6,7 +6,7 @@ from scipy.signal import firwin  # To create FIR kernels
 from scipy.sparse.linalg import svds
 from tqdm import tqdm
 
-from _utils import conv_m, svds_RND
+from modulo._utils import conv_m, svds_RND
 
 
 def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep, boundaries, MODE, dt,
