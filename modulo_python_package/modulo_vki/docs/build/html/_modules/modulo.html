@@ -1,0 +1,602 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>modulo &mdash; MODULO 1.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+        <script type="text/javascript" src="../_static/copybutton.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MODULO
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">MODULO: Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../importing_data.html">Importing data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../black_box.html">Black - box computing of mPOD and POD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-history.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../min_versions.html">Minimum Version of Python and NumPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../next.html">MODULO: What’s next?</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MODULO</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>modulo</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for modulo</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">_data_matrix</span> <span class="k">import</span> <span class="n">DataMatrix</span>
+<span class="kn">from</span> <span class="nn">_k_matrix</span> <span class="k">import</span> <span class="n">CorrelationMatrix</span>
+<span class="kn">from</span> <span class="nn">_pod_time</span> <span class="k">import</span> <span class="n">Temporal_basis_POD</span>
+<span class="kn">from</span> <span class="nn">_pod_space</span> <span class="k">import</span> <span class="n">Spatial_basis_POD</span>
+<span class="kn">from</span> <span class="nn">_mpod_time</span> <span class="k">import</span> <span class="n">temporal_basis_mPOD</span>
+<span class="kn">from</span> <span class="nn">_mpod_space</span> <span class="k">import</span> <span class="n">spatial_basis_mPOD</span>
+
+
+<span class="c1"># TODO: razionalizzare gli input. Forse meglio avere solo inizializzazione della classe e tutti i metodi dipendenti</span>
+<span class="c1"># TODO: verificare che con modalita&#39; memory saving attiva le matrici non siano mai salvate in memoria, ma solo su disco.</span>
+
+<div class="viewcode-block" id="MODULO"><a class="viewcode-back" href="../usage.html#modulo.MODULO">[docs]</a><span class="k">class</span> <span class="nc">MODULO</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform Multiscale</span>
+<span class="sd">    Modal Analysis of numerical and experimental data using the Multiscale Proper Orthogonal Decomposition (mPOD).</span>
+
+<span class="sd">    Theoretical foundation can be found at:</span>
+<span class="sd">    https://arxiv.org/abs/1804.09646</span>
+
+<span class="sd">    Presentation of the MODULO framework available here:</span>
+<span class="sd">    https://arxiv.org/pdf/2004.12123.pdf</span>
+
+<span class="sd">    YouTube channel with hands-on tutorials can be found at:</span>
+<span class="sd">    https://youtube.com/playlist?list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR</span>
+
+<span class="sd">    All the codes so far assume that the dataset is equally spaced both in space (i.e. along a Cartesian grid)</span>
+<span class="sd">    and in time. The extension to non-uniformly sampled data will be included in the next release.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
+                 <span class="n">N_PARTITIONS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">FOLDER_OUT</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span>
+                 <span class="n">MEMORY_SAVING</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function initializes the main parameters needed by MODULO.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">       </span>
+<span class="sd">        :param data: This is the data matrix to factorize. It is a np.array with </span>
+<span class="sd">        shape ((N_S, N_T)). If the data has not yet been prepared in the form of a np.array,</span>
+<span class="sd">        the method XXXXX in MODULO can be used (see XXXX).</span>
+<span class="sd">        #TODO: Lorenzo check this.</span>
+<span class="sd">        :param FOLDER_OUT: Folder in which the output will be stored.</span>
+<span class="sd">        The output includes the matrices Phi, Sigma and Psi (optional) and temporary files </span>
+<span class="sd">        used for some of the calculations (e.g.: for memory saving).</span>
+
+<span class="sd">        :param MEMORY_SAVING: Bool param. If True, the Memory Saving feature is activated.</span>
+<span class="sd">        For details on this feature, see the video of D. Ninni (PhD @ Politecnico of Bari and former STP student at VKI).</span>
+<span class="sd">        https://youtu.be/LclxO1WTuao</span>
+
+<span class="sd">        :param N_PARTITIONS: If memory saving feature is active, this parameter sets the number of partitions</span>
+<span class="sd">        that will be used to store the data matrices during the computations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Please check that your database is in an numpy array format.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span> <span class="o">=</span> <span class="n">MEMORY_SAVING</span>
+
+        <span class="n">flag</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Memory saving feature is active. Do you want to use float16 instead of float32 &quot;</span>
+                         <span class="s2">&quot;for your computations? (y/n): &quot;</span><span class="p">)</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="n">flag</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">flag</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">D</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float16&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">D</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_T</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_S</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">N_PARTITIONS</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_T</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;The number of requested partitions is greater of the total columns (N_T). Please,&quot;</span>
+                                 <span class="s2">&quot;try again.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_PARTITIONS</span> <span class="o">=</span> <span class="n">N_PARTITIONS</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span> <span class="o">=</span> <span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s1">&#39;MODULO_tmp/&#39;</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_data_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                         <span class="n">MR</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                         <span class="n">SAVE_D</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method pre-process the data before running the factorization. </span>
+<span class="sd">        If the memory saving option is active, the method ensures the correct splitting of the data matrix</span>
+<span class="sd">        into the required partitions.</span>
+<span class="sd">        If the mean removal is desired (MR: True), this method removes the time averaged column from the </span>
+<span class="sd">        data matrix D.</span>
+<span class="sd">        If neither the mean removal nor the memory saving options are active, this method is skipped.</span>
+
+<span class="sd">        :param MR: bool</span>
+<span class="sd">                    if True, the mean field is removed from the data matrix.</span>
+
+<span class="sd">        :param SAVE_D: bool</span>
+<span class="sd">                    if True, the D matrix is saved in the folder decided by the user</span>
+
+
+<span class="sd">        :return: D directly (as class attribute) if Memory saving is not active. </span>
+<span class="sd">                 Otherwise, it returns None and the matrix is automatically saved on disk.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">D</span> <span class="o">=</span> <span class="n">DataMatrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span><span class="p">,</span> <span class="n">MEMORY_SAVING</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">,</span>
+                            <span class="n">N_PARTITIONS</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_PARTITIONS</span><span class="p">,</span> <span class="n">MR</span><span class="o">=</span><span class="n">MR</span><span class="p">,</span> <span class="n">SAVE_D</span><span class="o">=</span><span class="n">SAVE_D</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_correlation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                            <span class="n">SAVE_K</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method computes the time correlation matrix. Here the memory saving is</span>
+<span class="sd">        beneficial for large datasets. Since the matrix could be potentially heavy, it is automatically stored on disk to </span>
+<span class="sd">        minimize the usage of the RAM. This feature can be deactivated by setting SAVE_K = False. </span>
+<span class="sd">        In this case, the correlation matrix is returned to the main class.</span>
+
+<span class="sd">        :param SAVE_K: bool</span>
+<span class="sd">            A flag deciding if the matrix will be stored in the disk (in FOLDER_OUT/MODULO_tmp) or not. </span>
+<span class="sd">            Default option is &#39;True&#39;. This attribute is passed to the class </span>
+<span class="sd">            in order to decide if it has to be loaded from disk or not.</span>
+
+
+<span class="sd">        :return K: np.array</span>
+<span class="sd">                The correlation matrix D^T D (as class attribute) if Memory saving is not active. </span>
+<span class="sd">                Otherwise, it returns None and the matrix is automatically saved on disk.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">SAVE_K</span> <span class="o">=</span> <span class="n">SAVE_K</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">CorrelationMatrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_PARTITIONS</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">,</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SAVE_K</span><span class="p">,</span> <span class="n">D</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_temporal_basis_POD</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                            <span class="n">SAVE_T_POD</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method computes the temporal structure for the Proper Orthogonal Decomposition (POD) computation. </span>
+<span class="sd">        The theoretical background of the POD is briefly recalled here:</span>
+
+<span class="sd">        https://youtu.be/8fhupzhAR_M</span>
+
+<span class="sd">        The diagonalization of K is computed via Singular Value Decomposition (SVD).</span>
+<span class="sd">        A speedup is available if the user is on Linux machine, in which case MODULO</span>
+<span class="sd">        exploits the power of JAX and its Numpy implementation.</span>
+
+<span class="sd">        For more on JAX:</span>
+
+<span class="sd">        https://github.com/google/jax</span>
+<span class="sd">        https://jax.readthedocs.io/en/latest/jax.numpy.html</span>
+
+<span class="sd">        If the user is on a Win machine, Linux OS can be used using</span>
+<span class="sd">        the Windows Subsystem for Linux.</span>
+
+<span class="sd">        For more on WSL:</span>
+<span class="sd">        https://docs.microsoft.com/en-us/windows/wsl/install-win10</span>
+
+<span class="sd">        :param SAVE_T_POD: bool</span>
+<span class="sd">                Flag deciding if the results will be stored on the disk. </span>
+<span class="sd">                Default value is True, to limit the RAM&#39;s usage.</span>
+<span class="sd">                Note that this might cause a minor slowdown for the loading,</span>
+<span class="sd">                but the tradeoff seems worthy. </span>
+<span class="sd">                This attribute is passed to the MODULO class.</span>
+
+
+<span class="sd">        POD temporal basis are returned if MEMORY_SAVING is not active. Otherwise all the results are saved on disk.</span>
+
+<span class="sd">        :return Psi_P: np.array</span>
+<span class="sd">                POD Psis</span>
+
+<span class="sd">        :return Sigma_P: np.array</span>
+<span class="sd">                POD Sigmas. If needed, Lambdas can be easily computed recalling that: Sigma_P = np.sqrt(Lambda_P)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">:</span>
+            <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s2">&quot;/correlation_matrix/k_matrix.npz&quot;</span><span class="p">)[</span><span class="s1">&#39;K&#39;</span><span class="p">]</span>
+            <span class="n">SAVE_T_POD</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span>
+
+        <span class="n">Psi_P</span><span class="p">,</span> <span class="n">Sigma_P</span> <span class="o">=</span> <span class="n">Temporal_basis_POD</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">SAVE_T_POD</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span><span class="p">)</span>
+
+        <span class="k">del</span> <span class="n">K</span>
+        <span class="k">return</span> <span class="n">Psi_P</span><span class="p">,</span> <span class="n">Sigma_P</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_spatial_basis_POD</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Psi_P</span><span class="p">,</span> <span class="n">Sigma_P</span><span class="p">,</span>
+                           <span class="n">SAVE_SPATIAL_POD</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method computes the spatial structure for the Proper Orthogonal Decomposition (POD) computation. </span>
+<span class="sd">        The theoretical background of the POD is briefly recalled here:</span>
+
+<span class="sd">        https://youtu.be/8fhupzhAR_M</span>
+<span class="sd">        </span>
+<span class="sd">        :param Psi_P: np.array</span>
+<span class="sd">                POD temporal basis</span>
+<span class="sd">        :param Sigma_P: np.array</span>
+<span class="sd">                POD Sigmas</span>
+<span class="sd">        :param SAVE_SPATIAL_POD: bool</span>
+<span class="sd">                Flag deciding if the results will be stored on the disk. </span>
+<span class="sd">                Default value is True, to limit the RAM&#39;s usage.</span>
+<span class="sd">                Note that this might cause a minor slowdown for the loading,</span>
+<span class="sd">                but the tradeoff seems worthy. </span>
+<span class="sd">                This attribute is passed to the MODULO class.</span>
+
+<span class="sd">        :return Phi_P: np.array</span>
+<span class="sd">            POD Phis</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">SAVE_SPATIAL_POD</span> <span class="o">=</span> <span class="n">SAVE_SPATIAL_POD</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">:</span>
+            <span class="sd">&#39;&#39;&#39;Loading temporal basis from disk. They&#39;re already in memory otherwise.&#39;&#39;&#39;</span>
+            <span class="n">Psi_P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s1">&#39;POD/temporal_basis.npz&#39;</span><span class="p">)[</span><span class="s1">&#39;Psis&#39;</span><span class="p">]</span>
+            <span class="n">Sigma_P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s1">&#39;POD/temporal_basis.npz&#39;</span><span class="p">)[</span><span class="s1">&#39;Sigmas&#39;</span><span class="p">]</span>
+
+        <span class="n">Phi_P</span> <span class="o">=</span> <span class="n">Spatial_basis_POD</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">,</span> <span class="n">N_T</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_T</span><span class="p">,</span> <span class="n">PSI_P</span><span class="o">=</span><span class="n">Psi_P</span><span class="p">,</span> <span class="n">Sigma_P</span><span class="o">=</span><span class="n">Sigma_P</span><span class="p">,</span>
+                                  <span class="n">MEMORY_SAVING</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">,</span> <span class="n">FOLDER_OUT</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span><span class="p">,</span>
+                                  <span class="n">N_PARTITIONS</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_PARTITIONS</span><span class="p">,</span> <span class="n">SAVE_SPATIAL_POD</span><span class="o">=</span><span class="n">SAVE_SPATIAL_POD</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Phi_P</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_temporal_basis_mPOD</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">Nf</span><span class="p">,</span> <span class="n">Ex</span><span class="p">,</span> <span class="n">F_V</span><span class="p">,</span> <span class="n">Keep</span><span class="p">,</span> <span class="n">boundaries</span><span class="p">,</span> <span class="n">MODE</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">K_S</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function computes the temporal structures of each scale in the mPOD, as in step 4 of the algorithm</span>
+<span class="sd">        ref: Multi-Scale Proper Orthogonal Decomposition of Complex Fluid Flows - M. A. Mendez et al.</span>
+
+<span class="sd">        :param K: np.array</span>
+<span class="sd">                Temporal correlation matrix</span>
+<span class="sd">        :param Nf: np.array</span>
+<span class="sd">                Order of the FIR filters that are used to isolate each of the scales</span>
+<span class="sd">        :param Ex: int</span>
+<span class="sd">                Extension at the boundaries of K to impose the boundary conditions (see boundaries)</span>
+<span class="sd">                It must be at least as Nf.</span>
+<span class="sd">        :param F_V: np.array</span>
+<span class="sd">                Frequency splitting vector, containing the frequencies of each scale (see article).</span>
+<span class="sd">                If the time axis is in seconds, these frequencies are in Hz.</span>
+<span class="sd">        :param Keep: np.array</span>
+<span class="sd">                Scale keep</span>
+<span class="sd">        :param boundaries: str -&gt; {&#39;nearest&#39;, &#39;reflect&#39;, &#39;wrap&#39; or &#39;extrap&#39;}</span>
+<span class="sd">                Define the boundary conditions for the filtering process, in order to avoid edge effects.</span>
+<span class="sd">                The available boundary conditions are the classic ones implemented for image processing:</span>
+<span class="sd">                nearest&#39;, &#39;reflect&#39;, &#39;wrap&#39; or &#39;extrap&#39;. See also https://docs.scipy.org/doc/scipy/reference/tutorial/ndimage.html      </span>
+<span class="sd">        :param MODE: str -&gt; {‘reduced’, ‘complete’, ‘r’, ‘raw’}</span>
+<span class="sd">                A QR factorization is used to enforce the orthonormality of the mPOD basis, to compensate</span>
+<span class="sd">                for the non-ideal frequency response of the filters. </span>
+<span class="sd">                The option MODE from np.linalg.qr carries out this operation.</span>
+
+<span class="sd">        :return PSI_M: np.array</span>
+<span class="sd">                Multiscale POD temporal basis</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">:</span>
+            <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s2">&quot;/correlation_matrix/k_matrix.npz&quot;</span><span class="p">)[</span><span class="s1">&#39;K&#39;</span><span class="p">]</span>
+
+        <span class="n">PSI_M</span> <span class="o">=</span> <span class="n">temporal_basis_mPOD</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">Nf</span><span class="p">,</span> <span class="n">Ex</span><span class="p">,</span> <span class="n">F_V</span><span class="p">,</span> <span class="n">Keep</span><span class="p">,</span>
+                                    <span class="n">boundaries</span><span class="p">,</span> <span class="n">MODE</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">FOLDER_OUT</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span><span class="p">,</span>
+                                    <span class="n">MEMORY_SAVING</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">,</span> <span class="n">K_S</span><span class="o">=</span><span class="n">K_S</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">PSI_M</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_spatial_basis_mPOD</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">PSI_M</span><span class="p">,</span> <span class="n">SAVE</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function implements the last step of the mPOD algorithm: completing the decomposition. </span>
+<span class="sd">        Here we project from psis, to get phis and sigmas</span>
+
+<span class="sd">        :param D: np.array</span>
+<span class="sd">                data matrix</span>
+<span class="sd">        :param PSI_M: np.array</span>
+<span class="sd">                temporal basis for the mPOD. Remember that it is not possible to impose both basis matrices</span>
+<span class="sd">                phis and psis: given one of the two, the other is univocally determined.</span>
+<span class="sd">        :param SAVE: bool</span>
+<span class="sd">                if True, MODULO saves the results on disk.</span>
+
+<span class="sd">        :return Phi_M: np.array</span>
+<span class="sd">                mPOD Phis (Matrix of spatial structures)</span>
+<span class="sd">        :return Psi_M: np.array</span>
+<span class="sd">                mPOD Psis (Matrix of temporal structures)</span>
+<span class="sd">        :return Sigma_M: np.array</span>
+<span class="sd">                mPOD Sigmas (vector of amplitudes, i.e. the diagonal of Sigma_M)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">Phi_M</span><span class="p">,</span> <span class="n">Psi_M</span><span class="p">,</span> <span class="n">Sigma_M</span> <span class="o">=</span> <span class="n">spatial_basis_mPOD</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">PSI_M</span><span class="p">,</span> <span class="n">N_T</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_T</span><span class="p">,</span> <span class="n">N_PARTITIONS</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_PARTITIONS</span><span class="p">,</span>
+                                                   <span class="n">N_S</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_S</span><span class="p">,</span> <span class="n">MEMORY_SAVING</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">,</span>
+                                                   <span class="n">FOLDER_OUT</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span><span class="p">,</span>
+                                                   <span class="n">SAVE</span><span class="o">=</span><span class="n">SAVE</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Phi_M</span><span class="p">,</span> <span class="n">Psi_M</span><span class="p">,</span> <span class="n">Sigma_M</span>
+
+    <span class="k">def</span> <span class="nf">compute_mPOD</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Nf</span><span class="p">,</span> <span class="n">Ex</span><span class="p">,</span> <span class="n">F_V</span><span class="p">,</span> <span class="n">Keep</span><span class="p">,</span> <span class="n">boundaries</span><span class="p">,</span> <span class="n">MODE</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">SAVE</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function computes the temporal structures of each scale in the mPOD, as in step 4 of the algorithm</span>
+<span class="sd">        ref: Multi-Scale Proper Orthogonal Decomposition of Complex Fluid Flows - M. A. Mendez et al.</span>
+
+<span class="sd">        :param K: np.array</span>
+<span class="sd">                Temporal correlation matrix</span>
+
+<span class="sd">        :param Nf: np.array</span>
+<span class="sd">                Order of the FIR filters that are used to isolate each of the scales</span>
+
+<span class="sd">        :param Ex: int</span>
+<span class="sd">                Extension at the boundaries of K to impose the boundary conditions (see boundaries)</span>
+<span class="sd">                It must be at least as Nf.</span>
+
+<span class="sd">        :param F_V: np.array</span>
+<span class="sd">                Frequency splitting vector, containing the frequencies of each scale (see article).</span>
+<span class="sd">                If the time axis is in seconds, these frequencies are in Hz.</span>
+
+<span class="sd">        :param Keep: np.array</span>
+<span class="sd">                Scale keep</span>
+
+<span class="sd">        :param boundaries: str -&gt; {&#39;nearest&#39;, &#39;reflect&#39;, &#39;wrap&#39; or &#39;extrap&#39;}</span>
+<span class="sd">                Define the boundary conditions for the filtering process, in order to avoid edge effects.</span>
+<span class="sd">                The available boundary conditions are the classic ones implemented for image processing:</span>
+<span class="sd">                nearest&#39;, &#39;reflect&#39;, &#39;wrap&#39; or &#39;extrap&#39;. See also https://docs.scipy.org/doc/scipy/reference/tutorial/ndimage.html</span>
+
+<span class="sd">        :param MODE: str -&gt; {‘reduced’, ‘complete’, ‘r’, ‘raw’}</span>
+<span class="sd">                A QR factorization is used to enforce the orthonormality of the mPOD basis, to compensate</span>
+<span class="sd">                for the non-ideal frequency response of the filters.</span>
+<span class="sd">                The option MODE from np.linalg.qr carries out this operation.</span>
+<span class="sd">        :param dt: float</span>
+<span class="sd">                temporal step</span>
+
+<span class="sd">        :return Phi_M: np.array</span>
+<span class="sd">                mPOD Phis (Matrix of spatial structures)</span>
+<span class="sd">        :return Psi_M: np.array</span>
+<span class="sd">                mPOD Psis (Matrix of temporal structures)</span>
+<span class="sd">        :return Sigma_M: np.array</span>
+<span class="sd">                mPOD Sigmas (vector of amplitudes, i.e. the diagonal of Sigma_M</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="n">CorrelationMatrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_PARTITIONS</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">,</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span><span class="p">,</span> <span class="n">D</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">:</span>
+            <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s1">&#39;correlation_matrix/k_matrix.npz&#39;</span><span class="p">)[</span><span class="s1">&#39;K&#39;</span><span class="p">]</span>
+
+        <span class="n">PSI_M</span> <span class="o">=</span> <span class="n">temporal_basis_mPOD</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">Nf</span><span class="o">=</span><span class="n">Nf</span><span class="p">,</span> <span class="n">Ex</span><span class="o">=</span><span class="n">Ex</span><span class="p">,</span> <span class="n">F_V</span><span class="o">=</span><span class="n">F_V</span><span class="p">,</span> <span class="n">Keep</span><span class="o">=</span><span class="n">Keep</span><span class="p">,</span> <span class="n">boundaries</span><span class="o">=</span><span class="n">boundaries</span><span class="p">,</span>
+                                    <span class="n">MODE</span><span class="o">=</span><span class="n">MODE</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span> <span class="n">FOLDER_OUT</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span><span class="p">,</span> <span class="n">K_S</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                    <span class="n">MEMORY_SAVING</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">,</span> <span class="n">SAT</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+        <span class="n">Phi_M</span><span class="p">,</span> <span class="n">Psi_M</span><span class="p">,</span> <span class="n">Sigma_M</span> <span class="o">=</span> <span class="n">spatial_basis_mPOD</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">,</span> <span class="n">PSI_M</span><span class="p">,</span> <span class="n">N_T</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_T</span><span class="p">,</span> <span class="n">N_PARTITIONS</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_PARTITIONS</span><span class="p">,</span>
+                                                   <span class="n">N_S</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_S</span><span class="p">,</span> <span class="n">MEMORY_SAVING</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">,</span>
+                                                   <span class="n">FOLDER_OUT</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span><span class="p">,</span>
+                                                   <span class="n">SAVE</span><span class="o">=</span><span class="n">SAVE</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Phi_M</span><span class="p">,</span> <span class="n">Psi_M</span><span class="p">,</span> <span class="n">Sigma_M</span>
+
+    <span class="k">def</span> <span class="nf">compute_POD</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SAVE_T_POD</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method computes the temporal structure for the Proper Orthogonal Decomposition (POD) computation.</span>
+<span class="sd">        The theoretical background of the POD is briefly recalled here:</span>
+
+<span class="sd">        https://youtu.be/8fhupzhAR_M</span>
+<span class="sd">        </span>
+<span class="sd">        :return Psi_P: np.array</span>
+<span class="sd">                POD Psis</span>
+
+<span class="sd">        :return Sigma_P: np.array</span>
+<span class="sd">                POD Sigmas. If needed, Lambdas can be easily computed recalling that: Sigma_P = np.sqrt(Lambda_P)</span>
+
+<span class="sd">        :return Phi_P: np.array</span>
+<span class="sd">                POD Phis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: compare compute POD w SVD(D) of SciPy</span>
+        <span class="c1"># TODO: add number of modes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">CorrelationMatrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_PARTITIONS</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">,</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SAVE_K</span><span class="p">,</span> <span class="n">D</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">)</span>
+
+        <span class="n">Psi_P</span><span class="p">,</span> <span class="n">Lambda_P</span><span class="p">,</span> <span class="n">Sigma_P</span> <span class="o">=</span> <span class="n">Temporal_basis_POD</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="n">SAVE_T_POD</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span><span class="p">)</span>
+
+        <span class="n">Phi_P</span> <span class="o">=</span> <span class="n">Spatial_basis_POD</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">,</span> <span class="n">N_T</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_T</span><span class="p">,</span> <span class="n">PSI_P</span><span class="o">=</span><span class="n">Psi_P</span><span class="p">,</span> <span class="n">Sigma_P</span><span class="o">=</span><span class="n">Sigma_P</span><span class="p">,</span>
+                                  <span class="n">MEMORY_SAVING</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_SAVING</span><span class="p">,</span> <span class="n">FOLDER_OUT</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">FOLDER_OUT</span><span class="p">,</span>
+                                  <span class="n">N_PARTITIONS</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_PARTITIONS</span><span class="p">,</span> <span class="n">SAVE_SPATIAL_POD</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">SAVE_SPATIAL_POD</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Phi_P</span><span class="p">,</span> <span class="n">Psi_P</span><span class="p">,</span> <span class="n">Sigma_P</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, L. Schena.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
