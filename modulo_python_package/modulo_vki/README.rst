@@ -7,7 +7,7 @@ MODULO
 MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform Multiscale Modal Analysis of numerical and experimental data using the Multiscale Proper Orthogonal Decomposition (mPOD).
 
 * Free software: 3-clause BSD license
-* Documentation: 	https://modulo.readthedocs.io/en/latest/.
+* Documentation: 	https://modulo.readthedocs.io/en/latest/?badge=latest.
 
 Features
 --------
