@@ -53,7 +53,7 @@ A series of Video tutorial of the GUI has been published on a youtube channel:
 
 The most recent implementation of MODULO is available on a Python module, prepared by Lorenzo Schena:
 
-- https://modulo-vki.readthedocs.io/en/main/intro.html
+- https://modulo.readthedocs.io/en/latest/?badge=latest
 
 
 
