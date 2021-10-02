@@ -1,5 +1,4 @@
 import os
-from sys import platform as _platform
 import numpy as np
 
 
@@ -32,19 +31,9 @@ def Temporal_basis_POD(K, SAVE_T_POD=False, FOLDER_OUT='./'):
     :return: Sigma_P: np.array
             POD Sigmas
     """
-
-    if not (_platform == "linux") or (_platform == "linux2"):
-        '''
-        Checking the os. If you're using windows you should think to switch it over a Linux machine or a WSL2
-        '''
-
-        Psi_P, Lambda_P, _ = np.linalg.svd(K)
-        Sigma_P = np.sqrt(Lambda_P)
-    else:
-        pass
-        # Psi_P, Lambda_P, _ = jnp.linalg.svd(K)
-        # Sigma_P = np.sqrt(Lambda_P)
-
+    Psi_P, Lambda_P, _ = np.linalg.svd(K)
+    Sigma_P = np.sqrt(Lambda_P)
+    
     if SAVE_T_POD:
         os.makedirs(FOLDER_OUT + "/POD/", exist_ok=True)
         print("Saving POD temporal basis")
