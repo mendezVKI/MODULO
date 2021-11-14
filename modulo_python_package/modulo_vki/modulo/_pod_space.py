@@ -58,7 +58,9 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,
         for i in tqdm(range(0, R)):
             # Normalize the columns of C to get spatial modes
             Phi_P[:, i] = PHI_P_SIGMA_P[:, i] / Sigma_P[i]
-
+        
+        return Phi_P  
+    
         if SAVE_SPATIAL_POD:
             os.makedirs(FOLDER_OUT + 'POD', exist_ok=True)
             np.savez(FOLDER_OUT + '/POD/pod_spatial_basis',
@@ -166,4 +168,11 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,
                 Phi_P = dps[:, jj] / np.linalg.norm(dps[:, jj])
                 np.savez(FOLDER_OUT + f"POD/phi_{j + 1}", phi_p=Phi_P)
 
-    return Phi_P
+        # Read the temporary files to build Phi_P_Matrix (Lorenzo pls fix this :D)
+        # TODO 
+        Phi_P_M=np.zeros((N_S,R))
+        for j in range(R):
+         Phi_P_V=np.load(FOLDER_OUT + f"POD/phi_{j + 1}.npz")['phi_p']   
+         Phi_P_M[:,j]=Phi_P_V    
+    
+        return Phi_P_M

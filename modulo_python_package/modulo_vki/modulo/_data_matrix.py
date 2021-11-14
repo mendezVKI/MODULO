@@ -7,7 +7,7 @@ def DataMatrix(database: np.array, FOLDER_OUT: str,
                MEMORY_SAVING: bool = False, N_PARTITIONS: int =1,
                MR: bool = False, SAVE_D: bool = False):
     """
-    This method performs post-processing operations on the data matrix, D:
+    This method performs pre-processing operations on the data matrix, D:
     - Mean removing: if MR=True, the mean (per each column - i.e.: snapshot at time t_i) is removed;
     - Splitting: if the MEMORY_SAVING=True the data matrix is splitted to optimize memory usage. Moreover, D is dumped
                 on disk and removed from the live memory. Finally, if in this condition, also the data type of the

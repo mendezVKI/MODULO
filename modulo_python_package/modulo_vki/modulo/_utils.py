@@ -14,7 +14,7 @@ def Bound_EXT(S, Ex, boundaries):
            ‘reflect’ (d c b a | a b c d | d c b a)    The input is extended by reflecting about the edge of the last pixel.
            ‘nearest’ (a a a a | a b c d | d d d d)    The input is extended by replicating the last pixel.
            ‘wrap’ (a b c d | a b c d | a b c d)       The input is extended by wrapping around to the opposite edge.
-           ‘extrap’ Extrapolation (not yet available) The input is extended via linear extrapolation.
+           ‘extrap’ Extrapolation                     The input is extended via linear extrapolation.
 
 
    """
@@ -60,7 +60,7 @@ def conv_m(K, h, Ex, boundaries):
            ‘reflect’ (d c b a | a b c d | d c b a)    The input is extended by reflecting about the edge of the last pixel.
            ‘nearest’ (a a a a | a b c d | d d d d)    The input is extended by replicating the last pixel.
            ‘wrap’ (a b c d | a b c d | a b c d)       The input is extended by wrapping around to the opposite edge.
-           ‘extrap’ Extrapolation (not yet available)
+           ‘extrap’ Extrapolation                     The input is extended via linear extrapolation.
    """
     # Filter along the raws
     n_t = np.shape(K)[0]

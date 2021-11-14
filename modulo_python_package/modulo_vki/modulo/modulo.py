@@ -8,7 +8,13 @@ from modulo._mpod_space import spatial_basis_mPOD
 from modulo._mpod_time import temporal_basis_mPOD
 from modulo._pod_space import Spatial_basis_POD
 from modulo._pod_time import Temporal_basis_POD
+# Add the DMD (11/11/2021, Miguel)
+from modulo._dmd_s import dmd_s
 from modulo._dft import dft_fit
+import math
+
+from tqdm import tqdm
+
 
 
 class MODULO:
@@ -35,6 +41,8 @@ class MODULO:
                  N_PARTITIONS: int = 1,
                  FOLDER_OUT='./',
                  MEMORY_SAVING: bool = False,
+                 n_Modes: int= 10,   
+                 SAT: int=100,
                  dtype: str = 'float32'):
         """
         This function initializes the main parameters needed by MODULO.
@@ -54,15 +62,25 @@ class MODULO:
 
         :param N_PARTITIONS: If memory saving feature is active, this parameter sets the number of partitions
         that will be used to store the data matrices during the computations.
+        
+        :param n_Modes: Number of Modes to be computed 
+        
+        
+        
         """
 
         if not isinstance(data, np.ndarray):
             raise TypeError("Please check that your database is in an numpy array format.")
 
         self.MEMORY_SAVING = MEMORY_SAVING
-
+        
+        # Assign the number of modes
+        self.n_Modes=n_Modes
+        # Max number of modes per scale (only relevant for the mPOD)
+        self.SAT=100
+        # Check the data type
         self.D = data.astype(dtype)
-
+        # Number of points in time and space 
         self.N_T = data.shape[1]
         self.N_S = data.shape[0]
 
@@ -176,7 +194,8 @@ class MODULO:
         else:
             K = self.K
 
-        Psi_P, Sigma_P = Temporal_basis_POD(K, SAVE_T_POD, self.FOLDER_OUT)
+        Psi_P, Sigma_P = Temporal_basis_POD(self.K, SAVE_T_POD, 
+                                            self.FOLDER_OUT,self.n_Modes)
 
         del K
         return Psi_P, Sigma_P if not self.MEMORY_SAVING else None
@@ -254,6 +273,7 @@ class MODULO:
 
         PSI_M = temporal_basis_mPOD(K, Nf, Ex, F_V, Keep,
                                     boundaries, MODE, dt, FOLDER_OUT=self.FOLDER_OUT,
+                                    n_Modes=self.n_Modes,
                                     MEMORY_SAVING=self.MEMORY_SAVING, K_S=K_S)
 
         return PSI_M if not self.MEMORY_SAVING else None
@@ -287,7 +307,7 @@ class MODULO:
 
         return Phi_M, Psi_M, Sigma_M
 
-    def compute_mPOD(self, Nf, Ex, F_V, Keep, boundaries, MODE, dt, SAVE):
+    def compute_mPOD(self, Nf, Ex, F_V, Keep, boundaries, MODE, dt, SAVE=False):
         """
         This function computes the temporal structures of each scale in the mPOD, as in step 4 of the algorithm
         ref: Multi-Scale Proper Orthogonal Decomposition of Complex Fluid Flows - M. A. Mendez et al.
@@ -336,8 +356,9 @@ class MODULO:
             K = np.load(self.FOLDER_OUT + 'correlation_matrix/k_matrix.npz')['K']
 
         PSI_M = temporal_basis_mPOD(K=K, Nf=Nf, Ex=Ex, F_V=F_V, Keep=Keep, boundaries=boundaries,
-                                    MODE=MODE, dt=dt, FOLDER_OUT=self.FOLDER_OUT, K_S=False,
-                                    MEMORY_SAVING=self.MEMORY_SAVING, SAT=2000)
+                                    MODE=MODE, dt=dt, FOLDER_OUT=self.FOLDER_OUT, 
+                                    n_Modes=self.n_Modes, K_S=False,
+                                    MEMORY_SAVING=self.MEMORY_SAVING, SAT=self.SAT)
 
         Phi_M, Psi_M, Sigma_M = spatial_basis_mPOD(self.D, PSI_M, N_T=self.N_T, N_PARTITIONS=self.N_PARTITIONS,
                                                    N_S=self.N_S, MEMORY_SAVING=self.MEMORY_SAVING,
@@ -368,14 +389,69 @@ class MODULO:
         if self.MEMORY_SAVING:
             self.K = np.load(self.FOLDER_OUT + 'correlation_matrix/k_matrix.npz')['K']
 
-        Psi_P, Sigma_P = Temporal_basis_POD(self.K, SAVE_T_POD, self.FOLDER_OUT)
+        Psi_P, Sigma_P = Temporal_basis_POD(self.K, SAVE_T_POD, 
+                                            self.FOLDER_OUT,self.n_Modes)
 
         Phi_P = Spatial_basis_POD(self.D, N_T=self.N_T, PSI_P=Psi_P, Sigma_P=Sigma_P,
                                   MEMORY_SAVING=self.MEMORY_SAVING, FOLDER_OUT=self.FOLDER_OUT,
                                   N_PARTITIONS=self.N_PARTITIONS)
 
         return Phi_P, Psi_P, Sigma_P
+    
+    def compute_DMD(self, SAVE_T_DMD: bool = True,F_S=1):
+        """
+        This method computes the Dynamic Mode Decomposition of the data
+        using the algorithm in https://arxiv.org/abs/1312.0041. 
+        See the slides in the DDFM course for more details or see
+        https://arxiv.org/abs/2001.01971.
+        
+        :return Phi_D: np.array
+                DMD Psis
 
+        :return Lambda_D: np.array
+                DMD Eigenvalues (of the reduced propagator)
+
+        :return freqs: np.array
+                Frequencies (in Hz, associated to the DMD modes)
+                
+         :return a0s: np.array
+                Initial Coefficients of the Modes        
+                
+        """
+        
+        # If Memory saving is active, we must load back the data 
+        if self.MEMORY_SAVING:
+
+         if self.N_T % self.N_PARTITIONS != 0:
+            tot_blocks_col = self.N_PARTITIONS + 1
+         else:
+            tot_blocks_col = self.N_PARTITIONS
+         
+         # Prepare the D matrix again   
+         D=np.zeros((self.N_S,self.N_T))
+         R1=0
+                  
+         print(' \n Reloading D from tmp...')
+         for k in tqdm(range(tot_blocks_col)):
+            di = np.load(self.FOLDER_OUT + f"/data_partitions/di_{k + 1}.npz")['di']    
+            R2=R1+np.shape(di)[1]
+            D[:,R1:R2]=di         
+            R1=R2
+                     
+         # Partition the data into D_1 and D_2, then clean memory
+         D_1=D[:,0:self.N_T-1] ; D_2=D[:,1:self.N_T]
+         # Compute the DMD
+         Phi_D, Lambda, freqs, a0s = dmd_s(D_1,D_2,self.n_Modes,F_S)
+        
+        if not self.MEMORY_SAVING: 
+         # Partition the data into D_1 and D_2, then clean memory
+         D_1=self.D[:,0:self.N_T-1] ; D_2=self.D[:,1:self.N_T]
+
+         # Compute the DMD
+         Phi_D, Lambda, freqs, a0s = dmd_s(D_1,D_2,self.n_Modes,F_S)
+
+        return Phi_D, Lambda, freqs, a0s
+    
     def compute_DFT(self, F_S, SAVE_DFT=False):
         """
         This method computes the Discrete Fourier Transform of your data.
