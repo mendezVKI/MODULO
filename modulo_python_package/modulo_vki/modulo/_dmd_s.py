@@ -13,8 +13,7 @@ import time
 
 def dmd_s(D_1,D_2,n_Modes, F_S, SAVE_T_DMD=False, FOLDER_OUT='./'):
     """
-    This method computes the POD basis. For some theoretical insights, you can find
-    the theoretical background of the proper orthogonal decomposition in a nutshell here:
+    This method computes the Dynamic Mode Decomposition (DMD). 
 
     https://youtu.be/8fhupzhAR_M
     --------------------------------------------------------------------------------------------------------------------

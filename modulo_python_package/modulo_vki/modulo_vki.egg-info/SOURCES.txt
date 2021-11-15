@@ -4,6 +4,7 @@ setup.py
 modulo/__init__.py
 modulo/_data_matrix.py
 modulo/_dft.py
+modulo/_dmd_s.py
 modulo/_k_matrix.py
 modulo/_mpod_space.py
 modulo/_mpod_time.py
