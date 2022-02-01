@@ -39,7 +39,8 @@ def dft_fit(N_T, F_S, D, FOLDER_OUT, SAVE_DFT=False):
     Sorted_Sigmas = SIGMA_F[Indices]  # Sort all the sigmas
     Sorted_Freqs = Freqs[Indices]  # Sort all the frequencies accordingly.
     Phi_F = PHI_F[:, Indices]  # Sorted Spatial Structures Matrix
-    SIGMA_F = np.diag(Sorted_Sigmas)  # Sorted Amplitude Matrix
+    # new version update
+    SIGMA_F = Sorted_Sigmas # Sorted Amplitude Matrix
 
     if SAVE_DFT:
         os.makedirs(FOLDER_OUT + 'DFT', exist_ok=True)
