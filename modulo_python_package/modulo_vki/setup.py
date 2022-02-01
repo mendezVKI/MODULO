@@ -59,7 +59,7 @@ setup(
     install_requires=[
             "tqdm==4.59.0",
             "sklearn==0.0",
-            "numpy==1.19.5",
+            "numpy==1.21.0",
             "scipy==1.5.4",
             "scikit-learn==0.24.1",
             "ipykernel==5.5.3",
