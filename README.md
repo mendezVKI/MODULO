@@ -1,12 +1,23 @@
 
 
-
 MODULO - latest update 2.0
 ===================
 
 This repository contains the version 2.0 of MODULO (MODal mULtiscale pOd), a software developed at the von Karman Institute to perform Multiscale Modal Analysis of numerical and experimental data using the Multiscale Proper Orthogonal Decomposition (mPOD).
 
-The old version based on MATLAB implementation and related GUI is no longer mantained but will remain available at https://github.com/mendezVKI/MODULO.
+
+The old version based on MATLAB implementation and related GUI is no longer mantained but will remain available at on the branch "Old_Matlab_Implementation". We keep the first Python implementation in the branch "Old_Python_Implementation". 
+
+On the other hand, we do not keep track of the version 1.1 since this is fully replaced by the current version in this repository.
+
+
+### What is MODULO ?
+
+
+
+
+
+### What is new in this V 2.0
 
 
 The new version of MODULO has the following major updates
