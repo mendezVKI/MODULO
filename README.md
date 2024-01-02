@@ -1,9 +1,10 @@
 # Note
 
-This is the first implementation of MODULO in Python, with key contributions by @Fran Torres.
+This is the first implementation of MODULO in Python, with key contributions by @Fran Torres and @Lorenzo Schena.
 
-I prefer keeping track of it because of didactic purposes, as I use some of this material during my courses.
+This branch contains two main folders:
 
-The repository contains three of the four exercises from the Matlab version in the other brunch.
+1. Python_first_Implementation. This contains three of the four exercises from the Matlab version in the other branch. Most of the codes were adapted directly from the Matlab implementation. I keep this folder because I occasionally use it in my courses. Notably, Fran has introduced a parallelized method for generating the matrix D, which has yet to be incorporated into the final version of MODULO.
 
-Notably, Fran has introduced a parallelized method for generating the matrix D, which has yet to be incorporated into the final version of MODULO.
+
+
