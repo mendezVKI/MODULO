@@ -1,5 +1,0 @@
-Download the data set for :
-- Exercise 1 (pulsating Poiseuille flow) https://osf.io/zqrp5/download
-- Exercise 3 (CFD vorticity) https://osf.io/zgujk/download
-- Exercise 4 (TR-PIV) https://osf.io/c28de/download
-- Exercise 5 (Cylinder) https://osf.io/qa8d4/download
