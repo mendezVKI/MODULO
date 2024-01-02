@@ -1,0 +1,9 @@
+tqdm
+numpy
+scipy
+scikit-learn
+ipykernel
+ipython
+ipython-genutils
+ipywidgets
+matplotlib

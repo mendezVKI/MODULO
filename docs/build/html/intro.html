@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MODULO: Introduction &mdash; MODULO 1.1.6 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="MODULO Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> MODULO
+          </a>
+              <div class="version">
+                1.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MODULO: Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="importing_data.html">Importing data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="black_box.html">Computing decompositions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-history.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="min_versions.html">Minimum Version of Python and NumPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="material.html">MODULO: References and material</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MODULO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>MODULO: Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/intro.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modulo-introduction">
+<h1>MODULO: Introduction<a class="headerlink" href="#modulo-introduction" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://imgur.com/ylm0cyv"><img alt="Alternative text" class="align-center" src="_images/modulo_logo.png" style="width: 700px;" /></a>
+<p>MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform Multiscale Modal Analysis of numerical and experimental data using the Multiscale Proper Orthogonal Decomposition (mPOD).</p>
+<p>The theoretical foundation of the decomposition is described in
+- M.A. Mendez, M. Balabane, J.-M. Buchlin, Multiscale Proper Orthogonal Decomposition of Complex Fluid Flows, Journal of Fluid Mechanics, Vol 870, July 2019, pp. 988-1036. The pre-print is available at <a class="reference external" href="https://arxiv.org/abs/1804.09646">https://arxiv.org/abs/1804.09646</a></p>
+<blockquote>
+<div><p>Example of applications of the decomposition to TR-PIV data are shown in</p>
+<ul class="simple">
+<li><p>M.A. Mendez, M.T. Scelzo, J.-M. Buchlin, Multiscale Modal Analysis of an Oscillating Impinging Gas Jet, Experimental Thermal and Fluid Science, Vol 91, February 2018, pp. 256-276 (<a class="reference external" href="https://doi.org/10.1016/j.expthermflusci.2017.10.032">https://doi.org/10.1016/j.expthermflusci.2017.10.032</a>).</p></li>
+<li><p>M.A. Mendez, A. Gosset, J.-M. Buchlin, Experimental Analysis of the Stability of the Jet Wiping Process, Part II: Multiscale Modal Analysis of the Gas Jet-Liquid Film Interaction, Experimental Thermal and Fluid Science, Vol 106, September 2019, pp. 48-67 (<a class="reference external" href="https://doi.org/10.1016/j.expthermflusci.2019.03.004">https://doi.org/10.1016/j.expthermflusci.2019.03.004</a>).</p></li>
+<li><p>M.A. Mendez, D. Hess, B. Watz, J.-M. Buchlin.  Multiscale Proper Orthogonal Decomposition (mPOD) of TR-PIV data: a Case Study on Transient Flows, 13th International Symposium on Particle Image Velocimetry at Munich. An extended version of this article is currently in preparation.</p></li>
+</ul>
+</div></blockquote>
+<p>Currently, this folder contains ffive exercises. Of these, two are done both in Matlab and in Python, while the remaining ones are only available in Matlab. The exercises include 1D and 2D cases with both scalar and vectorial quantities.
+An example of processing on video sequences is currently in preparation.</p>
+<p>All the codes so far assume that the dataset is equally spaced both in space (i.e. along a Cartesian grid) and in time.
+TR-PIV or video sequences satisfy these conditions easily. Other simple exercises using Finite Difference are also considered (ex.1, ex.2, ex. 3).</p>
+<p>The proposed exercises are the following:</p>
+<p>1- Decomposition of the velocity profile of a pulsating Poiseuille flow (1D, scalar). The theoretical background for the analytical solution is described in M.A. Mendez,J.-M Buchlin, VKI-TN 215, 2016, “Notes on 2D Pulsatile Poiseuille Flows An Introduction to Eigenfunction Expansion and Complex Variables using Matlab”
+(Available in Python and Matlab)</p>
+<p>2- Decomposition of a Synthetic Test case
+(Available only in Matlab)</p>
+<p>3- Decomposition of the Vorticity field of a 2D simulation in Matlab.
+(Available only in Matlab)</p>
+<p>4- Decomposition of a TR-PIV measurement of an impinging jet.
+(Available in Python and Matlab)</p>
+<p>5- Decomposition of a TR-PIV measurement of a flow past a cylinder.
+(Available only in Matlab)</p>
+<p>Exercises 2,3 and 4 are taken from the article at <a class="reference external" href="https://arxiv.org/abs/1804.09646">https://arxiv.org/abs/1804.09646</a> .
+Exercise 5 is available at <a class="reference external" href="https://arxiv.org/abs/2001.01971">https://arxiv.org/abs/2001.01971</a> .</p>
+<p>The standalone application is available in the section “Release” of this repository.</p>
+<p>The do list currently includes:</p>
+<p>1- Finish the exercises in Python and clean the codes.</p>
+<p>2- Extend the analysis to cases that do not have Cartesian grids, hence requiring weighted inner products.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="MODULO Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, L. Schena.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
