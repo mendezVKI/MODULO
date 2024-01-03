@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Towards customization: accessing MODULO internal modules &mdash; MODULO 1.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="Black - box computing of mPOD and POD" href="black_box.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> MODULO
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">MODULO: Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="importing_data.html">Importing data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="black_box.html">Black - box computing of mPOD and POD</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Towards customization: accessing MODULO internal modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-history.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="min_versions.html">Minimum Version of Python and NumPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="next.html">MODULO: What’s next?</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MODULO</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Towards customization: accessing MODULO internal modules</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/single_modules.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="towards-customization-accessing-modulo-internal-modules">
+<h1>Towards customization: accessing MODULO internal modules<a class="headerlink" href="#towards-customization-accessing-modulo-internal-modules" title="Permalink to this headline">¶</a></h1>
+<p>MODULO gives you control on each single decomposition step. In this way, you can compare different results and even make your personal
+decomposition algorithm.</p>
+<dl class="function">
+<dt id="modulo.MODULO._temporal_basis_POD">
+<code class="descclassname">modulo.MODULO.</code><code class="descname">_temporal_basis_POD</code><span class="sig-paren">(</span><em>self</em>, <em>SAVE_T_POD: bool = True</em><span class="sig-paren">)</span><a class="headerlink" href="#modulo.MODULO._temporal_basis_POD" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method computes the temporal structure for the Proper Orthogonal Decomposition (POD) computation. 
+The theoretical background of the POD is briefly recalled here:</p>
+<p><a class="reference external" href="https://youtu.be/8fhupzhAR_M">https://youtu.be/8fhupzhAR_M</a></p>
+<p>The diagonalization of K is computed via Singular Value Decomposition (SVD).
+A speedup is available if the user is on Linux machine, in which case MODULO
+exploits the power of JAX and its Numpy implementation.</p>
+<p>For more on JAX:</p>
+<p><a class="reference external" href="https://github.com/google/jax">https://github.com/google/jax</a>
+<a class="reference external" href="https://jax.readthedocs.io/en/latest/jax.numpy.html">https://jax.readthedocs.io/en/latest/jax.numpy.html</a></p>
+<p>If the user is on a Win machine, Linux OS can be used using
+the Windows Subsystem for Linux.</p>
+<p>For more on WSL:
+<a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">https://docs.microsoft.com/en-us/windows/wsl/install-win10</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>SAVE_T_POD</strong> – bool
+Flag deciding if the results will be stored on the disk. 
+Default value is True, to limit the RAM’s usage.
+Note that this might cause a minor slowdown for the loading,
+but the tradeoff seems worthy. 
+This attribute is passed to the MODULO class.</td>
+</tr>
+</tbody>
+</table>
+<p>POD temporal basis are returned if MEMORY_SAVING is not active. Otherwise all the results are saved on disk.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return Psi_P:</th><td class="field-body">np.array
+POD Psis</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return Sigma_P:</th><td class="field-body">np.array
+POD Sigmas. If needed, Lambdas can be easily computed recalling that: Sigma_P = np.sqrt(Lambda_P)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modulo.MODULO._spatial_basis_POD">
+<code class="descclassname">modulo.MODULO.</code><code class="descname">_spatial_basis_POD</code><span class="sig-paren">(</span><em>self</em>, <em>Psi_P</em>, <em>Sigma_P</em>, <em>SAVE_SPATIAL_POD: bool = True</em><span class="sig-paren">)</span><a class="headerlink" href="#modulo.MODULO._spatial_basis_POD" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method computes the spatial structure for the Proper Orthogonal Decomposition (POD) computation. 
+The theoretical background of the POD is briefly recalled here:</p>
+<p><a class="reference external" href="https://youtu.be/8fhupzhAR_M">https://youtu.be/8fhupzhAR_M</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Psi_P</strong> – np.array
+POD temporal basis</li>
+<li><strong>Sigma_P</strong> – np.array
+POD Sigmas</li>
+<li><strong>SAVE_SPATIAL_POD</strong> – bool
+Flag deciding if the results will be stored on the disk. 
+Default value is True, to limit the RAM’s usage.
+Note that this might cause a minor slowdown for the loading,
+but the tradeoff seems worthy. 
+This attribute is passed to the MODULO class.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return Phi_P:</th><td class="field-body"><p class="first last">np.array
+POD Phis</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modulo.MODULO._temporal_basis_mPOD">
+<code class="descclassname">modulo.MODULO.</code><code class="descname">_temporal_basis_mPOD</code><span class="sig-paren">(</span><em>self</em>, <em>K</em>, <em>Nf</em>, <em>Ex</em>, <em>F_V</em>, <em>Keep</em>, <em>boundaries</em>, <em>MODE</em>, <em>dt</em>, <em>K_S=False</em><span class="sig-paren">)</span><a class="headerlink" href="#modulo.MODULO._temporal_basis_mPOD" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the temporal structures of each scale in the mPOD, as in step 4 of the algorithm
+ref: Multi-Scale Proper Orthogonal Decomposition of Complex Fluid Flows - M. A. Mendez et al.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>K</strong> – np.array
+Temporal correlation matrix</li>
+<li><strong>Nf</strong> – np.array
+Order of the FIR filters that are used to isolate each of the scales</li>
+<li><strong>Ex</strong> – int
+Extension at the boundaries of K to impose the boundary conditions (see boundaries)
+It must be at least as Nf.</li>
+<li><strong>F_V</strong> – np.array
+Frequency splitting vector, containing the frequencies of each scale (see article).
+If the time axis is in seconds, these frequencies are in Hz.</li>
+<li><strong>Keep</strong> – np.array
+Scale keep</li>
+<li><strong>boundaries</strong> – str -&gt; {‘nearest’, ‘reflect’, ‘wrap’ or ‘extrap’}
+Define the boundary conditions for the filtering process, in order to avoid edge effects.
+The available boundary conditions are the classic ones implemented for image processing:
+nearest’, ‘reflect’, ‘wrap’ or ‘extrap’. See also <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/tutorial/ndimage.html">https://docs.scipy.org/doc/scipy/reference/tutorial/ndimage.html</a></li>
+<li><strong>MODE</strong> – str -&gt; {‘reduced’, ‘complete’, ‘r’, ‘raw’}
+A QR factorization is used to enforce the orthonormality of the mPOD basis, to compensate
+for the non-ideal frequency response of the filters. 
+The option MODE from np.linalg.qr carries out this operation.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return PSI_M:</th><td class="field-body"><p class="first last">np.array
+Multiscale POD temporal basis</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modulo.MODULO._spatial_basis_mPOD">
+<code class="descclassname">modulo.MODULO.</code><code class="descname">_spatial_basis_mPOD</code><span class="sig-paren">(</span><em>self</em>, <em>D</em>, <em>PSI_M</em>, <em>SAVE</em><span class="sig-paren">)</span><a class="headerlink" href="#modulo.MODULO._spatial_basis_mPOD" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function implements the last step of the mPOD algorithm: completing the decomposition. 
+Here we project from psis, to get phis and sigmas</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>D</strong> – np.array
+data matrix</li>
+<li><strong>PSI_M</strong> – np.array
+temporal basis for the mPOD. Remember that it is not possible to impose both basis matrices
+phis and psis: given one of the two, the other is univocally determined.</li>
+<li><strong>SAVE</strong> – bool
+if True, MODULO saves the results on disk.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return Phi_M:</th><td class="field-body"><p class="first">np.array
+mPOD Phis (Matrix of spatial structures)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return Psi_M:</th><td class="field-body"><p class="first">np.array
+mPOD Psis (Matrix of temporal structures)</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return Sigma_M:</th><td class="field-body"><p class="first last">np.array
+mPOD Sigmas (vector of amplitudes, i.e. the diagonal of Sigma_M)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="black_box.html" class="btn btn-neutral float-left" title="Black - box computing of mPOD and POD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, L. Schena.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
