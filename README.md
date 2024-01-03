@@ -46,10 +46,9 @@ This is generally faster but requires more memory.
 
 The installation provides with 5 exercises to explore all the features of MODULO while familizarizing with data driven decompositions. These are available in the /exercise/ folder, both in plain python format and in jupyter notebooks. 
 
-- Exercise 1. In this exercise we consider the flow past a cylinder. This is by far the most popular test case because it's well known to have a simple low order representation, with modes that have nearly harmonic temporal structure. We compute the POD and the DMD and compare the results... the difference between DMD and POD modes is hardly distinguishable !.
-The data for this test case was produced by Denis Dumoulin during his STP project at VKI in 2016 (Report available on request).
+- Exercise 1. In this exercise we consider the flow past a cylinder. The dataset was created via Large Eddy Simulations (LES) by Denis Dumoulin during his STP project at VKI in 2016 (Report available on request). For convinience, the data was first mapped to a Cartesian grid. This test case is by far the most popular because it's well known to have a simple low order representation, with modes that have nearly harmonic temporal structures. We compute the POD and the DMD and compare the results... the difference between DMD and POD modes is hardly distinguishable !.
 
-- Exercise 2. We consider the flow of an impinging gas jet, taken from [this](https://arxiv.org/abs/1804.09646) paper. This  
+- Exercise 2. We consider the flow of an impinging gas jet, taken from [this](https://arxiv.org/abs/1804.09646) paper. This dataset was collected via Time Resolved Particle Image Velocimetry (TR-PIV). Only the first 200 POD modes were stored. This dataset has a much richer dynamics than the previous and cannot be easily approximated using a few modes. We use it to explore the differences between the DFT, the SPODs and the mPOD.
 
 - Exercise 3.
 

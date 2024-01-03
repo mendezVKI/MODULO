@@ -204,8 +204,8 @@ print('Data set unzipped and ready ! ')
 #%% Exercise 8
 
 # This database collects a portion of the domain in a 3D LES simulation of a turbulent impinging jet.
-# The nozzle has a width of D=XX mm and is placed at a distance Z=XX  from the wall.
-# The mean velocity is approximately U= XXX m/s, resulting in a Reynolds number Re= U D/nu = XXXX
+# The nozzle has a width of D=1.5 mm and is placed at a distance Z=10mm  from the wall.
+# The mean velocity at the outlet is U= 100 m/s, resulting in a Reynolds number Re= U D/nu = 1e4
 # The dataset is sampled with dt = 5e-05 s.
 
 # Note: To visualize this data (VTK format) it is strongly adviced to use 
