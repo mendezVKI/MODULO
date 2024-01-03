@@ -25,7 +25,7 @@ For a more comprehensive overview of data driven decompositions, we refer to the
 This version expands considerably the version v1 in "Old_Python_Implementation", for which a first tutorial was provided by L. Schena in https://www.youtube.com/watch?v=y2uSvdxAwHk. 
 The major updates are the following :
 
-1. Faster EIG/SVD algorithms, using powerful randomized svd solvers from scikit_learn (see [this]() and [this]() ). It is now possible to select various options as "eig_solver" and "svd_solver", offering different trade offs in terms of accuracy vs computational time.
+1. Faster EIG/SVD algorithms, using powerful randomized svd solvers from scikit_learn (see [this](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html) and [this](https://scikit-learn.org/stable/modules/generated/sklearn.utils.extmath.randomized_svd.html) ). It is now possible to select various options as "eig_solver" and "svd_solver", offering different trade offs in terms of accuracy vs computational time.
 2. Faster subscale estimators for the mPOD: the previous version used the rank of the correlation matrix in each scale to define the number of modes to be computed in each portion of the splitting vector before assemblying the full basis. This is computationally very demanding. This estimation has been replaced by a frequency-based threshold (i.e based on the frequency bins within each portion), since 
 
 3. Implementation of Dynamic Mode Decomposition (DMD) from [Schmid, P.J 2010](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/dynamic-mode-decomposition-of-numerical-and-experimental-data/AA4C763B525515AD4521A6CC5E10DBD4)
