@@ -46,9 +46,10 @@ This is generally faster but requires more memory.
 
 The installation provides with 5 exercises to explore all the features of MODULO while familizarizing with data driven decompositions. These are available in the /exercise/ folder, both in plain python format and in jupyter notebooks. 
 
-- Exercise 1.
+- Exercise 1. In this exercise we consider the flow past a cylinder. This is by far the most popular test case because it's well known to have a simple low order representation, with modes that have nearly harmonic temporal structure. We compute the POD and the DMD and compare the results... the difference between DMD and POD modes is hardly distinguishable !.
+The data for this test case was produced by Denis Dumoulin during his STP project at VKI in 2016 (Report available on request).
 
-- Exercise 2.
+- Exercise 2. We consider the flow of an impinging gas jet, taken from [this](https://arxiv.org/abs/1804.09646) paper. This  
 
 - Exercise 3.
 
@@ -56,10 +57,6 @@ The installation provides with 5 exercises to explore all the features of MODULO
 
 - Exercise 5.
 
-
-<> 1. DMD and POD analysis of a 2D flow past a cylinder, simulated using 2D LES in openFOAM.
-<> 2. POD, SPODs and mPOD analysis of an impinging jet flow, obtained from a TR-PIV campaign <> at the von Karman Institute. This is one of test cases in [Mendez et al 2018](https://www.<> cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/<> multiscale-proper-orthogonal-decomposition-of-complex-fluid-flows/<> D078BD2873B1C30B6DD9016E30B62DA8), available on arxiv at https://arxiv.org/abs/1804.09646. 
-<> 3. POD, mPOD and kPOD of the flow past a cylinder in transient conditions. This is the dataset analyzed in [Mendez et al 2020](https://iopscience.iop.org/article/10.1088/1361-6501/ab82be/meta)
 
 
 
