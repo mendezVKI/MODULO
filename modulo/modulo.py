@@ -20,8 +20,6 @@ from modulo.utils._data_matrix import DataMatrix
 from modulo.utils._utils import switch_svds
 
 
-
-
 class MODULO:
     """
     MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform Multiscale
@@ -58,18 +56,15 @@ class MODULO:
         Attributes:
        
         :param data: This is the data matrix to factorize. It is a np.array with 
-        shape ((N_S, N_T)). If the data has not yet been prepared in the form of a np.array,
-        the method ReadData in MODULO can be used (see ReadData).
-        If the memory saving is active (N_PARTITIONS >1), the folder with partitions should be prepared.  
-        If the memory saving is active, this entry = None. The data matrix is assumed to big to be saved and the
-        
-        
+               shape ((N_S, N_T)). If the data has not yet been prepared in the form of a np.array,
+               the method ReadData in MODULO can be used (see ReadData). If the memory saving is active (N_PARTITIONS >1), the folder with partitions should be prepared.  
+               If the memory saving is active, this entry = None. The data matrix is assumed to big to be saved and the
+              
         :param N_PARTITIONS: If memory saving feature is active, this parameter sets the number of partitions
-        that will be used to store the data matrices during the computations.
+               that will be used to store the data matrices during the computations.
         
-        :param FOLDER_OUT: Folder in which the output will be stored.
-        The output includes the matrices Phi, Sigma and Psi (optional) and temporary files 
-        used for some of the calculations (e.g.: for memory saving).
+        :param FOLDER_OUT: Folder in which the output will be stored.The output includes the matrices Phi, Sigma and Psi (optional) and temporary files 
+               used for some of the calculations (e.g.: for memory saving).
         
         :param N_T: Number of time steps, must be given when N_PARTITIONS >1
         
@@ -84,7 +79,7 @@ class MODULO:
         :param svd_solver: Numerical solver to compute the Single Value Decomposition
         
         :param weights: weight vector [w_i,....,w_{N_s}] where w_i = area_cell_i/area_grid
-                Only needed if grid is non-uniform.
+               Only needed if grid is non-uniform.
         
         
         """
@@ -166,9 +161,6 @@ class MODULO:
 
 
         
-
-
-         
 
     def _data_processing(self,
                          MR: bool = False,
@@ -578,8 +570,9 @@ class MODULO:
     def compute_DMD_PIP(self, SAVE_T_DMD: bool = True, F_S=1):
         """
         This method computes the Dynamic Mode Decomposition of the data
-        using the algorithm in https://arxiv.org/abs/1312.0041. 
-        See also https://arxiv.org/abs/2001.01971 for more details.
+        using the algorithm in https://arxiv.org/abs/1312.0041, which is basically the same as 
+        the PIP algorithm proposed in https://www.sciencedirect.com/science/article/abs/pii/0167278996001248   
+        See v1 of this paper https://arxiv.org/abs/2001.01971 for more details (yes, reviewers did ask to omit this detail in v2).
         
         :return Phi_D: np.array
                 DMD Phis. As for the DFT, these are complex.
@@ -628,6 +621,8 @@ class MODULO:
     def compute_DFT(self, F_S, SAVE_DFT=False):
         """
         This method computes the Discrete Fourier Transform of your data.
+
+        Check out this tutorial: https://www.youtube.com/watch?v=8fhupzhAR_M&list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR&index=2
 
         :param F_S: float,
                 Sampling Frequency [Hz]
@@ -804,8 +799,11 @@ class MODULO:
 
     def compute_kPOD(self, M_DIST=[1,10],k_m=0.1, cent='y', n_Modes=10,alpha=1e-6):
         """
-        This function implements the kernel PCA as described in 
-        https://arxiv.org/pdf/2208.07746.pdf.
+        This function implements the kernel PCA as described in the VKI course https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023
+
+        The computation of the kernel function is carried out as in https://arxiv.org/pdf/2208.07746.pdf.
+
+
         
         :param M_DIST: array,
                 position of the two snapshots that will be considered to

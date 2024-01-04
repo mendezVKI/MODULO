@@ -8,10 +8,12 @@
 #/new_functions/
 
 # Exclude MODULO tmp
-/MODULO_tmp/
+#/MODULO_tmp/
 
 # Exclude all _py_chache
 modulo/__pycache__/
+modulo/core/__pycache__
+modulo/utils/__pycache__
 
 # Exclude development tests
 #/tests/

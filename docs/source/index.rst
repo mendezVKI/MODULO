@@ -14,8 +14,8 @@ MODULO Documentation
    importing_data
    usage
    black_box
+   exercises
+   min_versions
    single_modules
    release-history
-   min_versions
-   material
-
+   
