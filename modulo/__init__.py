@@ -5,7 +5,7 @@
 
 
 from .utils.read_db import *
-from .utils._data_matrix import *
+#from .utils._data_matrix import *
 from .core._k_matrix import *
 from .utils._utils import *
 from .core._mpod_time import *

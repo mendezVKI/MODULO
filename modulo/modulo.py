@@ -16,7 +16,6 @@ from modulo.core._pod_space import Spatial_basis_POD
 from modulo.core._pod_time import Temporal_basis_POD
 from modulo.core._spod_s import compute_SPOD_s
 from modulo.core._spod_t import compute_SPOD_t
-from modulo.utils._data_matrix import DataMatrix
 from modulo.utils._utils import switch_svds
 
 
