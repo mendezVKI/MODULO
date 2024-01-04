@@ -97,7 +97,7 @@ class MODULO:
         if not isinstance(data, np.ndarray) and N_PARTITIONS==1:
             raise TypeError("Please check that your database is in an numpy array format. If D=None, then you must have memory saving (N_PARTITIONS>1)")
 
-        
+
         # Load the data matrix 
         if isinstance(data,np.ndarray):
          # Number of points in time and space 
@@ -122,10 +122,16 @@ class MODULO:
                 self.weights = np.concatenate((weights,weights))
                 print("Modulo assumes you have a 2D domain and has duplicated the weight "
                       "array to match the size of the D columns \n")
+                print(weights)
             else:
                 raise AttributeError("Make sure the size of the weight array is twice smaller than the size of D")
             # Dstar is used to compute the K matrix
-            self.Dstar = np.transpose(np.transpose(self.D) * np.sqrt(self.weights))
+            if isinstance(data, np.ndarray):
+                # Apply the weights only if D exist.
+                # If not (i.e. N_partitions >1), weights are applied in _k_matrix.py when loading partitions of D
+                self.Dstar = np.transpose(np.transpose(self.D) * np.sqrt(self.weights))
+            else:
+                self.Dstar = None
         else:
             print("Modulo assumes you have a uniform grid. "
                   "If not, please give the weights as parameters of MODULO!")
@@ -164,39 +170,6 @@ class MODULO:
         if self.MEMORY_SAVING:
             os.makedirs(self.FOLDER_OUT, exist_ok=True)
 
-
-        
-
-
-         
-
-    def _data_processing(self,
-                         MR: bool = False,
-                         SAVE_D: bool = False):
-        """
-        This method pre-process the data before running the factorization. 
-        If the memory saving option is active, the method ensures the correct splitting of the data matrix
-        into the required partitions.
-        If the mean removal is desired (MR: True), this method removes the time averaged column from the 
-        data matrix D.
-        If neither the mean removal nor the memory saving options are active, this method is skipped.
-
-        :param MR: bool
-                    if True, the mean field is removed from the data matrix.
-
-        :param SAVE_D: bool
-                    if True, the D matrix is saved in the folder decided by the user
-
-
-        :return: D directly (as class attribute) if Memory saving is not active. 
-                 Otherwise, it returns None and the matrix is automatically saved on disk.
-        """
-
-        self.D = DataMatrix(self.D, self.FOLDER_OUT, MEMORY_SAVING=self.MEMORY_SAVING,
-                            N_PARTITIONS=self.N_PARTITIONS, MR=MR, SAVE_D=SAVE_D)
-
-  
-        return True 
 
     def _correlation_matrix(self,
                             SAVE_K: bool = True):
@@ -488,8 +461,7 @@ class MODULO:
         :return Phi_P: np.array
                 POD Phis
         """
-        
-                    
+
         print('Computing correlation matrix D matrix...')    
         self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, 
                                    self.MEMORY_SAVING,

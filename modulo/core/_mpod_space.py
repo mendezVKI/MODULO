@@ -10,7 +10,7 @@ from scipy.signal import firwin  # To create FIR kernels
 import math
 
 
-def spatial_basis_mPOD(D, PSI_M, N_T, N_PARTITIONS, N_S, MEMORY_SAVING, FOLDER_OUT, SAVE: bool = False):
+def spatial_basis_mPOD(D, PSI_M, N_T, N_PARTITIONS, N_S, MEMORY_SAVING, FOLDER_OUT, SAVE: bool = False,weights: np.array = np.array([])):
     """
     Given the temporal basis of the mPOD now the spatial ones are computed
 
@@ -119,7 +119,10 @@ def spatial_basis_mPOD(D, PSI_M, N_T, N_PARTITIONS, N_S, MEMORY_SAVING, FOLDER_O
             # Getting sigmas and phis
             for z in range(R1, R2):
                 zz = z - R1
-                SIGMA_M.append(np.linalg.norm(dps[:, zz]))
+                if weights.size == 0:
+                    SIGMA_M.append(np.linalg.norm(dps[:, zz]))
+                else:
+                    SIGMA_M.append(np.linalg.norm(dps[:, zz]*np.sqrt(weights)))
                 tmp = dps[:, zz] / SIGMA_M[z]
                 #print(f'Shape tmp = {np.shape(tmp)}')
                 PHI_M.append(tmp)
@@ -144,7 +147,10 @@ def spatial_basis_mPOD(D, PSI_M, N_T, N_PARTITIONS, N_S, MEMORY_SAVING, FOLDER_O
         for i in tqdm(range(0, R)):
             # print('Completing mPOD Mode ' + str(i))
             # Assign the norm as amplitude
-            SIGMA_M[i] = np.linalg.norm(PHI_M_SIGMA_M[:, i])
+            if weights.size == 0:
+                SIGMA_M[i] = np.linalg.norm(PHI_M_SIGMA_M[:, i])
+            else:
+                SIGMA_M[i] = np.linalg.norm(PHI_M_SIGMA_M[:, i]*np.sqrt(weights))
             # Normalize the columns of C to get spatial modes
             PHI_M[:, i] = PHI_M_SIGMA_M[:, i] / SIGMA_M[i]
 
