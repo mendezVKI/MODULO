@@ -10,7 +10,7 @@ from .utils._utils import *
 from .utils._plots import *
 from .utils.others import *
 
-
+from .core._k_matrix import *
 from .core._dft import *
 from .core._dmd_s import *
 from .core._k_matrix import *

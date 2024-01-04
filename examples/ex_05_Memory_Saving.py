@@ -82,13 +82,13 @@ n_x,n_y=np.shape(Xg)
 
 
 # Prepare 10 partitions
-D = ReadData._from_dat(folder=FOLDER, filename='Res%05d', 
+D = ReadData._data_processing(database=None,FOLDER_IN=FOLDER, filename='Res%05d',
                        N=2, N_S=2*nxny,N_T=N_T,
                        h = H, f = F, c=C,
-                       N_PARTITIONS=10, MR= False)
+                       N_PARTITIONS=10, MR= False,FOLDER_OUT='./MODULO_tmp')
 
 # --- Initialize MODULO object
-m = MODULO(data=None,N_T=N_T,
+m = MODULO(data=D,N_T=N_T,
            N_S=2*nxny,
            n_Modes=100,
            N_PARTITIONS=10,eig_solver='svd_sklearn_randomized')

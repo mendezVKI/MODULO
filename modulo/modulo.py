@@ -16,7 +16,6 @@ from modulo.core._pod_space import Spatial_basis_POD
 from modulo.core._pod_time import Temporal_basis_POD
 from modulo.core._spod_s import compute_SPOD_s
 from modulo.core._spod_t import compute_SPOD_t
-from modulo.utils._data_matrix import DataMatrix
 from modulo.utils._utils import switch_svds
 
 
@@ -92,7 +91,7 @@ class MODULO:
         if not isinstance(data, np.ndarray) and N_PARTITIONS==1:
             raise TypeError("Please check that your database is in an numpy array format. If D=None, then you must have memory saving (N_PARTITIONS>1)")
 
-        
+
         # Load the data matrix 
         if isinstance(data,np.ndarray):
          # Number of points in time and space 
@@ -117,10 +116,16 @@ class MODULO:
                 self.weights = np.concatenate((weights,weights))
                 print("Modulo assumes you have a 2D domain and has duplicated the weight "
                       "array to match the size of the D columns \n")
+                print(weights)
             else:
                 raise AttributeError("Make sure the size of the weight array is twice smaller than the size of D")
             # Dstar is used to compute the K matrix
-            self.Dstar = np.transpose(np.transpose(self.D) * np.sqrt(self.weights))
+            if isinstance(data, np.ndarray):
+                # Apply the weights only if D exist.
+                # If not (i.e. N_partitions >1), weights are applied in _k_matrix.py when loading partitions of D
+                self.Dstar = np.transpose(np.transpose(self.D) * np.sqrt(self.weights))
+            else:
+                self.Dstar = None
         else:
             print("Modulo assumes you have a uniform grid. "
                   "If not, please give the weights as parameters of MODULO!")
@@ -159,9 +164,7 @@ class MODULO:
         if self.MEMORY_SAVING:
             os.makedirs(self.FOLDER_OUT, exist_ok=True)
 
-
         
-
     def _data_processing(self,
                          MR: bool = False,
                          SAVE_D: bool = False):
@@ -480,8 +483,7 @@ class MODULO:
         :return Phi_P: np.array
                 POD Phis
         """
-        
-                    
+
         print('Computing correlation matrix D matrix...')    
         self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, 
                                    self.MEMORY_SAVING,

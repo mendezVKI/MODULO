@@ -176,11 +176,10 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,
 
                 dps[C1:C2, :] = PHI_SIGMA_BLOCK[:, R1:R2]
 
-                # Computing Sigmas and Phis:
-                # TODO: np.linalg.norm(dps[:, jj]) to substitute with Sigma (that is already available from _pod_time)
+            # Computing Sigmas and Phis
             for j in range(R1, R2):
                 jj = j - R1
-                Phi_P = dps[:, jj] / np.linalg.norm(dps[:, jj])
+                Phi_P = dps[:, jj] / Sigma_P[jj] #np.linalg.norm(dps[:, jj])
                 np.savez(FOLDER_OUT + f"/POD/phi_{j + 1}", phi_p=Phi_P)
 
         # Read the temporary files to build Phi_P_Matrix (Lorenzo pls fix this :D)
