@@ -1,0 +1,11 @@
+# List required packages in this file, one per line.
+numpy
+pandas
+matplotlib
+pytest
+sphinx
+tqdm
+scipy
+sklearn
+os
+matplotlib
