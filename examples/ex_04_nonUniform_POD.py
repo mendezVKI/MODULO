@@ -4,7 +4,6 @@
 # The grid of this slice is non-uniform and the velocity fields are saved with constant time steps.
 # More info ? Please look a Tutorial_4.
 
-
 import numpy as np
 import pyvista as pv  # https://docs.pyvista.org/version/stable/examples/99-advanced/openfoam-tubes.html
 import pickle
