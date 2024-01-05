@@ -10,12 +10,12 @@ MODULO Documentation
    :maxdepth: 2
  
    intro
+   what_is_new
    installation
    importing_data
    usage
    black_box
-   single_modules
-   release-history
+   exercises
    min_versions
-   material
-
+   single_modules
+   

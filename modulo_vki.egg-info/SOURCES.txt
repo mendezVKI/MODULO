@@ -6,5 +6,6 @@ modulo/modulo.py
 modulo_vki.egg-info/PKG-INFO
 modulo_vki.egg-info/SOURCES.txt
 modulo_vki.egg-info/dependency_links.txt
+modulo_vki.egg-info/entry_points.txt
 modulo_vki.egg-info/requires.txt
 modulo_vki.egg-info/top_level.txt

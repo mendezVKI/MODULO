@@ -2,11 +2,9 @@ import os
 import numpy as np
 
 # import jax.numpy as jnp
-from sklearn.decomposition import TruncatedSVD
 # For efficient linear algebra
 from numpy import linalg as LA
 # For Timing
-import time
 from ..utils._utils import switch_svds
 
 

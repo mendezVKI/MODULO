@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MODULO Documentation &mdash; MODULO 1.1.6 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>MODULO Documentation &mdash; MODULO 2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -14,7 +18,11 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -26,14 +34,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="#" class="icon icon-home"> MODULO
+
+          
+          
+          <a href="#" class="icon icon-home">
+            MODULO
           </a>
               <div class="version">
-                1.1
+                Version 2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -41,14 +53,14 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">MODULO: Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="what_is_new.html">What is new in this V 2.0?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="importing_data.html">Importing data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="black_box.html">Computing decompositions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="release-history.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exercises.html">MODULO: References and material</a></li>
 <li class="toctree-l1"><a class="reference internal" href="min_versions.html">Minimum Version of Python and NumPy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="material.html">MODULO: References and material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
 </ul>
 
         </div>
@@ -64,8 +76,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>MODULO Documentation</li>
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">MODULO Documentation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -76,24 +88,36 @@
            <div itemprop="articleBody">
              
   <section id="modulo-documentation">
-<h1>MODULO Documentation<a class="headerlink" href="#modulo-documentation" title="Permalink to this headline">¶</a></h1>
+<h1>MODULO Documentation<a class="headerlink" href="#modulo-documentation" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">MODULO: Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">MODULO: Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#what-are-data-driven-decompositions-some-literature">What are data-driven decompositions? Some literature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#previous-versions-of-modulo">Previous versions of MODULO</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="what_is_new.html">What is new in this V 2.0?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="importing_data.html">Importing data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="black_box.html">Computing decompositions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="release-history.html">Release History</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="release-history.html#modulo-vki-1-1-6">2021-11-15 - <cite>modulo_vki == 1.1.6</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="black_box.html">Computing decompositions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="black_box.html#modulo.MODULO.__init__"><code class="docutils literal notranslate"><span class="pre">__init__()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="black_box.html#pod-via-svd">1. POD via SVD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="black_box.html#pod-via-matrix-k">2. POD via matrix K</a></li>
+<li class="toctree-l2"><a class="reference internal" href="black_box.html#dft">3. DFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="black_box.html#spod-s">4. SPOD_s</a></li>
+<li class="toctree-l2"><a class="reference internal" href="black_box.html#spod-t">5. SPOD_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="black_box.html#dmd-or-pip">6. DMD ( or PIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="black_box.html#mpod">7. mPOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="black_box.html#kpod">8. kPOD</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="exercises.html">MODULO: References and material</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html#tutorials">Tutorials</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="min_versions.html">Minimum Version of Python and NumPy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="material.html">MODULO: References and material</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="material.html#tutorials">Tutorials</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
 </ul>
 </div>
 </section>
@@ -108,7 +132,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, L. Schena.</p>
+    <p>&#169; Copyright 2024, von Karman Institute.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
