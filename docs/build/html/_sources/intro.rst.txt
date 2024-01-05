@@ -2,8 +2,8 @@
 MODULO: Introduction
 =====================
 
-MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform Multiscale Modal Analysis of numerical and experimental data using the Multiscale Proper Orthogonal Decomposition (mPOD).
-
+MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute toperform data-driven modal decompositions.
+Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it has recently been extended to perform also other decompositions.
 
 .. image:: modulo_logo.png
   :target: https://imgur.com/ylm0cyv
@@ -11,46 +11,67 @@ MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institut
   :align: center
   :alt: Alternative text
 
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+What are data-driven decompositions? Some literature
+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The theoretical foundation of the decomposition is described in
-- M.A. Mendez, M. Balabane, J.-M. Buchlin, Multiscale Proper Orthogonal Decomposition of Complex Fluid Flows, Journal of Fluid Mechanics, Vol 870, July 2019, pp. 988-1036. The pre-print is available at https://arxiv.org/abs/1804.09646
+These seeks to partition a dataset as a linear combination of elementary contributions called modes.
+For a brief overview of the context, we refer to: 
 
- Example of applications of the decomposition to TR-PIV data are shown in
+- Ninni, D., Mendez, M. A. (2020), "MODULO: A Software for Multiscale Proper Orthogonal Decomposition of data", Software X, Vol 12, 100622, https://doi.org/10.1016/j.softx.2020.100622.
 
- -  M.A. Mendez, M.T. Scelzo, J.-M. Buchlin, Multiscale Modal Analysis of an Oscillating Impinging Gas Jet, Experimental Thermal and Fluid Science, Vol 91, February 2018, pp. 256-276 (https://doi.org/10.1016/j.expthermflusci.2017.10.032).
- -  M.A. Mendez, A. Gosset, J.-M. Buchlin, Experimental Analysis of the Stability of the Jet Wiping Process, Part II: Multiscale Modal Analysis of the Gas Jet-Liquid Film Interaction, Experimental Thermal and Fluid Science, Vol 106, September 2019, pp. 48-67 (https://doi.org/10.1016/j.expthermflusci.2019.03.004).
- - M.A. Mendez, D. Hess, B. Watz, J.-M. Buchlin.  Multiscale Proper Orthogonal Decomposition (mPOD) of TR-PIV data: a Case Study on Transient Flows, 13th International Symposium on Particle Image Velocimetry at Munich. An extended version of this article is currently in preparation.
+- Poletti, R., Scena, L, Ninni, D., Mendez, M.A (2024) "MODULO: a python toolbox for data-driven modal decomposition", Submitted to Journal of Open Source Software. Preprint available at https://www.researchgate.net/publication/376885484_MODULO_a_python_toolbox_for_data-driven_modal_decomposition
 
-Currently, this folder contains ffive exercises. Of these, two are done both in Matlab and in Python, while the remaining ones are only available in Matlab. The exercises include 1D and 2D cases with both scalar and vectorial quantities.
-An example of processing on video sequences is currently in preparation.
+The first article also presents the first version of MODULO (available in the OLD_Matlab_Implementation branch) and its GUI developed by D. Ninni. The second introduces MODULO v2 in this branch and alternative open source projects.
+While many projects allows for computing common decompositions such as POD, DMD and the SPODs, MODULO is currently the only opensource project allowing to compute the mPOD.
 
-All the codes so far assume that the dataset is equally spaced both in space (i.e. along a Cartesian grid) and in time.
-TR-PIV or video sequences satisfy these conditions easily. Other simple exercises using Finite Difference are also considered (ex.1, ex.2, ex. 3).
+For a more comprehensive overview on the theory of data-driven decompositions, we refer to the chapter:
 
-The proposed exercises are the following:
+- Mendez, M. A. (2023) "Generalized and Multiscale Modal Analysis". In : Mendez M.A., Ianiro, A., Noack, B.R., Brunton, S. L. (Eds), "Data-Driven Fluid Mechanics: Combining First Principles and Machine Learning". Cambridge University Press, 2023:153-181. https://doi.org/10.1017/9781108896214.013. The pre-print is available at https://arxiv.org/abs/2208.12630. 
 
-1- Decomposition of the velocity profile of a pulsating Poiseuille flow (1D, scalar). The theoretical background for the analytical solution is described in M.A. Mendez,J.-M Buchlin, VKI-TN 215, 2016, "Notes on 2D Pulsatile Poiseuille Flows An Introduction to Eigenfunction Expansion and Complex Variables using Matlab"
-(Available in Python and Matlab)
+and the article that first presented the complete theory of the mPOD :
 
-2- Decomposition of a Synthetic Test case
-(Available only in Matlab)
+- Mendez, M. A., Balabane, M., Buchlin, J.-M. (2019) "Multi-Scale Proper Orthogonal Decomposition of Complex Fluid Flows" Journal of Fluid Mechanics 870:988-1036, https://doi.org/10.1017/9781108896214.013. The pre-print is available at https://arxiv.org/abs/2208.12630. 
 
-3- Decomposition of the Vorticity field of a 2D simulation in Matlab.
-(Available only in Matlab)
+The first version of the mPOD was based on wavelet decomposition and was presented here :
 
-4- Decomposition of a TR-PIV measurement of an impinging jet.
-(Available in Python and Matlab)
+- Mendez, M.A.,  Scelzo, M.T., Buchlin, J.-M. , Multiscale Modal Analysis of an Oscillating Impinging Gas Jet, Experimental Thermal and Fluid Science, Vol 91, February 2018, pp. 256-276 (https://doi.org/10.1016/j.expthermflusci.2017.10.032).
 
-5- Decomposition of a TR-PIV measurement of a flow past a cylinder.
-(Available only in Matlab)
+Ongoing works on nonlinear methods are discussed here:
 
-Exercises 2,3 and 4 are taken from the article at https://arxiv.org/abs/1804.09646 .
-Exercise 5 is available at https://arxiv.org/abs/2001.01971 .
+- Mendez, M. A. (2023) "Linear and Nonlinear Dimensionality Reduction from Fluid Mechanics to Machine Learning", Meas. Sci. Technol. 34(042001), https://doi.org/10.1088/1361-6501/acaffe. The pre-print is available at https://arxiv.org/abs/2208.07746.   
 
-The standalone application is available in the section "Release" of this repository.
+Some examples of applications of mPOD for processing experimental and numerical are listed below:
 
-The do list currently includes:
+ - Zhang ,Y., Ma, H., Guo, G. (2023), Multi-scale proper orthogonal decomposition (mPOD) analysis of vortex evolution and viscous dissipation in a circular-cylinder wake controlled by parallel symmetric jets, Ocean Engineering, 289(2), 116280 (https://doi.org/10.1016/j.oceaneng.2023.116280)
+ - Chi, C., Thevenin, D., Smits, A.J., Wolligandt, S., Theisel, H (2022),Identification and analysis of very-large-scale turbulent motions using multiscale proper orthogonal decomposition, Phys Rev. Fluids 7, 084603, https://doi.org/10.1103/PhysRevFluids.7.084603  
+ - Procaci, A., Kamal, M.M., Mendez, M.A., Hochgreg, S., Coussement, A., Parente, A. (2022) Multi-scale proper orthogonal decomposition analysis of instabilities in swirled and stratified flames, Physics of Fluids 34, 124103, https://doi.org/10.1063/5.0127956
+ - Barreiro-Villaverde, Gosset, A., Mendez, M.A. (2021), On the dynamics of jet wiping: Numerical simulations and modal analysis, Physics of Fluids 33, 062114, https://doi.org/10.1063/5.0051451
+ - Esposito, C., Mendez, M.A., Steelant, J., Vetrano, M.R. (2021), Spectral and modal analysis of a cavitating flow through an orifice, Experimental Thermal and Fluid Science, Vol 121, February 2021, 110251, https://doi.org/10.1016/j.expthermflusci.2020.110251
+ - Mendez, M.A., Hess, D.  Watz, B., Buchlin, J.-M. (2020)  Multiscale proper orthogonal decomposition (mPOD) of TR-PIV data—a case study on stationary and transient cylinder wake flows, Meas. Sci. Technol. 31 https://iopscience.iop.org/article/10.1088/1361-6501/ab82be/meta. Preprint at https://arxiv.org/abs/2001.01971.   
+ - Mendez, M.A., Gosset, A., Buchlin, J.-M. (2019) Experimental Analysis of the Stability of the Jet Wiping Process, Part II: Multiscale Modal Analysis of the Gas Jet-Liquid Film Interaction, Experimental Thermal and Fluid Science, Vol 106, September 2019, pp. 48-67 (https://doi.org/10.1016/j.expthermflusci.2019.03.004).
+ 
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+Previous versions of MODULO
+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-1- Finish the exercises in Python and clean the codes.
+The first version was developed in Matlab and was equipped with a GUI by D. Ninni.
+A minicourse on data-driven decompositions and the usage of MODULO was provided here:
 
-2- Extend the analysis to cases that do not have Cartesian grids, hence requiring weighted inner products.
+https://www.youtube.com/watch?v=ED3x00H4yN4&list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR&index=1
+
+Although much of the material covered in these videos is still relevant, a new version of this minicourse is being prepared.
+This is a compressed version of the course "Data-Driven Modal Analysis" that I give at the Research Master Program at the von Karman Institute (https://www.vki.ac.be/index.php/research-master-in-fluid-dynamics)
+
+This first MODULO version implemented POD, DFT and mPOD and was already equipped with the first version of the memory-saving feature.
+The GUI was also available as an executable that the user could install without needing a Matlab license.
+
+This first version is still accessible from the branch "Old_Matlab_Implementation", but it is no longer maintained.
+
+The main functions were then imported to Python, and L. Schena developed the first package PyPi.
+A tutorial on how to use that version is given here: 
+
+https://www.youtube.com/watch?v=y2uSvdxAwHk&list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR&index=9
+
+The current architecture of MODULO v2 is built from that version but has been considerably expanded. This first Python version is still accessible from the branch "Old_Python_Implementation" together with the first (unpacked) versions of the codes. These are still used in some courses for didactic purposes.
+

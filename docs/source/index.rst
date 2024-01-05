@@ -10,6 +10,7 @@ MODULO Documentation
    :maxdepth: 2
  
    intro
+   what_is_new
    installation
    importing_data
    usage
@@ -17,5 +18,4 @@ MODULO Documentation
    exercises
    min_versions
    single_modules
-   release-history
    

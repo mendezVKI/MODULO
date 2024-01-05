@@ -1,5 +1,4 @@
 import numpy as np
-#from ._k_matrix import CorrelationMatrix
 from scipy import signal
 from scipy.signal import firwin
 from ._pod_time import Temporal_basis_POD

@@ -3,7 +3,7 @@
 MODULO - latest update 2.0
 ===================
 
-This repository contains version 2.0 of MODULO (MODal mULtiscale pOd), a software developed at the von Karman Institute to perform data-driven modal decompositions and, in particular, the Multiscale Proper Orthogonal Decomposition (MPD).
+This repository contains version 2.0 of MODULO (MODal mULtiscale pOd), a software developed at the von Karman Institute to perform data-driven modal decompositions and, in particular, the Multiscale Proper Orthogonal Decomposition (mPOD).
 
 The old version based on MATLAB implementation and related GUI is no longer maintained but will remain available on the branch "Old_Matlab_Implementation". We also keep the first Python implementation in the branch "Old_Python_Implementation". See the Readme file in these branches for more information.
 
@@ -15,7 +15,7 @@ MODULO allows to compute data-driven decompositions of experimental and numerica
 
 - Poletti, R., Scena, L, Ninni, D., Mendez, M.A (2024) "MODULO: a python toolbox for data-driven modal decomposition", Submitted to Journal of Open Source Software. Preprint available [here](https://www.researchgate.net/publication/376885484_MODULO_a_python_toolbox_for_data-driven_modal_decomposition)
 
-The first article also presents the first version of MODULO (available in the OLD_Matlab_Implementation branch) and its GUI developed by D. Ninni. The second introduces MODULO v2 in this branch and alternative open source projects.
+The first article also presents the first version of MODULO (available in the OLD_Matlab_Implementation branch) and its GUI developed by D. Ninni. The second introduces MODULO v2 in this branch and alternative open source projects. While many projects allows for computing common decompositions such as POD, DMD and the SPODs, MODULO is currently the only opensource project allowing to compute the mPOD.
 
 For a more comprehensive overview on the theory of data-driven decompositions, we refer to the chapter:
 
@@ -28,8 +28,6 @@ and the article that first presented the complete treatment of the mPOD :
 Ongoing works on nonlinear methods are discussed here:
 
 - Mendez, M. A. (2023) "Linear and Nonlinear Dimensionality Reduction from Fluid Mechanics to Machine Learning", Meas. Sci. Technol. 34(042001), https://doi.org/10.1088/1361-6501/acaffe. The pre-print is available at https://arxiv.org/abs/2208.07746.   
-
-
 
 ### What is new in this V 2.0? 
 
