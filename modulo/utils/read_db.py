@@ -17,7 +17,7 @@ class ReadData:
 
 
     @classmethod
-    def _data_processing(cls,database: np.array, FOLDER_OUT: str,
+    def _data_processing(cls,D: np.array, FOLDER_OUT: str='./',
                    N_PARTITIONS: int = 1,
                    MR: bool = False, SAVE_D: bool = False,
                    FOLDER_IN: str = './', filename: str = '',
@@ -30,66 +30,75 @@ class ReadData:
         - Splitting: if the MEMORY_SAVING=True the data matrix is splitted to optimize memory usage. Moreover, D is dumped
                     on disk and removed from the live memory. Finally, if in this condition, also the data type of the
                     matrix is self is changed: from float64 -> float32, with the same purpose.
-        --------------------------------------------------------------------------------------------------------------------
+        
+        ----------
         Parameters
         ----------
 
-        :param database: np.array
-                            data matrix D
+        :param D: np.array
+             data matrix D
         :param FOLDER_OUT: str
-                            folder in which the data (partitions and/or data matrix itself) will be eventually saved.
+             folder in which the data (partitions and/or data matrix itself) will be eventually saved.
         :param MEMORY_SAVING: bool, optional
-                            If True, memory saving feature is activated. Passed through __init__
+             If True, memory saving feature is activated. Passed through __init__
         :param N_PARTITIONS: int
-                            In memory saving environment, this parameter refers to the number of partitions to be applied
-                            to the data matrix. If the number indicated by the user is not a multiple of the N_T
-                            i.e.: if (N_T % N_PARTITIONS) !=0 - then an additional partition is introduced, that contains
-                            the remaining columns
+             In memory saving environment, this parameter refers to the number of partitions to be applied
+             to the data matrix. If the number indicated by the user is not a multiple of the N_T
+             i.e.: if (N_T % N_PARTITIONS) !=0 - then an additional partition is introduced, that contains
+             the remaining columns
         :param MR: bool, optional
-                            If True, it removes the mean (per column) from each snapshot
+             If True, it removes the mean (per column) from each snapshot
         :param SAVE_D: bool, optional
-                        If True, the matrix D is saved into memory. If the Memory Saving feature is active, this is performed
-                        by default.
+             If True, the matrix D is saved into memory. If the Memory Saving feature is active, this is performed
+             by default.
         :param FOLDER_IN: str, optional. Needed only if database=None
-                         If the D matrix is not provided (database = None), read it from the path FOLDER_IN
+             If the D matrix is not provided (database = None), read it from the path FOLDER_IN
         :param filename: str, optional. Needed only if database=None
-                         If the database is not provided, read it from the files filename
-                         The files must be named "filenamexxxx.dat" where x is the number of the file
-                         that goes from 0 to the number of time steps saved
+             If the database is not provided, read it from the files filename
+             The files must be named "filenamexxxx.dat" where x is the number of the file
+             that goes from 0 to the number of time steps saved
         :param h: int, optional. Needed only if database=None
-                    Lines to be skipped from the header of filename
+             Lines to be skipped from the header of filename
         :param f: int, optional. Needed only if database=None
-                    Lines to be skipped from the footer of filename
+             Lines to be skipped from the footer of filename
         :param c: int, optional. Needed only if database=None
-                    Columns to be skipped (for example if the first c columns contain the mesh grid.)
+             Columns to be skipped (for example if the first c columns contain the mesh grid.)
         :param N: int, optional. Needed only if database=None
-                    Components to be analysed.
+             Components to be analysed.
         :param N_S:  int, optional. Needed only if database=None
-                    Number of points in space.
+             Number of points in space.
         :param N_T: int, optional. Needed only if database=None
-                    Components to be analysed.
+             components to be analysed.
 
+        -------        
         Returns
         -------
-        :return: D if memory saving feature is active. Otherwise, D matrix is saved on disk and this method returns None
+        
+        There are four possible scenario:
+        1. if N_Partitions ==1 and MR = True, return is D,D_MEAN (the mean snapshot!)
+        2. if N_Partitions ==1 and MR = False, return is D.
+        3. if N_Partitions >1 and MR = True, return is D_MEAN
+        4. if N_Partitions >1 and MR=False, return is None
+        
+
         """
-        if isinstance(database, np.ndarray):  # D was already initialised
-            N_S = int(np.shape(database)[0])
-            N_T = int(np.shape(database)[1])
+        if isinstance(D, np.ndarray):  # D was already initialised
+            N_S = int(np.shape(D)[0])
+            N_T = int(np.shape(D)[1])
             if MR:
                 '''Removing mean from data matrix'''
 
                 print("Removing the mean from D ...")
-                D_MEAN = np.mean(database, 1)  # Temporal average (along the columns)
-                D_Mr = database - np.array([D_MEAN, ] * N_T).transpose()  # Mean Removed
+                D_MEAN = np.mean(D, 1)  # Temporal average (along the columns)
+                D_Mr = D - np.array([D_MEAN, ] * N_T).transpose()  # Mean Removed
                 print("Computing the mean-removed D ... ")
-                np.copyto(database, D_Mr)
+                np.copyto(D, D_Mr)                
                 del D_Mr
 
             if N_PARTITIONS > 1:
                 '''Converting D into float32, applying partitions and saving all.'''
                 SAVE_D = True
-                database = database.astype('float32', casting='same_kind')
+                database = D.astype('float32', casting='same_kind')
                 os.makedirs(FOLDER_OUT + "/data_partitions/", exist_ok=True)
                 print("Memory Saving feature is active. Partitioning Data Matrix...")
                 if N_T % N_PARTITIONS != 0:
@@ -111,7 +120,6 @@ class ReadData:
 
             if SAVE_D:
                 '''Saving data matrix in FOLDER_OUT'''
-
                 os.makedirs(FOLDER_OUT + "/data_matrix", exist_ok=True)
                 print(f"Saving the matrix D in {FOLDER_OUT}")
                 np.savez(FOLDER_OUT + '/data_matrix/database', D=database, n_t=N_T, n_s=N_S)
@@ -213,7 +221,16 @@ class ReadData:
             else:
                 raise TypeError("number of partitions not valid.")
 
-        return D if N_PARTITIONS == 1 else None
+        if (N_PARTITIONS ==1 and MR==True):
+         return D, D_MEAN  
+        elif (N_PARTITIONS ==1 and MR==False):
+         return D
+        elif (N_PARTITIONS >1 and MR==True):
+         return D_MEAN
+        else:
+          return None
+      
+    # return D if N_PARTITIONS == 1 & MR=else None
 
     @classmethod
     def from_xls(cls, filename, **kwargs):

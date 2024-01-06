@@ -18,6 +18,8 @@ from modulo.core._spod_s import compute_SPOD_s
 from modulo.core._spod_t import compute_SPOD_t
 from modulo.utils._utils import switch_svds
 
+from modulo.utils.read_db import ReadData
+
 
 class MODULO:
     """
@@ -84,9 +86,8 @@ class MODULO:
         """
         
         print("MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform "
-              "data driven modal decomposition of numerical and experimental data. \n"
-              "\n")
-        
+              "data driven modal decomposition of numerical and experimental data. \n")
+    
 
         if not isinstance(data, np.ndarray) and N_PARTITIONS==1:
             raise TypeError("Please check that your database is in an numpy array format. If D=None, then you must have memory saving (N_PARTITIONS>1)")
@@ -165,34 +166,7 @@ class MODULO:
             os.makedirs(self.FOLDER_OUT, exist_ok=True)
 
         
-    def _data_processing(self,
-                         MR: bool = False,
-                         SAVE_D: bool = False):
-        """
-        This method pre-process the data before running the factorization. 
-        If the memory saving option is active, the method ensures the correct splitting of the data matrix
-        into the required partitions.
-        If the mean removal is desired (MR: True), this method removes the time averaged column from the 
-        data matrix D.
-        If neither the mean removal nor the memory saving options are active, this method is skipped.
-
-        :param MR: bool
-                    if True, the mean field is removed from the data matrix.
-
-        :param SAVE_D: bool
-                    if True, the D matrix is saved in the folder decided by the user
-
-
-        :return: D directly (as class attribute) if Memory saving is not active. 
-                 Otherwise, it returns None and the matrix is automatically saved on disk.
-        """
-
-        self.D = DataMatrix(self.D, self.FOLDER_OUT, MEMORY_SAVING=self.MEMORY_SAVING,
-                            N_PARTITIONS=self.N_PARTITIONS, MR=MR, SAVE_D=SAVE_D)
-
-  
-        return True 
-
+   
     def _correlation_matrix(self,
                             SAVE_K: bool = True):
         """
