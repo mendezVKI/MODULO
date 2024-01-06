@@ -1,39 +1,19 @@
 import os
 import numpy as np
-from sklearn.decomposition import TruncatedSVD
 from ..utils._utils import switch_eigs
-from scipy.sparse.linalg import svds
 
 
-def Temporal_basis_POD(K, SAVE_T_POD=False, FOLDER_OUT='./', n_Modes=10,
-                       eig_solver: str = 'eigh'):
+def Temporal_basis_POD(K, SAVE_T_POD=False, FOLDER_OUT='./', n_Modes=10,eig_solver: str = 'eigh'):
     """
-    This method computes the POD basis. For some theoretical insights, you can find
-    the theoretical background of the proper orthogonal decomposition in a nutshell here:
+    This method computes the POD basis. For some theoretical insights, you can find the theoretical background of the proper orthogonal decomposition in a nutshell here: https://youtu.be/8fhupzhAR_M
 
-    https://youtu.be/8fhupzhAR_M
-    --------------------------------------------------------------------------------------------------------------------
-    Parameters:
-    ----------
-    :param FOLDER_OUT: str
-            Folder in which the results will be saved (if SAVE_T_POD=True)
-    :param K: np.array
-            Temporal correlation matrix
-    :param SAVE_T_POD: bool
-            A flag deciding whether the results are saved on disk or not. If the MEMORY_SAVING feature is active, it is
-            switched True by default.
-    :param n_Modes: int
-           number of modes that will be computed
-    :param svd_solver: str,
-            svd solver to be used throughout the computation
-    --------------------------------------------------------------------------------------------------------------------
-    Returns:
-    --------
-
-    :return: Psi_P: np.array
-            POD Psis
-    :return: Sigma_P: np.array
-            POD Sigmas
+    :param FOLDER_OUT: str. Folder in which the results will be saved (if SAVE_T_POD=True)
+    :param K: np.array. Temporal correlation matrix
+    :param SAVE_T_POD: bool. A flag deciding whether the results are saved on disk or not. If the MEMORY_SAVING feature is active, it is switched True by default.
+    :param n_Modes: int. Number of modes that will be computed
+    :param svd_solver: str. Svd solver to be used throughout the computation
+    :return: Psi_P: np.array. POD's Psis
+    :return: Sigma_P: np.array. POD's Sigmas
     """
     # Solver 1: Use the standard SVD
     # Psi_P, Lambda_P, _ = np.linalg.svd(K)

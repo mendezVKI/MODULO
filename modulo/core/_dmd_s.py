@@ -1,10 +1,6 @@
 import os
 import numpy as np
-
-# import jax.numpy as jnp
-# For efficient linear algebra
 from numpy import linalg as LA
-# For Timing
 from ..utils._utils import switch_svds
 
 
@@ -13,42 +9,36 @@ def dmd_s(D_1, D_2, n_Modes, F_S,
           FOLDER_OUT='./',
           svd_solver: str = 'svd_sklearn_truncated'):
     """
-    This method computes the Dynamic Mode Decomposition (DMD). 
-
-    --------------------------------------------------------------------------------------------------------------------
-    Parameters:
-    ----------
+    This method computes the Dynamic Mode Decomposition (DMD) using hte PIP algorithm from Penland.    
+    
+    :param D_1: np.array 
+           First portion of the data, i.e. D[:,0:n_t-1]            
     :param D_2: np.array
            Second portion of the data, i.e. D[:,1:n_t]
     :param Phi_P, Psi_P, Sigma_P: np.arrays
-            POD decomposition of D1
+           POD decomposition of D1
     :param F_S: float
            Sampling frequency in Hz
     :param FOLDER_OUT: str
-            Folder in which the results will be saved (if SAVE_T_DMD=True)
+           Folder in which the results will be saved (if SAVE_T_DMD=True)
     :param K: np.array
-            Temporal correlation matrix
+           Temporal correlation matrix
     :param SAVE_T_POD: bool
-            A flag deciding whether the results are saved on disk or not. If the MEMORY_SAVING feature is active, it is
-            switched True by default.
+           A flag deciding whether the results are saved on disk or not. If the MEMORY_SAVING feature is active, it is switched True by default.
     :param n_Modes: int
            number of modes that will be computed
     :param svd_solver: str,
-            svd solver to be used
-    --------------------------------------------------------------------------------------------------------------------
-    Returns:
-    --------
-    :return Phi_D: np.array
-            DMD Psis
-
-    :return Lambda_D: np.array
-            DMD Eigenvalues (of the reduced propagator)
-
-    :return freqs: np.array
-            Frequencies (in Hz, associated to the DMD modes)
-
-     :return a0s: np.array
-            Initial Coefficients of the Modes
+           svd solver to be used 
+          
+     
+    :return1 Phi_D: np.array. 
+          DMD's complex spatial structures
+    :return2 Lambda_D: np.array. 
+          DMD Eigenvalues (of the reduced propagator)
+    :return3 freqs: np.array. 
+          Frequencies (in Hz, associated to the DMD modes)
+    :return4 a0s: np.array. 
+          Initial Coefficients of the Modes
     """   
     
     Phi_P, Psi_P, Sigma_P = switch_svds(D_1, n_Modes, svd_solver)

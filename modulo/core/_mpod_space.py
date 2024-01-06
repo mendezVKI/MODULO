@@ -7,13 +7,29 @@ import math
 def spatial_basis_mPOD(D, PSI_M, N_T, N_PARTITIONS, N_S, MEMORY_SAVING, FOLDER_OUT, SAVE: bool = False,weights: np.array = np.array([])):
     """
     Given the temporal basis of the mPOD now the spatial ones are computed
-
-    :param D:
-    :param PSI_M:
-    :return:
+    
+    :param D: 
+        Snapshot matrix D: if memory savig is active, this is ignored.    
+    :param PSI_M: np.array.: 
+        The mPOD temporal basis Psi tentatively assembled from all scales
+    :param N_T: int. 
+        Number of snapshots
+    :param N_PARTITIONS: int. 
+        Number of partitions in the memory saving
+    :param N_S: int. 
+        Number of grid points in space
+    :param MEMORY_SAVING: bool. 
+        Inherited from main class, if True turns on the MEMORY_SAVING feature, loading the partitions and starting the proper algorithm  
+    :param FOLDER_OUT: str. 
+        Folder in which the results are saved if SAVE_SPATIAL_POD = True
+    :param SAVE_SPATIAL_POD: bool.
+        If True, results are saved on disk and released from memory
+    :param weights:  np.array
+        weight vector [w_i,....,w_{N_s}] where w_i = area_cell_i/area_grid. Only needed if grid is non-uniform & MEMORY_SAVING== True
+    :return: Phi_M, Psi_M, Sigma_M: np.arrays. The final (sorted) mPOD decomposition
     """
-    R1 = 0
-    R2 = 0
+    
+    R1 = 0; R2 = 0
     if MEMORY_SAVING:
         SAVE = True
         os.makedirs(FOLDER_OUT + '/mPOD/', exist_ok=True)

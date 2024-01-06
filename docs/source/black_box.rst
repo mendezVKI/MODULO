@@ -10,7 +10,6 @@ The modulo object is initialized as follows:
 
 Then, the key functions for the available decompositions are: 
 
-
 +++++++++++++++++++++++++++++++++++++
 1. POD via SVD 
 +++++++++++++++++++++++++++++++++++++

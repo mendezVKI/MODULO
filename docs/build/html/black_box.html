@@ -26,7 +26,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="MODULO: References and material" href="exercises.html" />
+    <link rel="next" title="New Tutorial Exercises" href="exercises.html" />
     <link rel="prev" title="Usage" href="usage.html" /> 
 </head>
 
@@ -94,7 +94,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="exercises.html">MODULO: References and material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exercises.html">New Tutorial Exercises</a></li>
 <li class="toctree-l1"><a class="reference internal" href="min_versions.html">Minimum Version of Python and NumPy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
 </ul>
@@ -135,13 +135,13 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> – This is the data matrix to factorize. It is a np.array with 
+<li><p><strong>data</strong> – This is the data matrix to factorize. It is a np.array with
 shape ((N_S, N_T)). If the data has not yet been prepared in the form of a np.array,
-the method ReadData in MODULO can be used (see ReadData). If the memory saving is active (N_PARTITIONS &gt;1), the folder with partitions should be prepared.  
+the method ReadData in MODULO can be used (see ReadData). If the memory saving is active (N_PARTITIONS &gt;1), the folder with partitions should be prepared.
 If the memory saving is active, this entry = None. The data matrix is assumed to big to be saved and the</p></li>
 <li><p><strong>N_PARTITIONS</strong> – If memory saving feature is active, this parameter sets the number of partitions
 that will be used to store the data matrices during the computations.</p></li>
-<li><p><strong>FOLDER_OUT</strong> – Folder in which the output will be stored.The output includes the matrices Phi, Sigma and Psi (optional) and temporary files 
+<li><p><strong>FOLDER_OUT</strong> – Folder in which the output will be stored.The output includes the matrices Phi, Sigma and Psi (optional) and temporary files
 used for some of the calculations (e.g.: for memory saving).</p></li>
 <li><p><strong>N_T</strong> – Number of time steps, must be given when N_PARTITIONS &gt;1</p></li>
 <li><p><strong>N_S</strong> – Number of grid points, must be given when N_PARTITIONS &gt;1</p></li>
@@ -253,7 +253,7 @@ DFT Sigmas</p>
 <dt class="sig sig-object py" id="modulo.MODULO.compute_SPOD_s">
 <span class="sig-prename descclassname"><span class="pre">modulo.MODULO.</span></span><span class="sig-name descname"><span class="pre">compute_SPOD_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_O</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_Modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_SPOD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo.MODULO.compute_SPOD_s" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method computes the Spectral POD of your data.
-This is the one by Sieber 
+This is the one by Sieber
 et al (<a class="reference external" href="https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/spectral-proper-orthogonal-decomposition/DCD8A6EDEFD56F5A9715DBAD38BD461A">https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/spectral-proper-orthogonal-decomposition/DCD8A6EDEFD56F5A9715DBAD38BD461A</a>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -335,8 +335,8 @@ frequency bins for the Spectral POD</p>
 <dt class="sig sig-object py" id="modulo.MODULO.compute_DMD_PIP">
 <span class="sig-prename descclassname"><span class="pre">modulo.MODULO.</span></span><span class="sig-name descname"><span class="pre">compute_DMD_PIP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_T_DMD</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_S</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo.MODULO.compute_DMD_PIP" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method computes the Dynamic Mode Decomposition of the data
-using the algorithm in <a class="reference external" href="https://arxiv.org/abs/1312.0041">https://arxiv.org/abs/1312.0041</a>, which is basically the same as 
-the PIP algorithm proposed in <a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/0167278996001248">https://www.sciencedirect.com/science/article/abs/pii/0167278996001248</a>   
+using the algorithm in <a class="reference external" href="https://arxiv.org/abs/1312.0041">https://arxiv.org/abs/1312.0041</a>, which is basically the same as
+the PIP algorithm proposed in <a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/0167278996001248">https://www.sciencedirect.com/science/article/abs/pii/0167278996001248</a>
 See v1 of this paper <a class="reference external" href="https://arxiv.org/abs/2001.01971">https://arxiv.org/abs/2001.01971</a> for more details (yes, reviewers did ask to omit this detail in v2).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return Phi_D<span class="colon">:</span></dt>
@@ -459,7 +459,7 @@ SPOD Phis</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="exercises.html" class="btn btn-neutral float-right" title="MODULO: References and material" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="exercises.html" class="btn btn-neutral float-right" title="New Tutorial Exercises" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

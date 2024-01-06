@@ -9,31 +9,14 @@ def CorrelationMatrix(N_T, N_PARTITIONS=1, MEMORY_SAVING=False, FOLDER_OUT='./',
     This method computes the temporal correlation matrix, given a data matrix as input. It's possible to use memory saving
     then splitting the computing in different tranches if computationally heavy. If D has been computed using MODULO
     then the dimension dim_col and N_PARTITIONS is automatically loaded
-    --------------------------------------------------------------------------------------------------------------------
-    Parameters
-    ----------
 
-    :param N_T: int
-                Number of temporal snapshots
-    :param D: np.array
-                Data matrix
-    :param SAVE_K: bool
-                If SAVE_K=True, the matrix K is saved on disk. If the MEMORY_SAVING feature is active, this is done
-                by default.
-    :param MEMORY_SAVING: bool
-                If MEMORY_SAVING = True, the computation of the correlation matrix is done by steps. It requires the
-                data matrix to be partitioned, following algorithm in MODULO._data_processing.
-    :param FOLDER_OUT: str
-                Folder in which the temporal correlation matrix will be stored
-    :param N_PARTITIONS: int
-                Number of partitions to be read in computing the correlation matrix. If _data_processing is used to
-                partition the data matrix, this is inherited from the main class
-    :param weights: weight vector [w_i,....,w_{N_s}] where w_i = area_cell_i/area_grid
-                    Only needed if grid is non-uniform & MEMORY_SAVING== True
-    --------------------------------------------------------------------------------------------------------------------
-    Returns
-    -------
-
+    :param N_T: int. Number of temporal snapshots
+    :param D: np.array. Data matrix
+    :param SAVE_K: bool. If SAVE_K=True, the matrix K is saved on disk. If the MEMORY_SAVING feature is active, this is done by default.
+    :param MEMORY_SAVING: bool. If MEMORY_SAVING = True, the computation of the correlation matrix is done by steps. It requires the data matrix to be partitioned, following algorithm in MODULO._data_processing.
+    :param FOLDER_OUT: str. Folder in which the temporal correlation matrix will be stored
+    :param N_PARTITIONS: int. Number of partitions to be read in computing the correlation matrix. If _data_processing is used to partition the data matrix, this is inherited from the main class
+    :param weights: weight vector [w_i,....,w_{N_s}] where w_i = area_cell_i/area_grid. Only needed if grid is non-uniform & MEMORY_SAVING== True
     :return: K (: np.array) if the memory saving is not active. None type otherwise.
     """
 

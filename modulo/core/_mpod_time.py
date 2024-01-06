@@ -1,80 +1,54 @@
 import os
-
 import numpy as np
 from scipy.signal import firwin  # To create FIR kernels
-#from scipy.sparse.linalg import svds
 from tqdm import tqdm
-
 from modulo.utils._utils import conv_m, switch_eigs
 
 
-def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep, boundaries, MODE='reduced', dt=1,
-                        FOLDER_OUT: str = "./",                        
-                        MEMORY_SAVING: bool = False,
-                        SAT: int = 100,
-                        n_Modes=10,
-                        eig_solver: str = 'svd_sklearn_randomized'):
+def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep, boundaries, MODE='reduced', dt=1,FOLDER_OUT: str = "./", MEMORY_SAVING: bool = False,SAT: int = 100,n_Modes=10, eig_solver: str = 'svd_sklearn_randomized'):
     '''
     This function computes the PSIs for the mPOD. In this implementation, a "dft-trick" is proposed, in order to avoid
-    expansive SVDs. Randomized SVD is used instead.
-    --------------------------------------------------------------------------------------------------------------------
-    Parameters:
-    -----------
-
-    :param K: np.array
-            Temporal correlation matrix
-    :param dt: float
-            Time step
-    :param Nf: np.array
-            Filters
-    :param Ex: int
-            Extension. Must have Ex >= Nf 
-    :param F_V: np.array
-            Filter array
-    :param Keep: np.array
-            vector defining which scale to keep.
-    :param boundaries: str
-            In order to avoid 'edge effects' if the time correlation matrix is not periodic, several boundary conditions
-            can be used.
-            Options are (from scipy.ndimage.convolve):
-            ‘reflect’ (d c b a | a b c d | d c b a)    The input is extended by reflecting about the edge of the last pixel.
-            ‘nearest’ (a a a a | a b c d | d d d d)    The input is extended by replicating the last pixel.
-            ‘wrap’ (a b c d | a b c d | a b c d)       The input is extended by wrapping around to the opposite edge.
-    :param MODE: str
-            As a final step of this algorithm, the orthogonality is imposed via a QR-factorization. This parameter
-            define how to perform such factorization, according to numpy.
-            Options: this is a wrapper to np.linalg.qr(_, mode=MODE).
-            Check numpy's documentation.
-            if ‘reduced’ The final basis will not necessarely be full
-            if ‘complete’ The final basis will always be full
-    :param FOLDER_OUT: str
-            This is the directory where intermediate results will be stored if the memory saving is active
-            It will be ignored if MEMORY_SAVING=False.
-            
-              
-    :param MEMORY_SAVING: Bool
-           If memory saving is active, the results will be saved locally
-           Nevertheless, since Psi_M is usually not expensive, it will be returned.        
-    :param SAT: int
-            Maximum number of modes per scale. 
-            The user can decide how many modes to compute; otherwise, modulo set the default SAT=100.
-    :param n_Modes: int
-          Total number of modes that will be finally exported   
-            
-    :param eig_solver: str
-           This is the eigenvalue solver that will be used. Refer to eigs_swith for the options.      
-            
-    --------------------------------------------------------------------------------------------------------------------
-    Returns:
-    --------
-    :return PSI_M: np.array
-            mPOD PSIs
+    expansive SVDs. Randomized SVD is used by default for the diagonalization.
+    
+    :param K: 
+        np.array  Temporal correlation matrix
+    :param dt: float.   
+        1/fs, the dt between snapshots. Units in seconds.
+    :param Nf: 
+        np.array. Vector collecting the order of the FIR filters used in each scale.
+    :param Ex: int.
+        Extension at the boundaries of K to impose the boundary conditions (see boundaries). It must be at least as Nf.
+    :param F_V: np.array. 
+        Frequency splitting vector, containing the frequencies of each scale (see article). If the time axis is in seconds, these frequencies are in Hz.
+    :param Keep: np.array. 
+        Vector defining which scale to keep.
+    :param boundaries: str -> {'nearest', 'reflect', 'wrap' or 'extrap'}. 
+        In order to avoid 'edge effects' if the time correlation matrix is not periodic, several boundary conditions can be used. Options are (from scipy.ndimage.convolve):
+        ‘reflect’ (d c b a | a b c d | d c b a)    The input is extended by reflecting about the edge of the last pixel.
+        ‘nearest’ (a a a a | a b c d | d d d d)    The input is extended by replicating the last pixel.
+        ‘wrap’ (a b c d | a b c d | a b c d)       The input is extended by wrapping around to the opposite edge.
+    :param MODE: tr -> {‘reduced’, ‘complete’, ‘r’, ‘raw’}
+        As a final step of this algorithm, the orthogonality is imposed via a QR-factorization. This parameterd define how to perform such factorization, according to numpy.
+        Options: this is a wrapper to np.linalg.qr(_, mode=MODE). Check numpy's documentation.
+        if ‘reduced’ The final basis will not necessarely be full. If ‘complete’ The final basis will always be full
+    :param FOLDER_OUT: str. 
+        This is the directory where intermediate results will be stored if the memory saving is active.It will be ignored if MEMORY_SAVING=False.              
+    :param MEMORY_SAVING: Bool. 
+        If memory saving is active, the results will be saved locally.  Nevertheless, since Psi_M is usually not expensive, it will be returned.        
+    :param SAT: int.
+        Maximum number of modes per scale. The user can decide how many modes to compute; otherwise, modulo set the default SAT=100.
+    :param n_Modes: int. 
+        Total number of modes that will be finally exported   
+    :param eig_solver: str. 
+        This is the eigenvalue solver that will be used. Refer to eigs_swith for the options.      
+    :return PSI_M: np.array. 
+        The mPOD PSIs. Yet to be sorted ! 
     '''
 
     if Ex < np.max(Nf):
         raise RuntimeError("For the mPOD temporal basis computation Ex must be larger than or equal to Nf")
 
-    '''Converting F_V in radiants and initialise number of scales M'''
+    #Converting F_V in radiants and initialise number of scales M
     Fs = 1 / dt
     F_Bank_r = F_V * 2 / Fs
     M = len(F_Bank_r)
@@ -87,12 +61,12 @@ def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep, boundaries, MODE='reduced', dt=1,
    # if K_S:
    #     Ks = np.zeros((n_t, n_t, M + 1))
 
-    '''DFT-trick below: computing frequency bins.'''
+    #DFT-trick below: computing frequency bins.
     Freqs = np.fft.fftfreq(n_t) * Fs
 
     print("Filtering and Diagonalizing H scale: \n")
 
-    '''Filtering and computing eigenvectors'''
+    #Filtering and computing eigenvectors
 
     for m in tqdm(range(0, M)):
         # Generate the 1d filter for this

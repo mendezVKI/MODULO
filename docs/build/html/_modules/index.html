@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overview: module code &mdash; MODULO 1.1.6 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <title>Overview: module code &mdash; MODULO 2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -13,7 +17,11 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -24,14 +32,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> MODULO
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MODULO
           </a>
               <div class="version">
-                1.1
+                Version 2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -39,14 +51,14 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../intro.html">MODULO: Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../what_is_new.html">What is new in this V 2.0?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../importing_data.html">Importing data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../black_box.html">Computing decompositions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../release-history.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../exercises.html">New Tutorial Exercises</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../min_versions.html">Minimum Version of Python and NumPy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../material.html">MODULO: References and material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
 </ul>
 
         </div>
@@ -62,8 +74,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Overview: module code</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Overview: module code</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -73,9 +85,13 @@
            <div itemprop="articleBody">
              
   <h1>All modules for which code is available</h1>
-<ul><li><a href="_dmd_s.html">_dmd_s</a></li>
-<li><a href="modulo.html">modulo</a></li>
-<li><a href="read_db.html">read_db</a></li>
+<ul><li><a href="modulo/core/_dft.html">modulo.core._dft</a></li>
+<li><a href="modulo/core/_dmd_s.html">modulo.core._dmd_s</a></li>
+<li><a href="modulo/core/_k_matrix.html">modulo.core._k_matrix</a></li>
+<li><a href="modulo/core/_mpod_space.html">modulo.core._mpod_space</a></li>
+<li><a href="modulo/core/_mpod_time.html">modulo.core._mpod_time</a></li>
+<li><a href="modulo/core/_pod_space.html">modulo.core._pod_space</a></li>
+<li><a href="modulo/core/_pod_time.html">modulo.core._pod_time</a></li>
 </ul>
 
            </div>
@@ -85,7 +101,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, L. Schena.</p>
+    <p>&#169; Copyright 2024, von Karman Institute.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

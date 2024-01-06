@@ -1,55 +1,27 @@
 import math
-import os
-
 import numpy as np
-from tqdm import tqdm
 
 
-def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,
-                      N_T, FOLDER_OUT='./', N_PARTITIONS=1,
-                      SAVE_SPATIAL_POD=False):
+def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,N_T, FOLDER_OUT='./', N_PARTITIONS=1,SAVE_SPATIAL_POD=False):
     """
-    Given the temporal basis  now the POD spatial ones are computed
-    --------------------------------------------------------------------------------------------------------------------
-    Parameters:
-    ----------
-    :param N_T: int
-        Number of temporal snapshots
-
-    :param FOLDER_OUT: str
-        Folder in which the results are saved if SAVE_SPATIAL_POD = True
-
-    :param SAVE_SPATIAL_POD: bool
-        If True, results are saved on disk and released from memory
-
-    :param N_PARTITIONS: int
-        Number of partitions to be loaded. If D has been partitioned using MODULO, this parameter is automatically
-        inherited from the main class. To be specified otherwise.
-
-    :param MEMORY_SAVING: bool
-        Inherited from main class, if True turns on the MEMORY_SAVING feature, loading the partitions and starting
-        the proper algorithm
-
-    :param D: np.array
-        Data matrix on which to project the temporal basis
-
-    :param PSI_P: np.array
-        POD Psis
-    :param Sigma_P: np.array
-        POD Sigmas
-    --------------------------------------------------------------------------------------------------------------------
-    Returns:
-    --------
-
-    :return Phi_P: np.array
-        POD Phis
+    This function computs the POD spatial basis from the temporal basis,
+    
+    :param N_T: int. Number of temporal snapshots
+    :param FOLDER_OUT: str. Folder in which the results are saved if SAVE_SPATIAL_POD = True
+    :param SAVE_SPATIAL_POD: bool. If True, results are saved on disk and released from memory
+    :param N_PARTITIONS: int. Number of partitions to be loaded. If D has been partitioned using MODULO, this parameter is automatically inherited from the main class. To be specified otherwise.
+    :param MEMORY_SAVING: bool. Inherited from main class, if True turns on the MEMORY_SAVING feature, loading the partitions and starting the proper algorithm
+    :param D: np.array. Data matrix on which to project the temporal basis
+    :param PSI_P: np.array. POD's Psis
+    :param Sigma_P: np.array. POD's Sigmas
+    :return Phi_P: np.array. POD's Phis
     """
+    
     R = PSI_P.shape[1]
 
     if not MEMORY_SAVING:
         N_S = D.shape[0]
-        
-                
+                        
         #The following is the general normalization approach.
         #not needed for POD. I leave it commented for the moment.
         
@@ -101,11 +73,7 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,
             tot_blocks_col = N_PARTITIONS
 
         # --- Loading Psi_P
-        fixed = 0
-        R1 = 0
-        R2 = 0
-        C1 = 0
-        C2 = 0
+        fixed = 0; R1 = 0; R2 = 0 ; C1 = 0; C2 = 0
 
         for i in range(1, tot_blocks_row + 1):
 

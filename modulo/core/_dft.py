@@ -6,12 +6,27 @@ from tqdm import tqdm
 
 def dft_fit(N_T, F_S, D, FOLDER_OUT, SAVE_DFT=False):
     """
-    :param N_T:
+    This function computes the DFT form the dataset D.
+    Currently, this does not handle the memory saving feature.
+    
+    :param N_T: int.
+        number of snapshots 
     :param F_S:
+        Sampling frequency (in Hz)
     :param D:
+        Snapshot matrix
     :param FOLDER_OUT:
+        Folder in which the results are saved if SAVE_SPATIAL_POD = True
     :param SAVE_DFT:
-    :return:
+        If True, results are saved on disk and released from memory
+        
+    :return: Sorted_Freqs, np.array
+        Frequency bins, in Hz. 
+    :return: Phi_F, np.array
+        (Complex) Spatial structures for each mode
+    :return: SIGMA_F, np.array
+         (real) amplitude of each modes
+    
     """
     n_t = int(N_T)
     Freqs = np.fft.fftfreq(n_t) * F_S  # Compute the frequency bins
