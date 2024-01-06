@@ -4,31 +4,37 @@ from scipy.signal import firwin
 from ._pod_time import Temporal_basis_POD
 from ._pod_space import Spatial_basis_POD
 
-def compute_SPOD_s(D, K, F_S, n_s, n_t,
-                   N_o=100, f_c=0.3,
-                   n_Modes=10, SAVE_SPOD=True,
-                   FOLDER_OUT='./',
-                   MEMORY_SAVING=False, N_PARTITIONS=1):
+def compute_SPOD_s(D, K, F_S, n_s, n_t,N_o=100, f_c=0.3,n_Modes=10, SAVE_SPOD=True,
+                   FOLDER_OUT='./', MEMORY_SAVING=False, N_PARTITIONS=1):
     """
     This method computes the Spectral POD of your data.
     This is the one by Sieber
     et al (https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/spectral-proper-orthogonal-decomposition/DCD8A6EDEFD56F5A9715DBAD38BD461A)
 
     :param F_S: float,
-            Sampling Frequency [Hz]
+           Sampling Frequency [Hz]
     :param N_o: float,
-            Semi-Order of the diagonal filter.
-            Note that the filter order will be 2 N_o +1 (to make sure it is odd)
+           Semi-Order of the diagonal filter.
+           Note that the filter order will be 2 N_o +1 (to make sure it is odd)
     :param f_c: float,
-            cut-off frequency of the diagonal filter
+           cut-off frequency of the diagonal filter
     :param n_Modes: float,
            number of modes to be computed
     :param SAVE_SPOD: bool,
-            If True, MODULO will save the output in self.FOLDER OUT/MODULO_tmp
+           If True, MODULO will save the output in self.FOLDER OUT/MODULO_tmp
+    :param FOLDER_OUT: string
+           Define where the out will be stored (ignored if SAVE_POD=False)
+    :param MEMORY SAVING: bool
+           Define if memory saving is active or not (reduntant; to be improved)
+           Currently left for compatibility with the rest of MODULO.
+    :param N_PARTITIONS: int
+           number of partitions (if memory saving = False, it should be 1). 
+           (reduntant; to be improved)
+           Currently left for compatibility with the rest of MODULO.           
     :return Psi_P: np.array
-            SPOD Psis
+           SPOD Psis
     :return Sigma_P: np.array
-            SPOD Sigmas.
+           SPOD Sigmas.
     :return Phi_P: np.array
             SPOD Phis
     """
@@ -88,9 +94,9 @@ def compute_SPOD_s(D, K, F_S, n_s, n_t,
 
     # From now on it's just POD:
     Psi_P, Sigma_P = Temporal_basis_POD(K_F, SAVE_SPOD, FOLDER_OUT, n_Modes)
-
+    # but with a normalization aspect to be careful about!  
     Phi_P = Spatial_basis_POD(D, N_T=n_t, PSI_P=Psi_P, Sigma_P=Sigma_P,
                               MEMORY_SAVING=MEMORY_SAVING, FOLDER_OUT=FOLDER_OUT,
-                              N_PARTITIONS=N_PARTITIONS)
+                              N_PARTITIONS=N_PARTITIONS,rescale=True)
 
     return Phi_P, Psi_P, Sigma_P

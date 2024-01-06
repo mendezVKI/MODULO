@@ -1,6 +1,5 @@
 import numpy as np
 from modulo.utils._utils import overlap
-#from sklearn.utils.extmath import randomized_svd
 from tqdm import tqdm
 import os
 
@@ -8,34 +7,36 @@ from modulo.utils._utils import switch_svds
 
 
 
-def compute_SPOD_t(D, F_S, L_B=500, O_B=250,
-                   n_Modes=10, SAVE_SPOD=True, FOLDER_OUT='/',
+def compute_SPOD_t(D, F_S, L_B=500, O_B=250,n_Modes=10, SAVE_SPOD=True, FOLDER_OUT='/',
                    possible_svds='svd_sklearn_truncated'):
     """
     This method computes the Spectral POD of your data.
-    :param D: array,
-            snapshot matrix to decompose, of size N_S,N_T 
+    This is the one by Town 
+    et al (https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/spectral-proper-orthogonal-decomposition-and-its-relationship-to-dynamic-mode-decomposition-and-resolvent-analysis/EC2A6DF76490A0B9EB208CC2CA037717)
+    
+    :param D: array.
+      snapshot matrix to decompose, of size N_S,N_T 
     :param F_S: float,
-            Sampling Frequency [Hz]
+      Sampling Frequency [Hz]
     :param L_B: float,
-            lenght of the chunks
+      Lenght of the chunks
     :param O_B: float,
-            Overlapping between blocks in the chunk
+      Overlapping between blocks in the chunk
     :param n_Modes: float,
-           number of modes to be computed FOR EACH FREQUENCY
+      Number of modes to be computed FOR EACH FREQUENCY
     :param SAVE_SPOD: bool,
-            If True, MODULO will save the output in FOLDER OUT/MODULO_tmp
-    :param possible_svds      
+      If True, MODULO will save the output in FOLDER OUT/MODULO_tmp
+    :param possible_svds: str,      
+      Svd solver to be used throughout the computation
+           
     :return Psi_P_hat: np.array
-            Spectra of the SPOD Modes
+      Spectra of the SPOD Modes
     :return Sigma_P: np.array
-            Amplitudes of the SPOD Modes.
+      Amplitudes of the SPOD Modes.
     :return Phi_P: np.array
-            SPOD Phis
+      SPOD Phis
     :return freq: float
-            frequency bins for the Spectral POD
-
-
+      Frequency bins for the Spectral POD
     """
         
     # if D is None:

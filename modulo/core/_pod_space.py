@@ -1,54 +1,72 @@
 import math
 import numpy as np
+from tqdm import tqdm
+import os
 
-
-def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,N_T, FOLDER_OUT='./', N_PARTITIONS=1,SAVE_SPATIAL_POD=False):
+def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,N_T, FOLDER_OUT='./', N_PARTITIONS=1,SAVE_SPATIAL_POD=False,rescale=False):
     """
     This function computs the POD spatial basis from the temporal basis,
-    
-    :param N_T: int. Number of temporal snapshots
-    :param FOLDER_OUT: str. Folder in which the results are saved if SAVE_SPATIAL_POD = True
-    :param SAVE_SPATIAL_POD: bool. If True, results are saved on disk and released from memory
-    :param N_PARTITIONS: int. Number of partitions to be loaded. If D has been partitioned using MODULO, this parameter is automatically inherited from the main class. To be specified otherwise.
-    :param MEMORY_SAVING: bool. Inherited from main class, if True turns on the MEMORY_SAVING feature, loading the partitions and starting the proper algorithm
-    :param D: np.array. Data matrix on which to project the temporal basis
-    :param PSI_P: np.array. POD's Psis
-    :param Sigma_P: np.array. POD's Sigmas
-    :return Phi_P: np.array. POD's Phis
+
+    :param D: np.array. 
+         matrix on which to project the temporal basis
+    :param PSI_P: np.array. 
+          POD's Psis
+    :param Sigma_P: np.array. 
+          POD's Sigmas
+    :param MEMORY_SAVING: bool. 
+         Inherited from main class, if True turns on the MEMORY_SAVING feature, loading the partitions and starting the proper algorithm          
+    :param N_T: int. 
+         Number of temporal snapshots
+    :param FOLDER_OUT: str. 
+         Folder in which the results are saved if SAVE_SPATIAL_POD = True
+    :param N_PARTITIONS: int. 
+         Number of partitions to be loaded. If D has been partitioned using MODULO, this parameter is automatically inherited from the main class. To be specified otherwise.
+
+    :param SAVE_SPATIAL_POD: bool. 
+         If True, results are saved on disk and released from memory
+
+    :param rescale: bool. 
+          If False, the Sigmas are used for the normalization. If True, these are ignored and the normalization is carried out.
+          For the standard POD, False is the way to go. 
+          However, for other decompositions (eg. the SPOD_s) you must use rescale=True                        
+
+    :return Phi_P: np.array. 
+          POD's Phis
     """
     
     R = PSI_P.shape[1]
 
     if not MEMORY_SAVING:
         N_S = D.shape[0]
-                        
-        #The following is the general normalization approach.
-        #not needed for POD. I leave it commented for the moment.
-        
-        # Phi_P = np.zeros((N_S, R))
+                                
+        if rescale:
+         #The following is the general normalization approach.
+         #not needed for POD for required for SPOD      
+         Phi_P = np.zeros((N_S, R))
 
-        # # N_S = D.shape[0]
-        # PHI_P_SIGMA_P = np.dot(D, PSI_P)
+         N_S = D.shape[0]
+         PHI_P_SIGMA_P = np.dot(D, PSI_P)
+         print("Completing Spatial Structures Modes: \n")
 
-        # print("Completing Spatial Structures Modes: \n")
+         for i in tqdm(range(0, R)):
+              # Normalize the columns of C to get spatial modes
+              Phi_P[:, i] = PHI_P_SIGMA_P[:, i] / Sigma_P[i]
 
-        # for i in tqdm(range(0, R)):
-        #     # Normalize the columns of C to get spatial modes
-        #     Phi_P[:, i] = PHI_P_SIGMA_P[:, i] / Sigma_P[i]
 
-        # if SAVE_SPATIAL_POD:
-        #     os.makedirs(FOLDER_OUT + 'POD', exist_ok=True)
-        #     np.savez(FOLDER_OUT + '/POD/pod_spatial_basis',
-        #               phis=Phi_P, PHI_P_SIGMA_P=PHI_P_SIGMA_P)
-
-        # return Phi_P
-        
-        # We take only the first R modes.
-        Sigma_P_t=Sigma_P[0:R]; Sigma_P_Inv_V=1/Sigma_P_t
-        # So we have the inverse
-        Sigma_P_Inv=np.diag(Sigma_P_Inv_V)
-        # Here is the one shot projection:
-        Phi_P=np.linalg.multi_dot([D,PSI_P[:,0:R],Sigma_P_Inv])
+        else:
+         # We take only the first R modes.
+         Sigma_P_t=Sigma_P[0:R]; Sigma_P_Inv_V=1/Sigma_P_t
+         # So we have the inverse
+         Sigma_P_Inv=np.diag(Sigma_P_Inv_V)
+         # Here is the one shot projection:
+         Phi_P=np.linalg.multi_dot([D,PSI_P[:,0:R],Sigma_P_Inv])
+         
+         
+         if SAVE_SPATIAL_POD:
+               os.makedirs(FOLDER_OUT + 'POD', exist_ok=True)
+               np.savez(FOLDER_OUT + '/POD/pod_spatial_basis',
+                         phis=Phi_P, PHI_P_SIGMA_P=PHI_P_SIGMA_P) 
+         
 
         return Phi_P
         
@@ -145,13 +163,19 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,N_T, FOLDER_OUT='./', N_P
                 dps[C1:C2, :] = PHI_SIGMA_BLOCK[:, R1:R2]
 
             # Computing Sigmas and Phis
-            for j in range(R1, R2):
+            if rescale:
+             for j in range(R1, R2):
                 jj = j - R1
-                Phi_P = dps[:, jj] / Sigma_P[jj] #np.linalg.norm(dps[:, jj])
+                Sigma_P[jj]=np.linalg.norm(dps[:, jj])
+                Phi_P = dps[:, jj] / Sigma_P[jj] 
                 np.savez(FOLDER_OUT + f"/POD/phi_{j + 1}", phi_p=Phi_P)
+            else:
+             for j in range(R1, R2):
+               jj = j - R1
+               Phi_P = dps[:, jj] / Sigma_P[jj] 
+               np.savez(FOLDER_OUT + f"/POD/phi_{j + 1}", phi_p=Phi_P)
+               
 
-        # Read the temporary files to build Phi_P_Matrix (Lorenzo pls fix this :D)
-        # TODO 
         Phi_P_M = np.zeros((N_S, R))
         for j in range(R):
             Phi_P_V = np.load(FOLDER_OUT + f"/POD/phi_{j + 1}.npz")['phi_p']

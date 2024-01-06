@@ -43,6 +43,26 @@ Functions for the DMD (PIP)
 .. autofunction:: modulo.core._dmd_s.dmd_s
 
 
+For the SPODs, currently these are implemented in a single function.
+MODULO acts as a wrapper to these. The memory saving feature on these is not yet implemented.
+
+
++++++++++++++++++++++++++++
+Functions for the SPOD_S 
++++++++++++++++++++++++++++
+
+.. autofunction:: modulo.core._spod_s.compute_SPOD_s
+
+
++++++++++++++++++++++++++++
+Functions for the SPOD_T
++++++++++++++++++++++++++++
+
+.. autofunction:: modulo.core._spod_t.compute_SPOD_t
+
+
+
+
 
 
 

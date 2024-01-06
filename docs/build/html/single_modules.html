@@ -80,6 +80,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#modulo.core._dmd_s.dmd_s"><code class="docutils literal notranslate"><span class="pre">dmd_s()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#functions-for-the-spod-s">Functions for the SPOD_S</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#modulo.core._spod_s.compute_SPOD_s"><code class="docutils literal notranslate"><span class="pre">compute_SPOD_s()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#functions-for-the-spod-t">Functions for the SPOD_T</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#modulo.core._spod_t.compute_SPOD_t"><code class="docutils literal notranslate"><span class="pre">compute_SPOD_t()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -165,23 +173,36 @@ then the dimension dim_col and N_PARTITIONS is automatically loaded</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="modulo.core._pod_space.Spatial_basis_POD">
-<span class="sig-prename descclassname"><span class="pre">modulo.core._pod_space.</span></span><span class="sig-name descname"><span class="pre">Spatial_basis_POD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PSI_P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MEMORY_SAVING</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FOLDER_OUT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_PARTITIONS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_SPATIAL_POD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modulo/core/_pod_space.html#Spatial_basis_POD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modulo.core._pod_space.Spatial_basis_POD" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">modulo.core._pod_space.</span></span><span class="sig-name descname"><span class="pre">Spatial_basis_POD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PSI_P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MEMORY_SAVING</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FOLDER_OUT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_PARTITIONS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_SPATIAL_POD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rescale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modulo/core/_pod_space.html#Spatial_basis_POD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modulo.core._pod_space.Spatial_basis_POD" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function computs the POD spatial basis from the temporal basis,</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>N_T</strong> – int. Number of temporal snapshots</p></li>
-<li><p><strong>FOLDER_OUT</strong> – str. Folder in which the results are saved if SAVE_SPATIAL_POD = True</p></li>
-<li><p><strong>SAVE_SPATIAL_POD</strong> – bool. If True, results are saved on disk and released from memory</p></li>
-<li><p><strong>N_PARTITIONS</strong> – int. Number of partitions to be loaded. If D has been partitioned using MODULO, this parameter is automatically inherited from the main class. To be specified otherwise.</p></li>
-<li><p><strong>MEMORY_SAVING</strong> – bool. Inherited from main class, if True turns on the MEMORY_SAVING feature, loading the partitions and starting the proper algorithm</p></li>
-<li><p><strong>D</strong> – np.array. Data matrix on which to project the temporal basis</p></li>
-<li><p><strong>PSI_P</strong> – np.array. POD’s Psis</p></li>
-<li><p><strong>Sigma_P</strong> – np.array. POD’s Sigmas</p></li>
+<li><p><strong>D</strong> – np.array.
+matrix on which to project the temporal basis</p></li>
+<li><p><strong>PSI_P</strong> – np.array.
+POD’s Psis</p></li>
+<li><p><strong>Sigma_P</strong> – np.array.
+POD’s Sigmas</p></li>
+<li><p><strong>MEMORY_SAVING</strong> – bool.
+Inherited from main class, if True turns on the MEMORY_SAVING feature, loading the partitions and starting the proper algorithm</p></li>
+<li><p><strong>N_T</strong> – int.
+Number of temporal snapshots</p></li>
+<li><p><strong>FOLDER_OUT</strong> – str.
+Folder in which the results are saved if SAVE_SPATIAL_POD = True</p></li>
+<li><p><strong>N_PARTITIONS</strong> – int.
+Number of partitions to be loaded. If D has been partitioned using MODULO, this parameter is automatically inherited from the main class. To be specified otherwise.</p></li>
+<li><p><strong>SAVE_SPATIAL_POD</strong> – bool.
+If True, results are saved on disk and released from memory</p></li>
+<li><p><strong>rescale</strong> – bool.
+If False, the Sigmas are used for the normalization. If True, these are ignored and the normalization is carried out.
+For the standard POD, False is the way to go.
+However, for other decompositions (eg. the SPOD_s) you must use rescale=True</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return Phi_P<span class="colon">:</span></dt>
-<dd class="field-even"><p>np.array. POD’s Phis</p>
+<dd class="field-even"><p>np.array.
+POD’s Phis</p>
 </dd>
 </dl>
 </dd></dl>
@@ -349,6 +370,104 @@ Frequencies (in Hz, associated to the DMD modes)</p>
 <dt class="field-odd">Return4 a0s<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.array.
 Initial Coefficients of the Modes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>For the SPODs, currently these are implemented in a single function.
+MODULO acts as a wrapper to these. The memory saving feature on these is not yet implemented.</p>
+</section>
+<section id="functions-for-the-spod-s">
+<h2>Functions for the SPOD_S<a class="headerlink" href="#functions-for-the-spod-s" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="modulo.core._spod_s.compute_SPOD_s">
+<span class="sig-prename descclassname"><span class="pre">modulo.core._spod_s.</span></span><span class="sig-name descname"><span class="pre">compute_SPOD_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_Modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_SPOD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FOLDER_OUT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MEMORY_SAVING</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_PARTITIONS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modulo/core/_spod_s.html#compute_SPOD_s"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modulo.core._spod_s.compute_SPOD_s" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method computes the Spectral POD of your data.
+This is the one by Sieber
+et al (<a class="reference external" href="https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/spectral-proper-orthogonal-decomposition/DCD8A6EDEFD56F5A9715DBAD38BD461A">https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/spectral-proper-orthogonal-decomposition/DCD8A6EDEFD56F5A9715DBAD38BD461A</a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>F_S</strong> – float,
+Sampling Frequency [Hz]</p></li>
+<li><p><strong>N_o</strong> – float,
+Semi-Order of the diagonal filter.
+Note that the filter order will be 2 N_o +1 (to make sure it is odd)</p></li>
+<li><p><strong>f_c</strong> – float,
+cut-off frequency of the diagonal filter</p></li>
+<li><p><strong>n_Modes</strong> – float,
+number of modes to be computed</p></li>
+<li><p><strong>SAVE_SPOD</strong> – bool,
+If True, MODULO will save the output in self.FOLDER OUT/MODULO_tmp</p></li>
+<li><p><strong>FOLDER_OUT</strong> – string
+Define where the out will be stored (ignored if SAVE_POD=False)</p></li>
+<li><p><strong>SAVING</strong> (<em>MEMORY</em>) – bool
+Define if memory saving is active or not (reduntant; to be improved)
+Currently left for compatibility with the rest of MODULO.</p></li>
+<li><p><strong>N_PARTITIONS</strong> – int
+number of partitions (if memory saving = False, it should be 1).
+(reduntant; to be improved)
+Currently left for compatibility with the rest of MODULO.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return Psi_P<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.array
+SPOD Psis</p>
+</dd>
+<dt class="field-odd">Return Sigma_P<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array
+SPOD Sigmas.</p>
+</dd>
+<dt class="field-even">Return Phi_P<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.array
+SPOD Phis</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="functions-for-the-spod-t">
+<h2>Functions for the SPOD_T<a class="headerlink" href="#functions-for-the-spod-t" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="modulo.core._spod_t.compute_SPOD_t">
+<span class="sig-prename descclassname"><span class="pre">modulo.core._spod_t.</span></span><span class="sig-name descname"><span class="pre">compute_SPOD_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">O_B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_Modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_SPOD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FOLDER_OUT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">possible_svds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svd_sklearn_truncated'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modulo/core/_spod_t.html#compute_SPOD_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modulo.core._spod_t.compute_SPOD_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method computes the Spectral POD of your data.
+This is the one by Town
+et al (<a class="reference external" href="https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/spectral-proper-orthogonal-decomposition-and-its-relationship-to-dynamic-mode-decomposition-and-resolvent-analysis/EC2A6DF76490A0B9EB208CC2CA037717">https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/spectral-proper-orthogonal-decomposition-and-its-relationship-to-dynamic-mode-decomposition-and-resolvent-analysis/EC2A6DF76490A0B9EB208CC2CA037717</a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>D</strong> – array.
+snapshot matrix to decompose, of size N_S,N_T</p></li>
+<li><p><strong>F_S</strong> – float,
+Sampling Frequency [Hz]</p></li>
+<li><p><strong>L_B</strong> – float,
+Lenght of the chunks</p></li>
+<li><p><strong>O_B</strong> – float,
+Overlapping between blocks in the chunk</p></li>
+<li><p><strong>n_Modes</strong> – float,
+Number of modes to be computed FOR EACH FREQUENCY</p></li>
+<li><p><strong>SAVE_SPOD</strong> – bool,
+If True, MODULO will save the output in FOLDER OUT/MODULO_tmp</p></li>
+<li><p><strong>possible_svds</strong> – str,
+Svd solver to be used throughout the computation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return Psi_P_hat<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.array
+Spectra of the SPOD Modes</p>
+</dd>
+<dt class="field-odd">Return Sigma_P<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array
+Amplitudes of the SPOD Modes.</p>
+</dd>
+<dt class="field-even">Return Phi_P<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.array
+SPOD Phis</p>
+</dd>
+<dt class="field-odd">Return freq<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float
+Frequency bins for the Spectral POD</p>
 </dd>
 </dl>
 </dd></dl>
