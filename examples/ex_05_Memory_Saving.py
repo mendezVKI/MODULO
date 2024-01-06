@@ -61,16 +61,15 @@ t=np.linspace(0,dt*(n_t-1),n_t) # prepare the time axis#
 
 #%% Get info about mesh and data, and construct D or partitions
 
-# --- Component fields (N=2 for 2D velocity fields, N=1 for pressure fields)
-N = 2 
-# --- Number of mesh points and snapshots
-nxny = 2130; N_T=n_t
 # --- Header (H),  footer (F) and columns (C) to be skipped during acquisition
 H = 1; F = 0; C=0
 # --- Read one sample snapshot (to get N_S)
 Name = FOLDER+os.sep+"Res00001.dat"
 Dat = np.genfromtxt(Name, skip_header=H, skip_footer=F)
-
+# --- Component fields (N=2 for 2D velocity fields, N=1 for pressure fields)
+N = Dat.shape[1]
+# --- Number of mesh points and snapshots
+nxny = Dat.shape[0]; N_T=n_t
 
 Name_Mesh=FOLDER+os.sep+'MESH.dat'
 Name_FIG='Cylinder_Flow_snapshot_'+str(2)+'.png'
