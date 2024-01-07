@@ -54,9 +54,9 @@ print('Download Completed! I prepare data Folder')
 from zipfile import ZipFile
 String='Ex_4_TR_PIV.zip'
 zf = ZipFile(String,'r')
-zf.extractall('./')
+zf.extractall(FOLDER+'/')
 zf.close() 
-os.rename('Ex_4_TR_PIV_Jet', FOLDER) # rename the data flolder to FOLDER
+os.rename(FOLDER+'/Ex_4_TR_PIV_Jet', FOLDER+'/data') # rename the data flolder to FOLDER
 os.remove(String) # Delete the zip file with the data 
 print('Data set unzipped and ready ! ')
 
@@ -69,8 +69,8 @@ t=np.linspace(0,dt*(n_t-1),n_t) # prepare the time axis#
 
 # Read file number 10 (Check the string construction)
 SNAP=10
-Name=FOLDER+os.sep+'Res%05d'%SNAP+'.dat' # Check it out: print(Name)
-n_s, Xg, Yg, Vxg, Vyg, X_S,Y_S=Plot_Field_TEXT_JET(Name) 
+Name=FOLDER+os.sep+'data/Res%05d'%SNAP+'.dat' # Check it out: print(Name)
+n_s, Xg, Yg, Vxg, Vyg, X_S,Y_S=Plot_Field_TEXT_JET(Name); plt.close() 
 # Shape of the grid
 n_y,n_x=np.shape(Xg)
 
@@ -111,12 +111,12 @@ N_S = 6840
 # --- Header (H) and footer (F) to be skipped during acquisition
 H = 1; F = 0
 # --- Read one sample snapshot (to get N_S)
-Name = "./Tutorial_2_JET_PIV/Res00001.dat"
+Name = FOLDER+"/data/Res00001.dat"
 Dat = np.genfromtxt(Name, skip_header=H, skip_footer=F)
 
-D = ReadData._data_processing(database=None,
+D = ReadData._data_processing(D=None,
                               FOLDER_OUT='./',
-                              FOLDER_IN='./Tutorial_2_JET_PIV/', 
+                              FOLDER_IN=FOLDER+'/data/', 
                               filename='Res%05d', 
                               h=H,f=F,c=2,
                               N=2, N_S=2*Dat.shape[0],N_T=n_t)
@@ -177,11 +177,6 @@ Name=FOLDER_DFT_RESULTS+os.sep+'DFT_R_Impinging_JET.png'
 plt.savefig(Name, dpi=200) 
 
 #% The modes come in pair. We plot the spatial structures of some modes
-
-# Export the first r modes
-Fol_Out=FOLDER_DFT_RESULTS+os.sep+'DFT_Results'
-if not os.path.exists(Fol_Out):
-    os.mkdir(Fol_Out)
   
 
 for r in range(200,220):
@@ -232,7 +227,7 @@ for r in range(200,220):
   ax2.set_xlim([-1000,1000])
   ax2.set_ylim([-45,10])
 
-  Name=Fol_Out+ os.sep +'DFT_Mode_'+str(r)+'.png'
+  Name=FOLDER_DFT_RESULTS+ os.sep +'DFT_Mode_'+str(r)+'.png'
   plt.savefig(Name, dpi=200)      
   plt.close()
 
@@ -242,11 +237,8 @@ for r in range(200,220):
 # Every DFT mode has one frequency. The convergence of the decomposition is 
 # poor. We can plot an animation using the first 50 DFT modes. 
 # First, construct an approximation of D in the DFT spectra:
-    
-#%% Build an animation of the Data and the approximation D_f
-plt.ioff()
-Name_GIF=FOLDER_DFT_RESULTS+os.sep+'Full_data.gif'
-Mex=Animation_JET(Name_GIF,m.D,X_S,Y_S,500,600,1)
+
+#%% Build DFT approximation of the dataset    
 
 # We can build an approximation as follows
 R=50
@@ -264,7 +256,7 @@ Error=np.linalg.norm(m.D-D_F)/np.linalg.norm(m.D)
 print('Convergence Error: E_C='+"{:.2f}".format(Error*100)+' %')
 
 Name_GIF=FOLDER_DFT_RESULTS+os.sep+'DFT_Approximation_R50.gif'
-
+plt.ioff()
 Mex=Animation_JET(Name_GIF,D_F+D_MEAN_mat,X_S,Y_S,500,600,1)
 
 #%% Perfom a POD Analysis
@@ -275,10 +267,7 @@ Mex=Animation_JET(Name_GIF,D_F+D_MEAN_mat,X_S,Y_S,500,600,1)
 # --- Initialize MODULO object
 m2 = MODULO(data=m.D,n_Modes=50)
 # --- Check for D
-D = m2._data_processing()
-
 Phi_P, Psi_P, Sigma_P = m2.compute_POD_svd() # POD via svd
-
 
 FOLDER_POD_RESULTS=FOLDER+os.sep+'POD_Results_Jet'
 if not os.path.exists(FOLDER_POD_RESULTS):
@@ -295,7 +284,7 @@ Name=FOLDER_POD_RESULTS+os.sep+'POD_R_Impinging_JET.png'
 plt.savefig(Name, dpi=200) 
 
 # Plot the leading POD modes and their spectra:
-    
+plt.ion()
 # Show modes
 for j in range(1,10):
  plt.close(fig='all') 
@@ -345,9 +334,10 @@ Error=np.linalg.norm(m.D-D_P)/np.linalg.norm(m.D)
 print('Convergence Error: E_C='+"{:.2f}".format(Error*100)+' %')
 
 Name_GIF=FOLDER_POD_RESULTS+os.sep+'POD_Approximation_R50.gif'
+plt.ioff()
 Mex=Animation_JET(Name_GIF,D_P+D_MEAN_mat,X_S,Y_S,500,600,1)
 
-# The extreme convergence comes at the prices of spectra mixing. 
+# The extreme convergence comes at the prices of spectral mixing. 
 # Modes are characterized by a large range of frequencies and thus their spatial
 # structures cannot be associated to specific ranges of frequencies.
 
