@@ -81,14 +81,14 @@ def Plot_Field_JET(X_S, Y_S, V_X, V_Y, PLOT, Step, Scale):
         # Show this particular step
         #    fig, ax = plt.subplots(figsize=(8, 5)) # This creates the figure
         # Or you can plot it as streamlines
-        fig, ax = plt.subplots(figsize=(8, 5))  # This creates the figure
-        ax.contourf(Xg, Yg, Magn)
-
+        #fig, ax = plt.subplots(figsize=(8, 5))  # This creates the figure
+        #ax.contourf(Xg, Yg, Magn)
+        plt.contourf(Xg,Yg,Magn) 
         # One possibility is to use quiver
         STEPx = Step
         STEPy = Step
 
-        ax.quiver(Xg[::STEPx, ::STEPy], Yg[::STEPx, ::STEPy], \
+        plt.quiver(Xg[::STEPx, ::STEPy], Yg[::STEPx, ::STEPy], \
                    Vxg[::STEPx, ::STEPy], -Vyg[::STEPx, ::STEPy], color='k',
                    scale=Scale)  # Create a quiver (arrows) plot
 

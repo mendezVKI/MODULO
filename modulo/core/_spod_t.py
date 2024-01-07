@@ -97,8 +97,8 @@ def compute_SPOD_t(D, F_S, L_B=500, O_B=250,n_Modes=10, SAVE_SPOD=True, FOLDER_O
         Sigma_SP[:, j] = Sigma / (N_S * N_B)
 
     if SAVE_SPOD:
-        folder_dir = FOLDER_OUT + 'SPOD_T'
+        folder_dir = FOLDER_OUT + '/SPOD_T'
         os.makedirs(folder_dir, exist_ok=True)
-        np.savez(folder_dir + 'spod_t.npz', Phi=Phi_SP, Sigma=Sigma_SP, Freqs=Freqs_Pos)
+        np.savez(folder_dir + '/spod_t.npz', Phi=Phi_SP, Sigma=Sigma_SP, Freqs=Freqs_Pos)
 
     return Phi_SP, Sigma_SP, Freqs_Pos

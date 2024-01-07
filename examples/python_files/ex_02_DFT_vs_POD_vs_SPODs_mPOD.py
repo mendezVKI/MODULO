@@ -352,11 +352,8 @@ FOLDER_sPOD_RESULTS=FOLDER+os.sep+'sPOD_t_Results_Jet'
 if not os.path.exists(FOLDER_sPOD_RESULTS):
     os.mkdir(FOLDER_sPOD_RESULTS)
 
-# Initialize a 'MODULO Object'
-m3 = MODULO(data=m.D,MEMORY_SAVING=False)
-# Prepare (partition) the dataset
-# Compute the POD
-Phi_SP, Sigma_SP, Freqs_Pos = m3.compute_SPOD_t(F_S=2000, # sampling frequency
+# Compute the SPOD_t
+Phi_SP, Sigma_SP, Freqs_Pos = m.compute_SPOD_t(F_S=2000, # sampling frequency
                                                 L_B=200, # Length of the chunks for time average
                                                 O_B=150, # Overlap between chunks
                                                 n_Modes=3) # number of modes PER FREQUENCY
@@ -539,13 +536,12 @@ Mex=Animation_JET(Name_GIF,D_P+D_MEAN_mat,X_S,Y_S,500,600,1)
 
 # Here we go with our legacy ;P
 
-FOLDER_MPOD_RESULTS=FOLDER+os.sep+'MPOD_Results_Jet'
+FOLDER_MPOD_RESULTS=FOLDER+os.sep+'mPOD_Results_Jet'
 if not os.path.exists(FOLDER_MPOD_RESULTS):
     os.mkdir(FOLDER_MPOD_RESULTS)
 
 # We here perform the mPOD as done in the previous tutorials.
 # This is mostly a copy paste from those, but we include it for completenetss
-
 Keep = np.array([1, 1, 1, 1])
 Nf = np.array([201, 201, 201, 201])
 # --- Test Case Data:
@@ -559,11 +555,9 @@ ST_V = np.array([0.1, 0.2, 0.25, 0.4])
 F_V = ST_V * U0 / H
 # + Size of the extension for the BC (Check Docs)
 Ex = 203  # This must be at least as Nf.
-dt = 1/2000
-boundaries = 'reflective'
-MODE = 'reduced'
+dt = 1/2000; boundaries = 'reflective'; MODE = 'reduced'
 #K = np.load("./MODULO_tmp/correlation_matrix/k_matrix.npz")['K']
-Phi_M, Psi_M, Sigmas_M = m.compute_mPOD(Nf, Ex, F_V, Keep, boundaries, MODE, dt, False)
+Phi_M, Psi_M, Sigmas_M = m.compute_mPOD(Nf, Ex, F_V, Keep, 20 ,boundaries, MODE, dt, False)
 
 
 # The rest of the plotting is IDENTICAL to the POD part
@@ -577,7 +571,7 @@ plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
 Name=FOLDER_MPOD_RESULTS+os.sep+'mPOD_R_Impinging_JET.png'
 plt.savefig(Name, dpi=200) 
 
-# Plot the leading SPOD modes and their spectra:
+# Plot the leading mPOD modes and their spectra:
     
 # Show modes
 for j in range(1,10):
@@ -614,7 +608,7 @@ for j in range(1,10):
  String_y='$\widehat{\psi}_{\mathcal{M}'+str(j)+'}$'
  plt.ylabel(String_y,fontsize=18)
  plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
- Name=FOLDER_MPOD_RESULTS+os.sep+'MPOD_s_Mode_'+str(j)+'.png'
+ Name=FOLDER_MPOD_RESULTS+os.sep+'mPOD_s_Mode_'+str(j)+'.png'
  print(Name+' Saved')
  plt.savefig(Name, dpi=300) 
 
