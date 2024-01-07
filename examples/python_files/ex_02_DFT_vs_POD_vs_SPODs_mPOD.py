@@ -44,7 +44,7 @@ plt.rcParams['font.size'] = fontsize
 # Folder where we extract the data 
 FOLDER='Tutorial_2_JET_PIV'
 
-# First we unzip the file (note that this is the 7th exercise in the old enumeration)
+# First we unzip the file (note that this is the 4th exercise in the old enumeration)
 import urllib.request
 print('Downloading Data for Tutorial 2...')
 url = 'https://osf.io/c28de/download'
@@ -62,6 +62,15 @@ print('Data set unzipped and ready ! ')
 
     
 #%% Load one snapshot and plot it 
+
+'''We use the functions Plot_Field_TEXT_JET to extract all the data 
+concerning the on snapshot. In particular, we us it to extract the 
+grid information. Note that the grid is here saved in each of the dat 
+files, even if this is identical for all of them. This is very
+inefficient, but that's how the output was produced from our old 
+PIV code. In what follows we generate the time and space grid and
+plot the velocity field of snapshot 10.'''
+
 
 # Construct Time discretization
 n_t=2000; Fs=2000; dt=1/Fs 
@@ -103,7 +112,6 @@ plt.show()
 
 
 #%% Step 1: Prepare the snapshot matrix
-
 # --- Component fields (N=2 for 2D velocity fields, N=1 for pressure fields)
 N = 2 
 # --- Number of mesh points
@@ -178,7 +186,6 @@ plt.savefig(Name, dpi=200)
 
 #% The modes come in pair. We plot the spatial structures of some modes
   
-
 for r in range(200,220):
   print('Exporting (real part of) Mode '+str(r))  
   Phi=np.real(Phi_F[:,r])
@@ -263,7 +270,6 @@ Mex=Animation_JET(Name_GIF,D_F+D_MEAN_mat,X_S,Y_S,500,600,1)
 
 # The POD provides the best decomposition convergence.
 # Here is how to perform it:
-    
 # --- Initialize MODULO object
 m2 = MODULO(data=m.D,n_Modes=50)
 # --- Check for D
@@ -415,8 +421,6 @@ Name=FOLDER_sPOD_RESULTS+os.sep+'SPOD_t_Jet_'+str(Ind_2)+'.png'
 plt.savefig(Name, dpi=200) 
     
 
-
-
 Ind_3=48 # Mode 48
 
 
@@ -451,7 +455,6 @@ plt.savefig(Name, dpi=200)
 # This is an hybrid between DFT and POD. We filter the correlation matrix
 # to make it more circulant. At the limit of perfectly circulant matrix,
  # the POD is a DFT.The filtering is carried out along the diagonals
-
 
 FOLDER_SPOD_RESULTS=FOLDER+os.sep+'SPOD_s_Results_Jet'
 if not os.path.exists(FOLDER_SPOD_RESULTS):
@@ -533,6 +536,8 @@ Mex=Animation_JET(Name_GIF,D_P+D_MEAN_mat,X_S,Y_S,500,600,1)
 
 
 #%% Mendez's mPOD
+
+'''Here we go for the mPOD by [Mendez et al 2019](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/multiscale-proper-orthogonal-decomposition-of-complex-fluid-flows/D078BD2873B1C30B6DD9016E30B62DA8). Like Sirovinch's SPOD this decomposition modifies the standard POD by acting on the matrix K . However, the mPOD does not just filter it: it decomposes into chunks containing certain portions of the spectra and diagonalizes each of these independently. The resulting modes are optimal within the user-provided frequency repartition.'''
 
 # Here we go with our legacy ;P
 
