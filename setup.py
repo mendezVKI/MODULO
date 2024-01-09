@@ -2,7 +2,6 @@ from os import path
 from setuptools import setup, find_packages
 import sys
 
-
 # NOTE: This file must remain Python 2 compatible for the foreseeable future,
 # to ensure that we error out properly for people with outdated setuptools
 # and/or pip.
@@ -69,6 +68,8 @@ setup(
         "ipywidgets",
         "matplotlib",
         "pyvista",
+        "os",
+        "time",
     ],
     license='BSD (3-clause)',
     classifiers=[
