@@ -7,8 +7,7 @@ import math
 class ReadData:
     """
     A MODULO helper class for input data.  ReadData allows to load the data directly before using MODULO, and
-    hence assembling the data matrix D from data, if needed.
-
+    hence assembling the data matrix D from data.
     """
 
 
@@ -25,15 +24,9 @@ class ReadData:
                    N: int = 0, N_S: int = 0, N_T: int = 0):
         """
         First, if the D matrix is not provided, this method attempts to load the data and assembles the D matrix.
-        Then, it performs pre-processing operations on the data matrix, D:
-        - Mean removing: if MR=True, the mean (per each column - i.e.: snapshot at time t_i) is removed;
-        - Splitting: if the MEMORY_SAVING=True the data matrix is splitted to optimize memory usage. Moreover, D is dumped
-                    on disk and removed from the live memory. Finally, if in this condition, also the data type of the
-                    matrix is self is changed: from float64 -> float32, with the same purpose.
-        
-        ----------
-        Parameters
-        ----------
+        Then, it performs pre-processing operations on the data matrix, D. if MR=True, the mean (per each column - i.e.: snapshot at time t_i) is removed;
+        If the MEMORY_SAVING=True the data matrix is splitted to optimize memory usage. Moreover, D is stored on disk and removed from the live memory.
+        Finally, if in this condition, also the data type of the matrix is self is changed: from float64 -> float32, with the same purpose.
 
         :param D: np.array
              data matrix D
@@ -70,18 +63,17 @@ class ReadData:
         :param N_T: int, optional. Needed only if database=None
              components to be analysed.
 
-        -------        
-        Returns
-        -------
-        
-        There are four possible scenario:
-        1. if N_Partitions ==1 and MR = True, return is D,D_MEAN (the mean snapshot!)
-        2. if N_Partitions ==1 and MR = False, return is D.
-        3. if N_Partitions >1 and MR = True, return is D_MEAN
-        4. if N_Partitions >1 and MR=False, return is None
+    
+        :return:
+             There are four possible scenario:
+              1. if N_Partitions ==1 and MR = True, return is D,D_MEAN (the mean snapshot!)
+              2. if N_Partitions ==1 and MR = False, return is D.
+              3. if N_Partitions >1 and MR = True, return is D_MEAN
+              4. if N_Partitions >1 and MR=False, return is None
         
 
         """
+        
         if isinstance(D, np.ndarray):  # D was already initialised
             N_S = int(np.shape(D)[0])
             N_T = int(np.shape(D)[1])
@@ -230,15 +222,13 @@ class ReadData:
         else:
           return None
       
-    # return D if N_PARTITIONS == 1 & MR=else None
-
+'''
     @classmethod
     def from_xls(cls, filename, **kwargs):
         """
         This class method builds the df from an excel file.
-        :param filename: str
-                filename (with path if needed) to the df file.
-        :return: constructor for the class.
+
+        work
 
         """
         ## TBD
@@ -342,7 +332,7 @@ class ReadData:
         return D
 
 
-
+'''
 
 
 #%%
