@@ -44,9 +44,9 @@ class MODULO:
     def __init__(self, data: np.array,
                  N_PARTITIONS: int = 1,
                  FOLDER_OUT='./',
-                 N_T: int =100,
-                 N_S: int= 200,
-                 n_Modes: int = 10,                
+                 N_T: int = 100,
+                 N_S: int = 200,
+                 n_Modes: int = 10,
                  dtype: str = 'float32',
                  eig_solver: str = 'eigh',
                  svd_solver: str = 'svd_sklearn_truncated',
@@ -84,28 +84,26 @@ class MODULO:
         
         
         """
-        
+
         print("MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform "
               "data driven modal decomposition of numerical and experimental data. \n")
-    
 
-        if not isinstance(data, np.ndarray) and N_PARTITIONS==1:
-            raise TypeError("Please check that your database is in an numpy array format. If D=None, then you must have memory saving (N_PARTITIONS>1)")
+        if not isinstance(data, np.ndarray) and N_PARTITIONS == 1:
+            raise TypeError(
+                "Please check that your database is in an numpy array format. If D=None, then you must have memory saving (N_PARTITIONS>1)")
 
-
-        # Load the data matrix 
-        if isinstance(data,np.ndarray):
-         # Number of points in time and space 
-         self.N_T = data.shape[1]
-         self.N_S = data.shape[0]       
-         # Check the data type
-         self.D = data.astype(dtype)                
+        # Load the data matrix
+        if isinstance(data, np.ndarray):
+            # Number of points in time and space
+            self.N_T = data.shape[1]
+            self.N_S = data.shape[0]
+            # Check the data type
+            self.D = data.astype(dtype)
         else:
-         self.D     = None # D is never saved when N_partitions >1 
-         self.N_S   = N_S; # so N_S and N_t must be given as parameters of modulo
-         self.N_T   = N_T
-         
-         
+            self.D = None  # D is never saved when N_partitions >1
+            self.N_S = N_S  # so N_S and N_t must be given as parameters of modulo
+            self.N_T = N_T
+
         # Load and applied the weights to the D matrix
         if weights.size != 0:
             if len(weights) == self.N_S:
@@ -113,8 +111,8 @@ class MODULO:
                       "MODULO has considered that you have already duplicated the dimensions of the weights "
                       "to match the dimensions of the D columns \n")
                 self.weights = weights
-            elif 2*len(weights) == self.N_S: # 2D computation only
-                self.weights = np.concatenate((weights,weights))
+            elif 2 * len(weights) == self.N_S:  # 2D computation only
+                self.weights = np.concatenate((weights, weights))
                 print("Modulo assumes you have a 2D domain and has duplicated the weight "
                       "array to match the size of the D columns \n")
                 print(weights)
@@ -132,13 +130,13 @@ class MODULO:
                   "If not, please give the weights as parameters of MODULO!")
             self.weights = weights
             self.Dstar = self.D
-             
-        if N_PARTITIONS>1:
-         self.MEMORY_SAVING = True
+
+        if N_PARTITIONS > 1:
+            self.MEMORY_SAVING = True
         else:
-         self.MEMORY_SAVING = False  
-         
-        # Assign the number of modes
+            self.MEMORY_SAVING = False
+
+            # Assign the number of modes
         self.n_Modes = n_Modes
         # If particular needs, override choice for svd and eigen solve
         self.svd_solver = svd_solver.lower()
@@ -165,8 +163,6 @@ class MODULO:
         if self.MEMORY_SAVING:
             os.makedirs(self.FOLDER_OUT, exist_ok=True)
 
-        
-   
     def _correlation_matrix(self,
                             SAVE_K: bool = True):
         """
@@ -318,10 +314,9 @@ class MODULO:
             K = np.load(self.FOLDER_OUT + "/correlation_matrix/k_matrix.npz")['K']
 
         PSI_M = temporal_basis_mPOD(K=K, Nf=Nf, Ex=Ex, F_V=F_V, Keep=Keep, boundaries=boundaries,
-                               MODE=MODE, dt=dt, FOLDER_OUT=self.FOLDER_OUT,
-                               n_Modes=self.n_Modes, K_S=False,
-                               MEMORY_SAVING=self.MEMORY_SAVING, SAT=self.SAT, eig_solver=self.eig_solver)
-
+                                    MODE=MODE, dt=dt, FOLDER_OUT=self.FOLDER_OUT,
+                                    n_Modes=self.n_Modes, K_S=False,
+                                    MEMORY_SAVING=self.MEMORY_SAVING, SAT=self.SAT, eig_solver=self.eig_solver)
 
         return PSI_M if not self.MEMORY_SAVING else None
 
@@ -401,42 +396,40 @@ class MODULO:
 
         """
 
-
-        print('Computing correlation matrix D matrix...')    
-        self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, 
+        print('Computing correlation matrix D matrix...')
+        self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS,
                                    self.MEMORY_SAVING,
                                    self.FOLDER_OUT, D=self.Dstar)
 
         if self.MEMORY_SAVING:
             self.K = np.load(self.FOLDER_OUT + '/correlation_matrix/k_matrix.npz')['K']
 
-  
         print("Computing Temporal Basis...")
 
         PSI_M = temporal_basis_mPOD(K=self.K, Nf=Nf, Ex=Ex, F_V=F_V, Keep=Keep, boundaries=boundaries,
                                     MODE=MODE, dt=dt, FOLDER_OUT=self.FOLDER_OUT,
-                                    n_Modes=self.n_Modes,MEMORY_SAVING=self.MEMORY_SAVING, SAT=SAT, eig_solver=self.eig_solver)
+                                    n_Modes=self.n_Modes, MEMORY_SAVING=self.MEMORY_SAVING, SAT=SAT,
+                                    eig_solver=self.eig_solver)
 
         print("Done.")
-        
-        if  hasattr(self, 'D'):# if self.D is available:
-         print('Computing Phi from D...')     
-         Phi_M, Psi_M, Sigma_M = spatial_basis_mPOD(self.D, PSI_M, N_T=self.N_T, N_PARTITIONS=self.N_PARTITIONS,
-                                                   N_S=self.N_S, MEMORY_SAVING=self.MEMORY_SAVING,
-                                                   FOLDER_OUT=self.FOLDER_OUT,
-                                                   SAVE=SAVE)
- 
-        else: # if not, the memory saving is on and D will not be used. We pass a dummy D
-         print('Computing Phi from partitions...')
-         Phi_M, Psi_M, Sigma_M = spatial_basis_mPOD(np.array([1]), PSI_M, N_T=self.N_T, N_PARTITIONS=self.N_PARTITIONS,
-                                                   N_S=self.N_S, MEMORY_SAVING=self.MEMORY_SAVING,
-                                                   FOLDER_OUT=self.FOLDER_OUT,
-                                                  SAVE=SAVE)  
-               
+
+        if hasattr(self, 'D'):  # if self.D is available:
+            print('Computing Phi from D...')
+            Phi_M, Psi_M, Sigma_M = spatial_basis_mPOD(self.D, PSI_M, N_T=self.N_T, N_PARTITIONS=self.N_PARTITIONS,
+                                                       N_S=self.N_S, MEMORY_SAVING=self.MEMORY_SAVING,
+                                                       FOLDER_OUT=self.FOLDER_OUT,
+                                                       SAVE=SAVE)
+
+        else:  # if not, the memory saving is on and D will not be used. We pass a dummy D
+            print('Computing Phi from partitions...')
+            Phi_M, Psi_M, Sigma_M = spatial_basis_mPOD(np.array([1]), PSI_M, N_T=self.N_T,
+                                                       N_PARTITIONS=self.N_PARTITIONS,
+                                                       N_S=self.N_S, MEMORY_SAVING=self.MEMORY_SAVING,
+                                                       FOLDER_OUT=self.FOLDER_OUT,
+                                                       SAVE=SAVE)
+
         print("Done.")
 
-
-       
         return Phi_M, Psi_M, Sigma_M
 
     def compute_POD_K(self, SAVE_T_POD: bool = True):
@@ -458,8 +451,8 @@ class MODULO:
                 POD Phis
         """
 
-        print('Computing correlation matrix D matrix...')    
-        self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, 
+        print('Computing correlation matrix D matrix...')
+        self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS,
                                    self.MEMORY_SAVING,
                                    self.FOLDER_OUT, D=self.Dstar, weights=self.weights)
 
@@ -471,26 +464,25 @@ class MODULO:
                                             self.FOLDER_OUT, self.n_Modes, eig_solver=self.eig_solver)
         print("Done.")
         print("Computing Spatial Basis...")
-        
-        if  hasattr(self, 'D'):# if self.D is available:
-         print('Computing Phi from D...')     
-         Phi_P = Spatial_basis_POD(self.D, N_T=self.N_T, 
-                                  PSI_P=Psi_P, 
-                                  Sigma_P=Sigma_P,
-                                  MEMORY_SAVING=self.MEMORY_SAVING, 
-                                  FOLDER_OUT=self.FOLDER_OUT,
-                                  N_PARTITIONS=self.N_PARTITIONS)
-        
-        else: # if not, the memory saving is on and D will not be used. We pass a dummy D
-         print('Computing Phi from partitions...')
-         Phi_P = Spatial_basis_POD(np.array([1]), N_T=self.N_T, 
-                                  PSI_P=Psi_P, 
-                                  Sigma_P=Sigma_P,
-                                  MEMORY_SAVING=self.MEMORY_SAVING, 
-                                  FOLDER_OUT=self.FOLDER_OUT,
-                                  N_PARTITIONS=self.N_PARTITIONS)
-           
-                
+
+        if hasattr(self, 'D'):  # if self.D is available:
+            print('Computing Phi from D...')
+            Phi_P = Spatial_basis_POD(self.D, N_T=self.N_T,
+                                      PSI_P=Psi_P,
+                                      Sigma_P=Sigma_P,
+                                      MEMORY_SAVING=self.MEMORY_SAVING,
+                                      FOLDER_OUT=self.FOLDER_OUT,
+                                      N_PARTITIONS=self.N_PARTITIONS)
+
+        else:  # if not, the memory saving is on and D will not be used. We pass a dummy D
+            print('Computing Phi from partitions...')
+            Phi_P = Spatial_basis_POD(np.array([1]), N_T=self.N_T,
+                                      PSI_P=Psi_P,
+                                      Sigma_P=Sigma_P,
+                                      MEMORY_SAVING=self.MEMORY_SAVING,
+                                      FOLDER_OUT=self.FOLDER_OUT,
+                                      N_PARTITIONS=self.N_PARTITIONS)
+
         print("Done.")
 
         return Phi_P, Psi_P, Sigma_P
@@ -515,7 +507,7 @@ class MODULO:
         """
         # If Memory saving is active, we must load back the data.
         # This process is memory demanding. Different SVD solver will handle this differently.
-        
+
         if self.MEMORY_SAVING:
             if self.N_T % self.N_PARTITIONS != 0:
                 tot_blocks_col = self.N_PARTITIONS + 1
@@ -534,13 +526,12 @@ class MODULO:
                 R1 = R2
 
             # Now that we have D back, we can proceed with the SVD approach
-            Phi_P, Psi_P, Sigma_P=switch_svds(D, self.n_Modes, self.svd_solver)
-                        
-            
-        else: # self.MEMORY_SAVING:
-            Phi_P, Psi_P, Sigma_P=switch_svds(self.D, self.n_Modes, self.svd_solver)
- 
-         
+            Phi_P, Psi_P, Sigma_P = switch_svds(D, self.n_Modes, self.svd_solver)
+
+
+        else:  # self.MEMORY_SAVING:
+            Phi_P, Psi_P, Sigma_P = switch_svds(self.D, self.n_Modes, self.svd_solver)
+
         return Phi_P, Psi_P, Sigma_P
 
     def compute_DMD_PIP(self, SAVE_T_DMD: bool = True, F_S=1):
@@ -582,11 +573,10 @@ class MODULO:
                 D[:, R1:R2] = di
                 R1 = R2
 
-
             # Compute the DMD
-            Phi_D, Lambda, freqs, a0s = dmd_s(D[:, 0:self.N_T - 1], 
-                                              D[:, 1:self.N_T], self.n_Modes, F_S,svd_solver=self.svd_solver)
-     
+            Phi_D, Lambda, freqs, a0s = dmd_s(D[:, 0:self.N_T - 1],
+                                              D[:, 1:self.N_T], self.n_Modes, F_S, svd_solver=self.svd_solver)
+
         else:
             Phi_D, Lambda, freqs, a0s = dmd_s(self.D[:, 0:self.N_T - 1],
                                               self.D[:, 1:self.N_T], self.n_Modes, F_S, SAVE_T_DMD=SAVE_T_DMD,
@@ -651,13 +641,12 @@ class MODULO:
         if self.D is None:
             D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
             Phi_SP, Sigma_SP, Freqs_Pos = compute_SPOD_t(D, F_S, L_B=L_B, O_B=O_B,
-                                                     n_Modes=n_Modes, SAVE_SPOD=SAVE_SPOD,
-                                                     FOLDER_OUT=self.FOLDER_OUT,possible_svds=self.svd_solver)
+                                                         n_Modes=n_Modes, SAVE_SPOD=SAVE_SPOD,
+                                                         FOLDER_OUT=self.FOLDER_OUT, possible_svds=self.svd_solver)
         else:
             Phi_SP, Sigma_SP, Freqs_Pos = compute_SPOD_t(self.D, F_S, L_B=L_B, O_B=O_B,
-                                                     n_Modes=n_Modes, SAVE_SPOD=SAVE_SPOD,
-                                                     FOLDER_OUT=self.FOLDER_OUT,possible_svds=self.svd_solver)
-
+                                                         n_Modes=n_Modes, SAVE_SPOD=SAVE_SPOD,
+                                                         FOLDER_OUT=self.FOLDER_OUT, possible_svds=self.svd_solver)
 
         return Phi_SP, Sigma_SP, Freqs_Pos
 
@@ -692,20 +681,19 @@ class MODULO:
             D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
 
             self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, self.MEMORY_SAVING,
-                              self.FOLDER_OUT, D=D)
+                                       self.FOLDER_OUT, D=D)
 
             Phi_sP, Psi_sP, Sigma_sP = compute_SPOD_s(D, self.K, F_S, self.N_S, self.N_T, N_O, f_c,
-                                                  n_Modes, SAVE_SPOD, self.FOLDER_OUT, self.MEMORY_SAVING,
-                                                  self.N_PARTITIONS)
+                                                      n_Modes, SAVE_SPOD, self.FOLDER_OUT, self.MEMORY_SAVING,
+                                                      self.N_PARTITIONS)
 
         else:
             self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, self.MEMORY_SAVING,
-                              self.FOLDER_OUT, D=self.D)
+                                       self.FOLDER_OUT, D=self.D)
 
             Phi_sP, Psi_sP, Sigma_sP = compute_SPOD_s(self.D, self.K, F_S, self.N_S, self.N_T, N_O, f_c,
-                                                  n_Modes, SAVE_SPOD, self.FOLDER_OUT, self.MEMORY_SAVING,
-                                                  self.N_PARTITIONS)
-
+                                                      n_Modes, SAVE_SPOD, self.FOLDER_OUT, self.MEMORY_SAVING,
+                                                      self.N_PARTITIONS)
 
         # if self.D is None:
         #     D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
@@ -771,8 +759,6 @@ class MODULO:
 
         return Phi_sP, Psi_sP, Sigma_sP
 
-
-
     def compute_kPOD(self, M_DIST=[1,10],k_m=0.1, cent=True,
                      n_Modes=10,alpha=1e-6,metric='rbf',K_out=False):
         """
@@ -813,16 +799,17 @@ class MODULO:
             D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
         else:
             D = self.D
-            
+
         # Compute Eucledean distances
-        i,j=M_DIST; n_s,n_t=np.shape(D)
-        M_ij=np.linalg.norm(D[:,i]-D[:,j])**2
-        
-        gamma=-np.log(k_m)/M_ij    
-                
-        K_zeta=pairwise_kernels(D.T,metric='rbf',gamma=gamma)
+        i, j = M_DIST;
+        n_s, n_t = np.shape(D)
+        M_ij = np.linalg.norm(D[:, i] - D[:, j]) ** 2
+
+        gamma = -np.log(k_m) / M_ij
+
+        K_zeta = pairwise_kernels(D.T, metric='rbf', gamma=gamma)
         print('Kernel K ready')
-        
+
         # Compute the Kernel Matrix
         n_t=np.shape(D)[1]
         # Center the Kernel Matrix (if cent is True):
@@ -831,8 +818,9 @@ class MODULO:
          K_zeta=H@K_zeta@H.T  
          print('K_zeta centered')
         # Diagonalize and Sort
-        lambdas,Psi_xi=linalg.eigh(K_zeta+alpha*np.eye(n_t),subset_by_index=[n_t-n_Modes, n_t-1]) 
-        lambdas,Psi_xi=lambdas[::-1],Psi_xi[:,::-1] ; Sigma_xi=np.sqrt(lambdas); 
+        lambdas, Psi_xi = linalg.eigh(K_zeta + alpha * np.eye(n_t), subset_by_index=[n_t - n_Modes, n_t - 1])
+        lambdas, Psi_xi = lambdas[::-1], Psi_xi[:, ::-1];
+        Sigma_xi = np.sqrt(lambdas);
         print('K_zeta diagonalized')
         # Encode
         # Z_xi=np.diag(Sigma_xi)@Psi_xi.T 
@@ -856,8 +844,8 @@ class MODULO:
         Psi_xi = Psi_xi[:, Indices]  # Sorted Temporal Structures Matrix
         Sigma_xi = Sorted_Sigmas  # Sorted Amplitude Matrix
         print('Phi_xi computed')
+
         if K_out:
          return Phi_xi, Psi_xi, Sigma_xi, K_zeta
         else: 
          return Phi_xi, Psi_xi, Sigma_xi
-

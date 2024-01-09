@@ -3,7 +3,9 @@ import numpy as np
 from tqdm import tqdm
 import os
 
-def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,N_T, FOLDER_OUT='./', N_PARTITIONS=1,SAVE_SPATIAL_POD=False,rescale=False):
+
+def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING, N_T, FOLDER_OUT='./', N_PARTITIONS=1, SAVE_SPATIAL_POD=False,
+                      rescale=False):
     """
     This function computs the POD spatial basis from the temporal basis,
 
@@ -33,48 +35,43 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,N_T, FOLDER_OUT='./', N_P
     :return Phi_P: np.array. 
           POD's Phis
     """
-    
+
     R = PSI_P.shape[1]
 
     if not MEMORY_SAVING:
         N_S = D.shape[0]
-                                
+
         if rescale:
-         #The following is the general normalization approach.
-         #not needed for POD for required for SPOD      
-         Phi_P = np.zeros((N_S, R))
+            # The following is the general normalization approach.
+            # not needed for POD for required for SPOD
+            Phi_P = np.zeros((N_S, R))
+            # N_S = D.shape[0] unused variable
+            PHI_P_SIGMA_P = np.dot(D, PSI_P)
+            print("Completing Spatial Structures Modes: \n")
 
-         N_S = D.shape[0]
-         PHI_P_SIGMA_P = np.dot(D, PSI_P)
-         print("Completing Spatial Structures Modes: \n")
-
-         for i in tqdm(range(0, R)):
-              # Normalize the columns of C to get spatial modes
-              Phi_P[:, i] = PHI_P_SIGMA_P[:, i] / Sigma_P[i]
-
+            for i in tqdm(range(0, R)):
+                # Normalize the columns of C to get spatial modes
+                Phi_P[:, i] = PHI_P_SIGMA_P[:, i] / Sigma_P[i]
 
         else:
-         # We take only the first R modes.
-         Sigma_P_t=Sigma_P[0:R]; Sigma_P_Inv_V=1/Sigma_P_t
-         # So we have the inverse
-         Sigma_P_Inv=np.diag(Sigma_P_Inv_V)
-         # Here is the one shot projection:
-         Phi_P=np.linalg.multi_dot([D,PSI_P[:,0:R],Sigma_P_Inv])
-         
-         
-         if SAVE_SPATIAL_POD:
-               os.makedirs(FOLDER_OUT + 'POD', exist_ok=True)
-               np.savez(FOLDER_OUT + '/POD/pod_spatial_basis',
-                         phis=Phi_P, PHI_P_SIGMA_P=PHI_P_SIGMA_P) 
-         
+            # We take only the first R modes.
+            Sigma_P_t = Sigma_P[0:R];
+            Sigma_P_Inv_V = 1 / Sigma_P_t
+            # So we have the inverse
+            Sigma_P_Inv = np.diag(Sigma_P_Inv_V)
+            # Here is the one shot projection:
+            Phi_P = np.linalg.multi_dot([D, PSI_P[:, 0:R], Sigma_P_Inv])
+
+            if SAVE_SPATIAL_POD:
+                os.makedirs(FOLDER_OUT + 'POD', exist_ok=True)
+                np.savez(FOLDER_OUT + '/POD/pod_spatial_basis', phis=Phi_P)
+                # removed PHI_P_SIGMA_P=PHI_P_SIGMA_P, not present if not rescale and not needed (?)
 
         return Phi_P
-        
 
     else:
 
         N_S = np.shape(np.load(FOLDER_OUT + "/data_partitions/di_1.npz")['di'])[0]
-
         dim_col = math.floor(N_T / N_PARTITIONS)
         dim_row = math.floor(N_S / N_PARTITIONS)
         dr = np.zeros((dim_row, N_T))
@@ -91,7 +88,11 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,N_T, FOLDER_OUT='./', N_P
             tot_blocks_col = N_PARTITIONS
 
         # --- Loading Psi_P
-        fixed = 0; R1 = 0; R2 = 0 ; C1 = 0; C2 = 0
+        fixed = 0
+        R1 = 0
+        R2 = 0
+        C1 = 0
+        C2 = 0
 
         for i in range(1, tot_blocks_row + 1):
 
@@ -164,22 +165,20 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,N_T, FOLDER_OUT='./', N_P
 
             # Computing Sigmas and Phis
             if rescale:
-             for j in range(R1, R2):
-                jj = j - R1
-                Sigma_P[jj]=np.linalg.norm(dps[:, jj])
-                Phi_P = dps[:, jj] / Sigma_P[jj] 
-                np.savez(FOLDER_OUT + f"/POD/phi_{j + 1}", phi_p=Phi_P)
+                for j in range(R1, R2):
+                    jj = j - R1
+                    Sigma_P[jj] = np.linalg.norm(dps[:, jj])
+                    Phi_P = dps[:, jj] / Sigma_P[jj]
+                    np.savez(FOLDER_OUT + f"/POD/phi_{j + 1}", phi_p=Phi_P)
             else:
-             for j in range(R1, R2):
-               jj = j - R1
-               Phi_P = dps[:, jj] / Sigma_P[jj] 
-               np.savez(FOLDER_OUT + f"/POD/phi_{j + 1}", phi_p=Phi_P)
-               
+                for j in range(R1, R2):
+                    jj = j - R1
+                    Phi_P = dps[:, jj] / Sigma_P[jj]
+                    np.savez(FOLDER_OUT + f"/POD/phi_{j + 1}", phi_p=Phi_P)
 
         Phi_P_M = np.zeros((N_S, R))
         for j in range(R):
             Phi_P_V = np.load(FOLDER_OUT + f"/POD/phi_{j + 1}.npz")['phi_p']
             Phi_P_M[:, j] = Phi_P_V
 
- 
         return Phi_P_M
