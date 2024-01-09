@@ -158,7 +158,7 @@ class MODULO:
 
         self.N_PARTITIONS = N_PARTITIONS
 
-        self.FOLDER_OUT = FOLDER_OUT
+        self.FOLDER_OUT = FOLDER_OUT + 'MODULO_tmp'
 
         if self.MEMORY_SAVING:
             os.makedirs(self.FOLDER_OUT, exist_ok=True)
@@ -844,8 +844,12 @@ class MODULO:
         Psi_xi = Psi_xi[:, Indices]  # Sorted Temporal Structures Matrix
         Sigma_xi = Sorted_Sigmas  # Sorted Amplitude Matrix
         print('Phi_xi computed')
-
+<<<<<<< HEAD
         if K_out:
          return Phi_xi, Psi_xi, Sigma_xi, K_zeta
         else: 
          return Phi_xi, Psi_xi, Sigma_xi
+
+=======
+        return Phi_xi, Psi_xi, Sigma_xi
+>>>>>>> 626a47b06488f01e2d10e18159126b64872f3b59

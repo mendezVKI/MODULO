@@ -19,5 +19,5 @@ The format expected for the data is ``.dat`` or ``.txt``.  Variants for ``.csv``
 The codes to generate the matrix D are availble in  ``ReadData``. The main function is 
 *_data_processing*, documented below:
 
-.. autofunction:: modulo.utils.ReadData._data_processing  
+.. autofunction:: modulo.utils.read_db._data_processing  
 
