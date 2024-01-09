@@ -773,12 +773,12 @@ class MODULO:
 
 
 
-    def compute_kPOD(self, M_DIST=[1,10],k_m=0.1, cent='y', n_Modes=10,alpha=1e-6):
+    def compute_kPOD(self, M_DIST=[1,10],k_m=0.1, cent=True,
+                     n_Modes=10,alpha=1e-6,metric='rbf',K_out=False):
         """
         This function implements the kernel PCA as described in the VKI course https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023
 
         The computation of the kernel function is carried out as in https://arxiv.org/pdf/2208.07746.pdf.
-
 
         
         :param M_DIST: array,
@@ -788,18 +788,25 @@ class MODULO:
                 minimum value for the kernelized correlation
         :param alpha: float
                 regularization for K_zeta        
-        :param cent: string,
-                if 'y', the matrix K is centered.
+        :param cent: bool,
+                if True, the matrix K is centered. Else it is not
         :param n_Modes: float,
                number of modes to be computed 
-        :param SAVE_SPOD: bool,
-                If True, MODULO will save the output in self.FOLDER OUT/MODULO_tmp
-        :return Psi_P: np.array
-                SPOD Psis
-        :return Sigma_P: np.array
-                SPOD Sigmas. 
-        :return Phi_P: np.array
-                SPOD Phis
+        :param metric: string,
+               This identifies the metric for the kernel matrix. It is a wrapper to 'pairwise_kernels' from sklearn.metrics.pairwise
+               Note that different metrics would need different set of parameters. For the moment, only rbf was tested; use any other option at your peril !
+        :param K_out: bool,
+               If true, the matrix K is also exported as a fourth output.
+        :return Psi_xi: np.array
+               kPOD's Psis
+        :return Sigma_xi: np.array
+               kPOD's Sigmas. 
+        :return Phi_xi: np.array
+               kPOD's Phis               
+        :return K_zeta: np.array
+               Kernel Function from which the decomposition is computed. 
+               (exported only if K_out=True)
+               
                 
         """
         if self.D is None:
@@ -818,8 +825,8 @@ class MODULO:
         
         # Compute the Kernel Matrix
         n_t=np.shape(D)[1]
-        # Center the Kernel Matrix (if cent is 'y'):
-        if cent =='y':
+        # Center the Kernel Matrix (if cent is True):
+        if cent :
          H=np.eye(n_t)-1/n_t*np.ones_like(K_zeta)   
          K_zeta=H@K_zeta@H.T  
          print('K_zeta centered')
@@ -838,7 +845,6 @@ class MODULO:
         SIGMA_xi = np.zeros((R))
 
         for i in tqdm(range(0, R)):
-            # print('Completing mPOD Mode ' + str(i))
             # Assign the norm as amplitude
             SIGMA_xi[i] = np.linalg.norm(PHI_xi_SIGMA_xi[:, i])
             # Normalize the columns of C to get spatial modes
@@ -850,6 +856,8 @@ class MODULO:
         Psi_xi = Psi_xi[:, Indices]  # Sorted Temporal Structures Matrix
         Sigma_xi = Sorted_Sigmas  # Sorted Amplitude Matrix
         print('Phi_xi computed')
-        return Phi_xi, Psi_xi, Sigma_xi
-         
+        if K_out:
+         return Phi_xi, Psi_xi, Sigma_xi, K_zeta
+        else: 
+         return Phi_xi, Psi_xi, Sigma_xi
 

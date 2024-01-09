@@ -218,7 +218,6 @@ def Plot_2D_CFD_Cyl(Xg,Yg,U,V,k=10,CL=16,Name=''):
     circle = plt.Circle((0,0),0.0075,fill=True,color='r',edgecolor='k',alpha=0.5)
     plt.gcf().gca().add_artist(circle)
     plt.tight_layout()
-    plt.show()
               
     if len(Name) !=0:
         plt.savefig(Name, dpi=200)

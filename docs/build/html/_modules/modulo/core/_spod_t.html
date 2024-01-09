@@ -185,9 +185,9 @@
         <span class="n">Sigma_SP</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">Sigma</span> <span class="o">/</span> <span class="p">(</span><span class="n">N_S</span> <span class="o">*</span> <span class="n">N_B</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">SAVE_SPOD</span><span class="p">:</span>
-        <span class="n">folder_dir</span> <span class="o">=</span> <span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s1">&#39;SPOD_T&#39;</span>
+        <span class="n">folder_dir</span> <span class="o">=</span> <span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s1">&#39;/SPOD_T&#39;</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">folder_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">folder_dir</span> <span class="o">+</span> <span class="s1">&#39;spod_t.npz&#39;</span><span class="p">,</span> <span class="n">Phi</span><span class="o">=</span><span class="n">Phi_SP</span><span class="p">,</span> <span class="n">Sigma</span><span class="o">=</span><span class="n">Sigma_SP</span><span class="p">,</span> <span class="n">Freqs</span><span class="o">=</span><span class="n">Freqs_Pos</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">folder_dir</span> <span class="o">+</span> <span class="s1">&#39;/spod_t.npz&#39;</span><span class="p">,</span> <span class="n">Phi</span><span class="o">=</span><span class="n">Phi_SP</span><span class="p">,</span> <span class="n">Sigma</span><span class="o">=</span><span class="n">Sigma_SP</span><span class="p">,</span> <span class="n">Freqs</span><span class="o">=</span><span class="n">Freqs_Pos</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">Phi_SP</span><span class="p">,</span> <span class="n">Sigma_SP</span><span class="p">,</span> <span class="n">Freqs_Pos</span></div>
 </pre></div>

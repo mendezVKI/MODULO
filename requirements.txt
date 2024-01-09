@@ -11,3 +11,4 @@ os
 matplotlib
 sys
 time
+pyvista

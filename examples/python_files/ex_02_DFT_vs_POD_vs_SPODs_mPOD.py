@@ -537,7 +537,13 @@ Mex=Animation_JET(Name_GIF,D_P+D_MEAN_mat,X_S,Y_S,500,600,1)
 
 #%% Mendez's mPOD
 
-'''Here we go for the mPOD by [Mendez et al 2019](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/multiscale-proper-orthogonal-decomposition-of-complex-fluid-flows/D078BD2873B1C30B6DD9016E30B62DA8). Like Sirovinch's SPOD this decomposition modifies the standard POD by acting on the matrix K . However, the mPOD does not just filter it: it decomposes into chunks containing certain portions of the spectra and diagonalizes each of these independently. The resulting modes are optimal within the user-provided frequency repartition.'''
+'''Here we go for the mPOD by [Mendez et al 2019]
+(https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/multiscale-proper-orthogonal-decomposition-of-complex-fluid-flows/D078BD2873B1C30B6DD9016E30B62DA8). 
+Like Sirovinch's SPOD this decomposition modifies the standard POD by acting
+ on the matrix K . However, the mPOD does not just filter it: it decomposes
+ into chunks containing certain portions of the spectra and diagonalizes each 
+ of these independently. The resulting modes are optimal within the 
+ user-provided frequency repartition.'''
 
 # Here we go with our legacy ;P
 
@@ -566,7 +572,6 @@ Phi_M, Psi_M, Sigmas_M = m.compute_mPOD(Nf, Ex, F_V, Keep, 20 ,boundaries, MODE,
 
 
 # The rest of the plotting is IDENTICAL to the POD part
-
 fig, ax = plt.subplots(figsize=(6, 3)) # This creates the figure
 plt.plot(Sigmas_M/np.max(Sigmas_M),'ko:')
 # ax.set_yscale('log'); ax.set_xscale('log')
