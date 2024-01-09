@@ -34,7 +34,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as readme_file:
 
 setup(
     name='modulo_vki',
-    version='3.0',
+    version='2.0',
     description="MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform "
                 "Multiscale Modal Analysis of numerical and experimental data using the Multiscale Proper "
                 "Orthogonal Decomposition (mPOD).",
@@ -68,6 +68,7 @@ setup(
         "ipython-genutils",
         "ipywidgets",
         "matplotlib",
+        "pyvista",
     ],
     license='BSD (3-clause)',
     classifiers=[
