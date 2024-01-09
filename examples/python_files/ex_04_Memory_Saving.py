@@ -5,24 +5,27 @@ Created on Wed Dec 20 15:46:01 2023
 @author: mendez
 """
 
+
+''' 
+ This exercise uses the memory saving feature.
+ The idea is to compute all the decomposition without never assembling the
+ matrix D. This makes the computation much slower, because of the time
+ lost in reading/saving things on the disk, but it allows to process 
+ datasets that are too large to fit in you RAM.
+
+ In MODULO, the memory saving feature is currently implemented for
+ the POD (if done via matrix K) and mPOD.
+ 
+'''
+
 import numpy as np
 import matplotlib.pyplot as plt 
 import os  # To create folders an delete them
 
 from modulo.utils.read_db import ReadData # to read the data
 
-# This exercise uses the memory saving feature.
-# The idea is to compute all the decomposition without never assembling the
-# matrix D. This makes the computation much slower, because of the time
-# lost in reading/saving things on the disk, but it allows to process 
-# datasets that are too large to fit in you RAM.
-
-# In MODULO, the memory saving feature is currently implemented for
-# the POD (if done via matrix K) and mPOD.
-
 from modulo.modulo import MODULO
 from modulo.utils.others import plot_grid_cylinder_flow,Plot_Field_TEXT_Cylinder
-# Download the dataset locally
 
 
 ### Plot Customization (Optional )
@@ -38,6 +41,8 @@ plt.rcParams['font.size'] = fontsize
 
 #%% Get the data
 FOLDER='Tutorial_5_2D_Cylinder_Memory_Saving'
+if not os.path.exists(FOLDER):
+    os.mkdir(FOLDER)
 
 # Script 1: Get the Data
 import urllib.request
@@ -46,14 +51,14 @@ url = 'https://osf.io/47ftd/download'
 urllib.request.urlretrieve(url, 'Ex_5_TR_PIV_Cylinder.zip')
 print('Download Completed! I prepare data Folder')
 # Unzip the file 
-from zipfile import ZipFile
+from zipfile import ZipFile; import shutil
 String='Ex_5_TR_PIV_Cylinder.zip'
 zf = ZipFile(String,'r'); 
 zf.extractall('./DATA_CYLINDER'); zf.close()
-
-os.rename('DATA_CYLINDER', FOLDER) # rename the data flolder to FOLDER
+shutil.move('DATA_CYLINDER', FOLDER+os.sep+'data') # rename the data flolder to FOLDER
 os.remove(String) # Delete the zip file with the data 
 print('Data set unzipped and ready ! ')
+
 
 #%% Partition the data into blocks
 n_t=13200; Fs=3000; dt=1/Fs 
@@ -64,35 +69,37 @@ t=np.linspace(0,dt*(n_t-1),n_t) # prepare the time axis#
 # --- Header (H),  footer (F) and columns (C) to be skipped during acquisition
 H = 1; F = 0; C=0
 # --- Read one sample snapshot (to get N_S)
-Name = FOLDER+os.sep+"Res00001.dat"
+Name = FOLDER+os.sep+'data'+os.sep+"Res00001.dat"
 Dat = np.genfromtxt(Name, skip_header=H, skip_footer=F)
 # --- Component fields (N=2 for 2D velocity fields, N=1 for pressure fields)
 N = Dat.shape[1]
 # --- Number of mesh points and snapshots
 nxny = Dat.shape[0]; N_T=n_t
 
-Name_Mesh=FOLDER+os.sep+'MESH.dat'
-Name_FIG='Cylinder_Flow_snapshot_'+str(2)+'.png'
+Name_Mesh=FOLDER+os.sep+'data'+os.sep+'MESH.dat'
+Name_FIG=FOLDER+os.sep+'Cylinder_Flow_snapshot_'+str(2)+'.png'
 
 # This function reads all the info about the grid
 n_s,Xg,Yg,Vxg,Vyg,X_S,Y_S=Plot_Field_TEXT_Cylinder(Name,Name_Mesh,Name_FIG) 
 # number of points in x and y
 n_x,n_y=np.shape(Xg)
 
-
 # Prepare 10 partitions
-D = ReadData._data_processing(database=None,FOLDER_IN=FOLDER, filename='Res%05d',
-                       N=2, N_S=2*nxny,N_T=N_T,
-                       h = H, f = F, c=C,
-                       N_PARTITIONS=10, MR= False,FOLDER_OUT='./MODULO_tmp')
+D = ReadData._data_processing(D=None,FOLDER_IN=FOLDER+os.sep+'data', 
+                              filename='Res%05d',
+                              N=2, N_S=2*nxny,N_T=N_T,
+                              h = H, f = F, c=C,
+                              N_PARTITIONS=10, MR= False,
+                              FOLDER_OUT=FOLDER+os.sep+'MODULO_tmp')
 
 # --- Initialize MODULO object
-m = MODULO(data=D,N_T=N_T,
+m = MODULO(data=None,N_T=N_T,
+           FOLDER_OUT=FOLDER+os.sep,
            N_S=2*nxny,
            n_Modes=100,
            N_PARTITIONS=10,eig_solver='svd_sklearn_randomized')
 
-# compute the POD
+# compute the POD (without having loaded D! )
 Phi_POD, Psi_POD, Sigma_POD = m.compute_POD_K()
 
 #%% Post Process the POD

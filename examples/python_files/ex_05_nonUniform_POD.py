@@ -180,7 +180,7 @@ if N_PARTITIONS==1:
     Phi_POD, Psi_POD, Sigma_POD = m.compute_POD_K()
 else:
     # Prepare 10 partitions, see ex_04 for more details
-    D = ReadData._data_processing(D=D,N_PARTITIONS=N_PARTITIONS,FOLDER_OUT='./MODULO_tmp')
+    _ = ReadData._data_processing(D=D,N_PARTITIONS=N_PARTITIONS,FOLDER_OUT='./MODULO_tmp')
     # Make sure to give the dimensions of D as input to MODULO when D is no more saved in the RAM
     m = MODULO(data=None, n_Modes=5, dtype='float32', weights =weights_for_D,N_PARTITIONS=N_PARTITIONS,N_S=N_P*N,N_T=N_T)
     Phi_POD, Psi_POD, Sigma_POD = m.compute_POD_K()
