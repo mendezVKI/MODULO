@@ -77,6 +77,7 @@ author = 'Poletti, R., Schena, L., Ninni, D., Mendez, M.A.'
 # built documents.
 #
 import modulo
+import numpy as np
 # The short X.Y version.
 version = 'Version 2'
 # The full version, including alpha/beta/rc tags.
