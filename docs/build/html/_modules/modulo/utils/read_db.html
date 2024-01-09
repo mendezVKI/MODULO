@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>modulo.utils.read_db &mdash; MODULO 2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            MODULO
+          </a>
+              <div class="version">
+                Version 2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">MODULO: Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../what_is_new.html">What is new in this V 2.0?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../importing_data.html">Importing data and D matrix preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../black_box.html">Computing decompositions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../exercises.html">New Tutorial Exercises</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../min_versions.html">Minimum Version of Python and NumPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MODULO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">modulo.utils.read_db</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for modulo.utils.read_db</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+
+<div class="viewcode-block" id="ReadData"><a class="viewcode-back" href="../../../importing_data.html#modulo.utils.read_db.ReadData">[docs]</a><span class="k">class</span> <span class="nc">ReadData</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A MODULO helper class for input data.  ReadData allows to load the data directly before using MODULO, and</span>
+<span class="sd">    hence assembling the data matrix D from data, if needed.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="ReadData.__init__"><a class="viewcode-back" href="../../../importing_data.html#modulo.utils.read_db.ReadData.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_data_processing</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="n">D</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">FOLDER_OUT</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span>
+                   <span class="n">N_PARTITIONS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                   <span class="n">MR</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">SAVE_D</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                   <span class="n">FOLDER_IN</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                   <span class="n">h</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                   <span class="n">N</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">N_S</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">N_T</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        First, if the D matrix is not provided, this method attempts to load the data and assembles the D matrix.</span>
+<span class="sd">        Then, it performs pre-processing operations on the data matrix, D:</span>
+<span class="sd">        - Mean removing: if MR=True, the mean (per each column - i.e.: snapshot at time t_i) is removed;</span>
+<span class="sd">        - Splitting: if the MEMORY_SAVING=True the data matrix is splitted to optimize memory usage. Moreover, D is dumped</span>
+<span class="sd">                    on disk and removed from the live memory. Finally, if in this condition, also the data type of the</span>
+<span class="sd">                    matrix is self is changed: from float64 -&gt; float32, with the same purpose.</span>
+<span class="sd">        </span>
+<span class="sd">        ----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        :param D: np.array</span>
+<span class="sd">             data matrix D</span>
+<span class="sd">        :param FOLDER_OUT: str</span>
+<span class="sd">             folder in which the data (partitions and/or data matrix itself) will be eventually saved.</span>
+<span class="sd">        :param MEMORY_SAVING: bool, optional</span>
+<span class="sd">             If True, memory saving feature is activated. Passed through __init__</span>
+<span class="sd">        :param N_PARTITIONS: int</span>
+<span class="sd">             In memory saving environment, this parameter refers to the number of partitions to be applied</span>
+<span class="sd">             to the data matrix. If the number indicated by the user is not a multiple of the N_T</span>
+<span class="sd">             i.e.: if (N_T % N_PARTITIONS) !=0 - then an additional partition is introduced, that contains</span>
+<span class="sd">             the remaining columns</span>
+<span class="sd">        :param MR: bool, optional</span>
+<span class="sd">             If True, it removes the mean (per column) from each snapshot</span>
+<span class="sd">        :param SAVE_D: bool, optional</span>
+<span class="sd">             If True, the matrix D is saved into memory. If the Memory Saving feature is active, this is performed</span>
+<span class="sd">             by default.</span>
+<span class="sd">        :param FOLDER_IN: str, optional. Needed only if database=None</span>
+<span class="sd">             If the D matrix is not provided (database = None), read it from the path FOLDER_IN</span>
+<span class="sd">        :param filename: str, optional. Needed only if database=None</span>
+<span class="sd">             If the database is not provided, read it from the files filename</span>
+<span class="sd">             The files must be named &quot;filenamexxxx.dat&quot; where x is the number of the file</span>
+<span class="sd">             that goes from 0 to the number of time steps saved</span>
+<span class="sd">        :param h: int, optional. Needed only if database=None</span>
+<span class="sd">             Lines to be skipped from the header of filename</span>
+<span class="sd">        :param f: int, optional. Needed only if database=None</span>
+<span class="sd">             Lines to be skipped from the footer of filename</span>
+<span class="sd">        :param c: int, optional. Needed only if database=None</span>
+<span class="sd">             Columns to be skipped (for example if the first c columns contain the mesh grid.)</span>
+<span class="sd">        :param N: int, optional. Needed only if database=None</span>
+<span class="sd">             Components to be analysed.</span>
+<span class="sd">        :param N_S:  int, optional. Needed only if database=None</span>
+<span class="sd">             Number of points in space.</span>
+<span class="sd">        :param N_T: int, optional. Needed only if database=None</span>
+<span class="sd">             components to be analysed.</span>
+
+<span class="sd">        -------        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        </span>
+<span class="sd">        There are four possible scenario:</span>
+<span class="sd">        1. if N_Partitions ==1 and MR = True, return is D,D_MEAN (the mean snapshot!)</span>
+<span class="sd">        2. if N_Partitions ==1 and MR = False, return is D.</span>
+<span class="sd">        3. if N_Partitions &gt;1 and MR = True, return is D_MEAN</span>
+<span class="sd">        4. if N_Partitions &gt;1 and MR=False, return is None</span>
+<span class="sd">        </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>  <span class="c1"># D was already initialised</span>
+            <span class="n">N_S</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">D</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">N_T</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">D</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">MR</span><span class="p">:</span>
+                <span class="sd">&#39;&#39;&#39;Removing mean from data matrix&#39;&#39;&#39;</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Removing the mean from D ...&quot;</span><span class="p">)</span>
+                <span class="n">D_MEAN</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Temporal average (along the columns)</span>
+                <span class="n">D_Mr</span> <span class="o">=</span> <span class="n">D</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">D_MEAN</span><span class="p">,</span> <span class="p">]</span> <span class="o">*</span> <span class="n">N_T</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>  <span class="c1"># Mean Removed</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing the mean-removed D ... &quot;</span><span class="p">)</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">D_Mr</span><span class="p">)</span>                
+                <span class="k">del</span> <span class="n">D_Mr</span>
+
+            <span class="k">if</span> <span class="n">N_PARTITIONS</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="sd">&#39;&#39;&#39;Converting D into float32, applying partitions and saving all.&#39;&#39;&#39;</span>
+                <span class="n">SAVE_D</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">database</span> <span class="o">=</span> <span class="n">D</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">,</span> <span class="n">casting</span><span class="o">=</span><span class="s1">&#39;same_kind&#39;</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s2">&quot;/data_partitions/&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Memory Saving feature is active. Partitioning Data Matrix...&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">N_T</span> <span class="o">%</span> <span class="n">N_PARTITIONS</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">dim_col</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">N_T</span> <span class="o">/</span> <span class="n">N_PARTITIONS</span><span class="p">)</span>
+
+                    <span class="n">columns_to_part</span> <span class="o">=</span> <span class="n">dim_col</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span>
+                    <span class="n">splitted_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hsplit</span><span class="p">(</span><span class="n">database</span><span class="p">[:,</span> <span class="p">:</span><span class="n">columns_to_part</span><span class="p">],</span> <span class="n">N_PARTITIONS</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">splitted_tmp</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/data_partitions/di_</span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">di</span><span class="o">=</span><span class="n">splitted_tmp</span><span class="p">[</span><span class="n">ii</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+
+                    <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/data_partitions/di_</span><span class="si">{</span><span class="n">N_PARTITIONS</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                             <span class="n">di</span><span class="o">=</span><span class="n">database</span><span class="p">[:,</span> <span class="n">columns_to_part</span><span class="p">:])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">splitted_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hsplit</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">N_PARTITIONS</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">splitted_tmp</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/data_partitions/di_</span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">di</span><span class="o">=</span><span class="n">splitted_tmp</span><span class="p">[</span><span class="n">ii</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Data Matrix has been successfully splitted. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">SAVE_D</span><span class="p">:</span>
+                <span class="sd">&#39;&#39;&#39;Saving data matrix in FOLDER_OUT&#39;&#39;&#39;</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s2">&quot;/data_matrix&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving the matrix D in </span><span class="si">{</span><span class="n">FOLDER_OUT</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s1">&#39;/data_matrix/database&#39;</span><span class="p">,</span> <span class="n">D</span><span class="o">=</span><span class="n">database</span><span class="p">,</span> <span class="n">n_t</span><span class="o">=</span><span class="n">N_T</span><span class="p">,</span> <span class="n">n_s</span><span class="o">=</span><span class="n">N_S</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># try to read the data</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data matrix was not provided, reading it from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">FOLDER_IN</span><span class="p">))</span>
+            <span class="c1"># First check if the data were saved in the supported format</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">Name</span> <span class="o">=</span> <span class="n">FOLDER_IN</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">filename</span> <span class="o">%</span> <span class="p">(</span><span class="mi">0</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.dat&#39;</span>  <span class="c1"># Name of the file to read</span>
+                <span class="c1"># Read data from a file</span>
+                <span class="n">DATA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">Name</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">skip_footer</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>  <span class="c1"># Here we have the two colums</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                    <span class="s2">&quot;FOLDER_IN </span><span class="si">{}</span><span class="s2"> does not exist or filename </span><span class="si">{}</span><span class="s2"> has not the good format. Check the help!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">FOLDER_IN</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">N_PARTITIONS</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># If you have only one partition (one matrix! )</span>
+                <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_S</span><span class="p">,</span> <span class="n">N_T</span><span class="p">))</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> Importing data with no partitions... </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">MR</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean removal activated&quot;</span><span class="p">)</span>
+                    <span class="n">D_MEAN</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N_S</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N_T</span><span class="p">)):</span>
+                    <span class="n">Name</span> <span class="o">=</span> <span class="n">FOLDER_IN</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">filename</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.dat&#39;</span>  <span class="c1"># Name of the file to read</span>
+                    <span class="c1"># Read data from a file</span>
+                    <span class="n">DATA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">Name</span><span class="p">,</span>  <span class="c1"># usecols=np.arange(0, 2),</span>
+                                         <span class="n">skip_header</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">skip_footer</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>  <span class="c1"># Here we have the two colums</span>
+                    <span class="c1"># Dat = DATA[1:, :]  # Here we remove the first raw, containing the header</span>
+                    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="n">c</span><span class="p">):</span>
+                        <span class="n">tmp</span> <span class="o">=</span> <span class="n">DATA</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">ii</span> <span class="o">==</span> <span class="n">c</span><span class="p">:</span>
+                            <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">V</span><span class="p">,</span> <span class="n">tmp</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">MR</span><span class="p">:</span>
+                        <span class="n">D_MEAN</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">N_T</span> <span class="o">*</span> <span class="n">V</span>  <span class="c1"># Snapshot contribution to the mean</span>
+
+                    <span class="n">D</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">V</span>  <span class="c1"># Reshape and assign</span>
+
+                <span class="k">if</span> <span class="n">MR</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Removing the mean from D ...&quot;</span><span class="p">)</span>
+                    <span class="n">D_Mr</span> <span class="o">=</span> <span class="n">D</span> <span class="o">-</span> <span class="n">D_MEAN</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Mean Removed</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing the mean-removed D ... &quot;</span><span class="p">)</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">D_Mr</span><span class="p">)</span>
+                    <span class="k">del</span> <span class="n">D_Mr</span>
+
+            <span class="k">elif</span> <span class="n">N_PARTITIONS</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># then we enter in the memory saving loop</span>
+                <span class="c1"># prepare the folder to store the parittions</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s2">&quot;/data_partitions/&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Memory Saving feature is active. Partitioning Data Matrix...&quot;</span><span class="p">)</span>
+
+                <span class="n">dim_col</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">N_T</span> <span class="o">/</span> <span class="n">N_PARTITIONS</span><span class="p">)</span>
+                <span class="n">columns_to_part</span> <span class="o">=</span> <span class="n">dim_col</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span>  <span class="c1"># These are integer multiples of N_PARTITIONS</span>
+                <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">columns_to_part</span><span class="p">)</span>
+                <span class="c1"># This gets the blocks</span>
+                <span class="n">splitted_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hsplit</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">N_PARTITIONS</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">columns_to_part</span> <span class="o">!=</span> <span class="n">N_T</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: the last &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                        <span class="n">N_T</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">splitted_tmp</span><span class="p">[</span><span class="n">N_PARTITIONS</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; snapshots are not considered&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">MR</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean removal activated&quot;</span><span class="p">)</span>
+                    <span class="n">D_MEAN</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N_S</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">splitted_tmp</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Working on block &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ii</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">N_PARTITIONS</span><span class="p">))</span>
+                    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_S</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">splitted_tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+                    <span class="n">i1</span> <span class="o">=</span> <span class="n">splitted_tmp</span><span class="p">[</span><span class="n">ii</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+                    <span class="n">i2</span> <span class="o">=</span> <span class="n">splitted_tmp</span><span class="p">[</span><span class="n">ii</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># ranges</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">i2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+                        <span class="n">Name</span> <span class="o">=</span> <span class="n">FOLDER_IN</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">filename</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.dat&#39;</span>  <span class="c1"># Name of the file to read</span>
+                        <span class="n">DATA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">Name</span><span class="p">,</span>  <span class="c1"># usecols=np.arange(0, 2),</span>
+                                             <span class="n">skip_header</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">skip_footer</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>  <span class="c1"># Here we have the two colums</span>
+                        <span class="k">for</span> <span class="n">nn</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="n">c</span><span class="p">):</span>
+                            <span class="n">tmp</span> <span class="o">=</span> <span class="n">DATA</span><span class="p">[:,</span> <span class="n">nn</span><span class="p">]</span>
+                            <span class="k">if</span> <span class="n">nn</span> <span class="o">==</span> <span class="n">c</span><span class="p">:</span>
+                                <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">V</span><span class="p">,</span> <span class="n">tmp</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">MR</span><span class="p">:</span>
+                            <span class="n">D_MEAN</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">N_T</span> <span class="o">*</span> <span class="n">V</span>  <span class="c1"># Snapshot contribution to the mean</span>
+
+                        <span class="n">D</span><span class="p">[:,</span> <span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">V</span>  <span class="c1"># Reshape and assign</span>
+                        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/data_partitions/di_</span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">di</span><span class="o">=</span><span class="n">D</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Partition &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ii</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">N_PARTITIONS</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; saved&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">MR</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reloading the data for removing the mean&#39;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">splitted_tmp</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean centering block </span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">di</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/data_partitions/di_</span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s2">.npz&quot;</span><span class="p">)[</span><span class="s1">&#39;di&#39;</span><span class="p">]</span>
+                        <span class="n">di_mr</span> <span class="o">=</span> <span class="n">di</span> <span class="o">-</span> <span class="n">D_MEAN</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Mean Removed</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/data_partitions/di_</span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">di</span><span class="o">=</span><span class="n">di_mr</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;number of partitions not valid.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">N_PARTITIONS</span> <span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">MR</span><span class="o">==</span><span class="kc">True</span><span class="p">):</span>
+         <span class="k">return</span> <span class="n">D</span><span class="p">,</span> <span class="n">D_MEAN</span>  
+        <span class="k">elif</span> <span class="p">(</span><span class="n">N_PARTITIONS</span> <span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">MR</span><span class="o">==</span><span class="kc">False</span><span class="p">):</span>
+         <span class="k">return</span> <span class="n">D</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">N_PARTITIONS</span> <span class="o">&gt;</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">MR</span><span class="o">==</span><span class="kc">True</span><span class="p">):</span>
+         <span class="k">return</span> <span class="n">D_MEAN</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="k">return</span> <span class="kc">None</span></div>
+      
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @classmethod</span>
+<span class="sd">    def from_xls(cls, filename, **kwargs):</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        This class method builds the df from an excel file.</span>
+
+<span class="sd">        work</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        ## TBD</span>
+<span class="sd">        return</span>
+
+<span class="sd">    @classmethod</span>
+<span class="sd">    def _from_csv(cls, folder, filename, N, N_S,</span>
+<span class="sd">                  h: int = 0, f: int = 0,</span>
+<span class="sd">                  c: int = 0):</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        This method imports data (in the specified format) and then assemblies the corresponding</span>
+<span class="sd">        data matrix, D.</span>
+
+<span class="sd">        :param folder: str </span>
+<span class="sd">                Folder in which the data is stored</span>
+<span class="sd">        :param filename: str</span>
+<span class="sd">                Name of the files to be imported</span>
+<span class="sd">        :param N number of components: int</span>
+<span class="sd">                Components to be analysed</span>
+<span class="sd">        :param h: int </span>
+<span class="sd">                Lines to be skipped from header</span>
+<span class="sd">        :param f: int</span>
+<span class="sd">                Lines to be skipped from footer</span>
+<span class="sd">        :param c: int</span>
+<span class="sd">                Columns to be skipped</span>
+
+<span class="sd">        :return: np.array</span>
+<span class="sd">                Assembled DataMarix</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        path, dirs, files = next(os.walk(folder))</span>
+<span class="sd">        files = [f for f in files if f.endswith(&#39;.csv&#39;)]</span>
+<span class="sd">        N_T = len(files)</span>
+<span class="sd">        D = np.zeros((N_S, N_T))</span>
+
+<span class="sd">        print(&quot;\n \n Importing data... \n \n&quot;)</span>
+
+<span class="sd">        for k in tqdm(range(0, N_T)):</span>
+<span class="sd">            Name = folder + files[k] #os.sep + filename % (k + 1) + &#39;.csv&#39;  # Name of the file to read</span>
+<span class="sd">            # Read data from a file</span>
+<span class="sd">            DATA = np.genfromtxt(Name,  # usecols=np.arange(0, 2),</span>
+<span class="sd">                                 skip_header=h, skip_footer=f)  # Here we have the two colums</span>
+<span class="sd">            # Dat = DATA[1:, :]  # Here we remove the first raw, containing the header</span>
+<span class="sd">            for ii in range(c, N + c):</span>
+<span class="sd">                tmp = DATA[:, ii]</span>
+<span class="sd">                if ii == c:</span>
+<span class="sd">                    V = np.copy(tmp)</span>
+<span class="sd">                else:</span>
+<span class="sd">                    V = np.concatenate([V, tmp], axis=0)</span>
+
+<span class="sd">            D[:, k] = V  # Reshape and assign</span>
+
+<span class="sd">        return D</span>
+
+<span class="sd">    @classmethod</span>
+<span class="sd">    def _from_txt(cls, folder, filename, N, N_S,</span>
+<span class="sd">                  h: int = 0, f: int = 0,</span>
+<span class="sd">                  c: int = 0):</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        This method imports data (in the specified format) and then assemblies the corresponding</span>
+<span class="sd">        data matrix, D.</span>
+
+<span class="sd">        :param folder: str </span>
+<span class="sd">                Folder in which the data is stored</span>
+<span class="sd">        :param filename: str</span>
+<span class="sd">                Name of the files to be imported</span>
+<span class="sd">        :param N number of components: int</span>
+<span class="sd">                Components to be analysed</span>
+<span class="sd">        :param h: int </span>
+<span class="sd">                Lines to be skipped from header</span>
+<span class="sd">        :param f: int</span>
+<span class="sd">                Lines to be skipped from footer</span>
+<span class="sd">        :param c: int</span>
+<span class="sd">                Columns to be skipped</span>
+
+<span class="sd">        :return: np.array</span>
+<span class="sd">                Assembled DataMarix</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        path, dirs, files = next(os.walk(folder))</span>
+<span class="sd">        N_T = len(files)</span>
+<span class="sd">        D = np.zeros((N_S, N_T))</span>
+
+<span class="sd">        print(&quot;\n \n Importing data... \n \n&quot;)</span>
+
+<span class="sd">        for k in tqdm(range(0, N_T)):</span>
+<span class="sd">            Name = folder + os.sep + filename % (k + 1) + &#39;.txt&#39;  # Name of the file to read</span>
+<span class="sd">            # Read data from a file</span>
+<span class="sd">            DATA = np.genfromtxt(Name,  # usecols=np.arange(0, 2),</span>
+<span class="sd">                                 skip_header=h, skip_footer=f)  # Here we have the two colums</span>
+<span class="sd">            # Dat = DATA[1:, :]  # Here we remove the first raw, containing the header</span>
+<span class="sd">            for ii in range(c, N + c):</span>
+<span class="sd">                tmp = DATA[:, ii]</span>
+<span class="sd">                if ii == c:</span>
+<span class="sd">                    V = np.copy(tmp)</span>
+<span class="sd">                else:</span>
+<span class="sd">                    V = np.concatenate([V, tmp], axis=0)</span>
+
+<span class="sd">            D[:, k] = V  # Reshape and assign</span>
+
+<span class="sd">        return D</span>
+
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+
+<span class="c1">#%%</span>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, von Karman Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

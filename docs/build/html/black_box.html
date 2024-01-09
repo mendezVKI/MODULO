@@ -56,7 +56,7 @@
 <li class="toctree-l1"><a class="reference internal" href="intro.html">MODULO: Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="what_is_new.html">What is new in this V 2.0?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="importing_data.html">Importing data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="importing_data.html">Importing data and D matrix preparation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Computing decompositions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#modulo.MODULO.__init__"><code class="docutils literal notranslate"><span class="pre">__init__()</span></code></a></li>
@@ -415,7 +415,7 @@ mPOD Sigmas (vector of amplitudes, i.e. the diagonal of Sigma_M</p>
 <h2>8. kPOD<a class="headerlink" href="#kpod" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="modulo.MODULO.compute_kPOD">
-<span class="sig-prename descclassname"><span class="pre">modulo.MODULO.</span></span><span class="sig-name descname"><span class="pre">compute_kPOD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M_DIST</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">10]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_Modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo.MODULO.compute_kPOD" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">modulo.MODULO.</span></span><span class="sig-name descname"><span class="pre">compute_kPOD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M_DIST</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">10]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_Modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo.MODULO.compute_kPOD" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function implements the kernel PCA as described in the VKI course <a class="reference external" href="https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023">https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023</a></p>
 <p>The computation of the kernel function is carried out as in <a class="reference external" href="https://arxiv.org/pdf/2208.07746.pdf">https://arxiv.org/pdf/2208.07746.pdf</a>.</p>
 <dl class="field-list simple">
@@ -428,25 +428,33 @@ estimate the minimal k. They should be the most different ones.</p></li>
 minimum value for the kernelized correlation</p></li>
 <li><p><strong>alpha</strong> – float
 regularization for K_zeta</p></li>
-<li><p><strong>cent</strong> – string,
-if ‘y’, the matrix K is centered.</p></li>
+<li><p><strong>cent</strong> – bool,
+if True, the matrix K is centered. Else it is not</p></li>
 <li><p><strong>n_Modes</strong> – float,
 number of modes to be computed</p></li>
-<li><p><strong>SAVE_SPOD</strong> – bool,
-If True, MODULO will save the output in self.FOLDER OUT/MODULO_tmp</p></li>
+<li><p><strong>metric</strong> – string,
+This identifies the metric for the kernel matrix. It is a wrapper to ‘pairwise_kernels’ from sklearn.metrics.pairwise
+Note that different metrics would need different set of parameters. For the moment, only rbf was tested; use any other option at your peril !</p></li>
+<li><p><strong>K_out</strong> – bool,
+If true, the matrix K is also exported as a fourth output.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return Psi_P<span class="colon">:</span></dt>
+<dt class="field-even">Return Psi_xi<span class="colon">:</span></dt>
 <dd class="field-even"><p>np.array
-SPOD Psis</p>
+kPOD’s Psis</p>
 </dd>
-<dt class="field-odd">Return Sigma_P<span class="colon">:</span></dt>
+<dt class="field-odd">Return Sigma_xi<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.array
-SPOD Sigmas.</p>
+kPOD’s Sigmas.</p>
 </dd>
-<dt class="field-even">Return Phi_P<span class="colon">:</span></dt>
+<dt class="field-even">Return Phi_xi<span class="colon">:</span></dt>
 <dd class="field-even"><p>np.array
-SPOD Phis</p>
+kPOD’s Phis</p>
+</dd>
+<dt class="field-odd">Return K_zeta<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array
+Kernel Function from which the decomposition is computed.
+(exported only if K_out=True)</p>
 </dd>
 </dl>
 </dd></dl>
