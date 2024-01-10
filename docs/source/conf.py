@@ -1,6 +1,7 @@
 import os
 import sys
 import sphinx_rtd_theme
+
 # Add the path to your Python modules (if needed)
 sys.path.insert(0, os.path.abspath('../../'))
 
@@ -28,6 +29,7 @@ extensions = [
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = 'sphinx_rtd_theme'  # ReadTheDocs theme - Change as desired
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Other HTML options can be set here
 
