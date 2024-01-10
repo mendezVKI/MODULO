@@ -27,7 +27,7 @@ extensions = [
 
 # -- Options for HTML output -------------------------------------------------
 
-html_theme = 'sphinx_rtd_theme'  # ReadTheDocs theme - Change as desired
+html_theme = 'default'  # ReadTheDocs theme - Change as desired
 
 # Other HTML options can be set here
 
