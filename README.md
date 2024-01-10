@@ -7,6 +7,11 @@ This repository contains version 2.0 of MODULO (MODal mULtiscale pOd), a softwar
 
 The old version based on MATLAB implementation and related GUI is no longer maintained but will remain available on the branch "Old_Matlab_Implementation". We also keep the first Python implementation in the branch "Old_Python_Implementation". See the Readme file in these branches for more information.
 
+## Documentation
+
+The full documentation is available at https://modulo.readthedocs.io/en/latest/intro.html.
+This documentation is stored alongside the source code and linked to a specific version of MODULO.
+
 ### What is MODULO, and what are data-driven decompositions?
 
 MODULO allows to compute data-driven decompositions of experimental and numerical data. To have a concise overview of the context, we refer to: 
@@ -65,7 +70,3 @@ The installation provides five exercises to explore MODULO's features while fami
 
 - Exercise 5. We consider the flow of an impinging gas jet again, but this time on a numerical test case. This dataset was produced by Yannic Lowenstein during his STP at VKI at the end of 2023, with the help of Dr. Maria Faruoli. The Reynolds number is two orders of magnitude higher than in exercise 2, yet the flow features you will observe are pretty similar, at least qualitatively. From a learning perspective, the key feature of this test case is that the data is not available on a uniform grid. But fear not: with the new features, it is possible to compute the decompositions using appropriate weights!
  
-### Documentation
-
-The full documentation is available at https://modulo.readthedocs.io/en/latest/intro.html.
-This documentation is stored alongside the source code and linked to a specific version of MODULO.
