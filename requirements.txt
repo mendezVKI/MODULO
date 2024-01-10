@@ -8,5 +8,4 @@ tqdm
 scipy
 scikit-learn
 matplotlib
-time
 pyvista
