@@ -2,7 +2,7 @@ import os
 import sys
 import sphinx_rtd_theme
 
-sys.path.insert(0, '../../')
+# sys.path.insert(0, '../../')
 
 # -- Project information -----------------------------------------------------
 
