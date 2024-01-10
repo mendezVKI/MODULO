@@ -2,7 +2,7 @@ import os
 import sys
 
 # Add the path to your Python modules (if needed)
-sys.path.insert(0, os.path.abspath('path/to/your/module_directory'))
+sys.path.insert(0, os.path.abspath('../../'))
 
 # -- Project information -----------------------------------------------------
 
