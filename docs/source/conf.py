@@ -3,9 +3,10 @@ import sys
 import sphinx_rtd_theme
 
 docs_path = os.path.abspath(os.path.dirname(__file__))
-module_directory = os.path.join(docs_path, '../../')
+module_directory = os.path.join(docs_path, '../../modulo')
 
-sys.path.insert(0, os.path.abspath(module_directory))
+# add module folder to python path, ready for readthedocs
+sys.path.insert(0, module_directory)
 
 
 # -- Project information -----------------------------------------------------
