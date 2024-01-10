@@ -2,8 +2,11 @@ import os
 import sys
 import sphinx_rtd_theme
 
-# Add the path to your Python modules (if needed)
-sys.path.insert(0, os.path.abspath('../../'))
+docs_path = os.path.abspath(os.path.dirname(__file__))
+module_directory = os.path.join(docs_path, '../../')
+
+sys.path.insert(0, os.path.abspath(module_directory))
+
 
 # -- Project information -----------------------------------------------------
 
