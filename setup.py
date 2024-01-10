@@ -70,6 +70,7 @@ setup(
         "pyvista",
         "os",
         "time",
+        "sphinx_rtd_theme",
     ],
     license='BSD (3-clause)',
     classifiers=[
