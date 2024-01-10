@@ -7,8 +7,6 @@ sphinx
 tqdm
 scipy
 scikit-learn
-os
 matplotlib
-sys
 time
 pyvista
