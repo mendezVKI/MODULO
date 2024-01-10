@@ -7,7 +7,7 @@ pytest
 sphinx
 tqdm
 scipy
-sklearn
+scikit-learn
 os
 matplotlib
 sys
