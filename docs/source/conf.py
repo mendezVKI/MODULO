@@ -1,6 +1,6 @@
 import os
 import sys
-
+import sphinx_rtd_theme
 # Add the path to your Python modules (if needed)
 sys.path.insert(0, os.path.abspath('../../'))
 
@@ -27,22 +27,22 @@ extensions = [
 
 # -- Options for HTML output -------------------------------------------------
 
-html_theme = 'default'  # ReadTheDocs theme - Change as desired
+html_theme = 'sphinx_rtd_theme'  # ReadTheDocs theme - Change as desired
 
 # Other HTML options can be set here
 
 # -- Options for autodoc extension ------------------------------------------
 
 # Paths to exclude from being documented (if needed)
-exclude_patterns = ['path/to/excluded/files']
+# exclude_patterns = ['path/to/excluded/files']
 
 # Set autodoc options (customize as needed)
-autodoc_default_options = {
-    'members': True,
-    'undoc-members': True,
-    'show-inheritance': True,
-    'member-order': 'bysource',  # Adjust member order
-}
+# autodoc_default_options = {
+#     'members': True,
+#     'undoc-members': True,
+#     'show-inheritance': True,
+#     'member-order': 'bysource',  # Adjust member order
+# }
 
 # -- Paths for source and build directories ----------------------------------
 
@@ -50,6 +50,24 @@ source_dir = './'  # Replace with your source directory name
 build_dir = '../build'  # Replace with your build directory name
 
 # -- Additional configuration options ----------------------------------------
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3/', None),
+    'numpy': ('https://numpy.org/doc/stable/', None),
+    'scikit-learn': ('https://scikit-learn.org/stable/', None),
+    'scipy': ('https://docs.scipy.org/doc/scipy/reference/', None),
+    'pandas': ('https://pandas.pydata.org/pandas-docs/stable', None),
+    'matplotlib': ('https://matplotlib.org/stable', None),
+}
+
+
+# added by Miguel: to include __init__ in the docs
+autodoc_default_options = {
+    'members': True,
+    'member-order': 'bysource',
+    'special-members': '__init__',
+    'undoc-members': True,
+    'exclude-members': '__weakref__'
+}
 
 
 # Add any additional configurations or overrides here
