@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
@@ -17,9 +18,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-#import os
-#import sys
-#sys.path.insert(0, os.path.abspath('../../modulo'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../../modulo'))
 
 # -- General configuration ------------------------------------------------
 
@@ -76,8 +77,6 @@ author = 'Poletti, R., Schena, L., Ninni, D., Mendez, M.A.'
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
-import modulo
-import numpy as np
 # The short X.Y version.
 version = 'Version 2'
 # The full version, including alpha/beta/rc tags.
@@ -186,7 +185,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'modulo_vki', 'MODULO Documentation',
-     author, 'modulo_vki', 
+     author, 'modulo_vki',
      'MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform Multiscale Modal Analysis of numerical and experimental data using the Multiscale Proper Orthogonal Decomposition (mPOD).',
      'Miscellaneous'),
 ]
