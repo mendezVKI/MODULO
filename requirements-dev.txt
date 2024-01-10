@@ -5,6 +5,7 @@ coverage
 flake8
 pytest
 sphinx
+sphinx_rtd_theme
 # These are dependencies of various sphinx extensions for documentation.
 ipython
 matplotlib

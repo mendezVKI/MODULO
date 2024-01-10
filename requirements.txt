@@ -4,6 +4,7 @@ pandas
 matplotlib
 pytest
 sphinx
+sphinx_rtd_theme
 tqdm
 scipy
 sklearn
