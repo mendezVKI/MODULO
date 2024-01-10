@@ -4,10 +4,10 @@ Importing data and D matrix preparation
 
 MODULO can operate with two options.
 
-Option 1: the snapshot matrix is provided by the users. MODULO accepts ``numpy.array`` data matrices only.
+**Option 1**: the snapshot matrix is provided by the users. MODULO accepts ``numpy.array`` data matrices only.
 We use this feature in Example 1.
 
-Option 2: a folder containing the data is provided and MOUDLO must assemble the snapshot mtrix.
+**Option 2**: a folder containing the data is provided and MOUDLO must assemble the snapshot mtrix.
 We use this feature in Example 2.
 
 When operating with MEMORY_SAVING=True, MODULO will refrain from working on them full matrix D.

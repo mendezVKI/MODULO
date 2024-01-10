@@ -6,9 +6,6 @@ pytest
 sphinx
 tqdm
 scipy
-sklearn
-os
+scikit-learn
 matplotlib
-sys
-time
 pyvista
