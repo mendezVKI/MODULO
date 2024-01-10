@@ -47,8 +47,8 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # -- Paths for source and build directories ----------------------------------
 
-source_dir = 'docs/source/'  # Replace with your source directory name
-build_dir = 'docs/build'  # Replace with your build directory name
+source_dir = './'  # Replace with your source directory name
+build_dir = '../build'  # Replace with your build directory name
 
 # -- Additional configuration options ----------------------------------------
 intersphinx_mapping = {
