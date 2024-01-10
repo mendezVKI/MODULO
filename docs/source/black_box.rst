@@ -8,55 +8,55 @@ Computing decompositions
 MODULO Initialization
 +++++++++++++++++++++++++++++++++++++
 
-.. autofunction:: modulo.MODULO.__init__
+.. autofunction:: modulo.modulo.MODULO.__init__
 
 Then, the key functions for the available decompositions are: 
 
 POD via SVD
 +++++++++++++++++++++++++++++++++++++
 
-.. autofunction:: modulo.MODULO.compute_POD_svd
+.. autofunction:: modulo.modulo.MODULO.compute_POD_svd
 
 
 POD via matrix K
 +++++++++++++++++++++++++++++++++++++
 
-.. autofunction:: modulo.MODULO.compute_POD_K
+.. autofunction:: modulo.modulo.MODULO.compute_POD_K
 
 DFT
 +++++++++++++++++++++++++++++++++++++
 
-.. autofunction:: modulo.MODULO.compute_DFT
+.. autofunction:: modulo.modulo.MODULO.compute_DFT
 
 
 SPOD_s
 +++++++++++++++++++++++++++++++++++++
 
-.. autofunction:: modulo.MODULO.compute_SPOD_s
+.. autofunction:: modulo.modulo.MODULO.compute_SPOD_s
 
 
 SPOD_t
 +++++++++++++++++++++++++++++++++++++
 
-.. autofunction:: modulo.MODULO.compute_SPOD_t
+.. autofunction:: modulo.modulo.MODULO.compute_SPOD_t
 
 
 DMD ( or PIP)
 +++++++++++++++++++++++++++++++++++++
 
-.. autofunction:: modulo.MODULO.compute_DMD_PIP
+.. autofunction:: modulo.modulo.MODULO.compute_DMD_PIP
 
 
 mPOD
 +++++++++++++++++++++++++++++++++++++
 
-.. autofunction:: modulo.MODULO.compute_mPOD
+.. autofunction:: modulo.modulo.MODULO.compute_mPOD
 
 
 kPOD
 +++++++++++++++++++++++++++++++++++++
 
-.. autofunction:: modulo.MODULO.compute_kPOD
+.. autofunction:: modulo.modulo.MODULO.compute_kPOD
 
 
 

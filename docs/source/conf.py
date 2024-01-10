@@ -2,12 +2,7 @@ import os
 import sys
 import sphinx_rtd_theme
 
-docs_path = os.path.abspath(os.path.dirname(__file__))
-module_directory = os.path.join(docs_path, '../../modulo')
-
-# add module folder to python path, ready for readthedocs
-sys.path.insert(0, module_directory)
-
+sys.path.insert(0, os.path.abspath('../../'))
 
 # -- Project information -----------------------------------------------------
 
@@ -65,15 +60,14 @@ intersphinx_mapping = {
     'matplotlib': ('https://matplotlib.org/stable', None),
 }
 
-
 # added by Miguel: to include __init__ in the docs
-autodoc_default_options = {
-    'members': True,
-    'member-order': 'bysource',
-    'special-members': '__init__',
-    'undoc-members': True,
-    'exclude-members': '__weakref__'
-}
+# autodoc_default_options = {
+#     'members': True,
+#     'member-order': 'bysource',
+#     'special-members': '__init__',
+#     'undoc-members': True,
+#     'exclude-members': '__weakref__'
+# }
 
 
 # Add any additional configurations or overrides here
