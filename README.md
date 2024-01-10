@@ -12,7 +12,7 @@ The old version based on MATLAB implementation and related GUI is no longer main
 The full documentation is available at https://modulo.readthedocs.io/en/latest/intro.html.
 This documentation is stored alongside the source code and linked to a specific version of MODULO.
 
-### What is MODULO, and what are data-driven decompositions?
+## What is MODULO, and what are data-driven decompositions?
 
 MODULO allows to compute data-driven decompositions of experimental and numerical data. To have a concise overview of the context, we refer to: 
 
@@ -34,7 +34,7 @@ Ongoing works on nonlinear methods are discussed here:
 
 - Mendez, M. A. (2023) "Linear and Nonlinear Dimensionality Reduction from Fluid Mechanics to Machine Learning", Meas. Sci. Technol. 34(042001), https://doi.org/10.1088/1361-6501/acaffe. The pre-print is available at https://arxiv.org/abs/2208.07746.   
 
-### What is new in this V 2.0? 
+## What is new in this V 2.0? 
 
 This version expands considerably the version v1 in "Old_Python_Implementation", for which a first tutorial was provided by L. Schena in https://www.youtube.com/watch?v=y2uSvdxAwHk. 
 The major updates are the following :
@@ -56,7 +56,7 @@ This is generally faster but requires more memory.
 
 8. Implementation of a formulation for non-uniform meshes, using a weighted matrix for all the relevant inner products. This is currently available only for POD and mPOD but allows for handling data produced from CFD simulation without resampling on a uniform grid (see exercise 4). It can be used both with and without the memory-saving option.
 
-### New Tutorials 
+## New Tutorials 
 
 The installation provides five exercises to explore MODULO's features while familiarizing with data-driven decompositions. These are available in the /exercise/ folder in plain Python format and jupyter notebooks. 
 
