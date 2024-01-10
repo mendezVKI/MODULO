@@ -11,7 +11,7 @@ sphinx:
 python:
   install:
       - requirements: requirements-dev.txt
-        setup_py_install: true
+
 
 
 
