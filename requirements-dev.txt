@@ -1,16 +1,21 @@
 # These are required for developing the package (running the tests, building
 # the documentation) but not necessarily required for _using_ it.
-codecov
-coverage
-flake8
+numpy
+pandas
+matplotlib
 pytest
 sphinx
-sphinx_rtd_theme
-numpy
+tqdm
+scipy
+sklearn
+os
 matplotlib
-# These are dependencies of various sphinx extensions for documentation.
-ipython
-matplotlib
-numpydoc
-sphinx-copybutton
+sys
+time
 pyvista
+pytest
+##########
+sphinx
+sphinx_rtd_theme
+
+
