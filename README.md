@@ -7,7 +7,7 @@ This repository contains version 2.0 of MODULO (MODal mULtiscale pOd), a softwar
 
 The old version based on MATLAB implementation and related GUI is no longer maintained but will remain available on the branch "Old_Matlab_Implementation". We also keep the first Python implementation in the branch "Old_Python_Implementation". See the Readme file in these branches for more information.
 
-## Documentation
+#### Documentation
 
 The full documentation is available at https://modulo.readthedocs.io/en/latest/intro.html.
 This documentation is stored alongside the source code and linked to a specific version of MODULO.
