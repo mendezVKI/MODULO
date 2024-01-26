@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath('../../'))
 project = 'MODULO'
 author = 'Poletti, R., Schena, L., Ninni, D., Mendez, M.A.'
 version = '2.0'
-release = '2.0.0'
+release = '2.0.1'
 copyright = '2024 von Karman Institute'
 
 # -- General configuration ---------------------------------------------------
