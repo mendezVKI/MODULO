@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Importing data and D matrix preparation &mdash; MODULO 2.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/documentation_options.js?v=f5cff4aa"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            MODULO
+          </a>
+              <div class="version">
+                2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">MODULO: Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="what_is_new.html">What is new in this V 2.0?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Importing data and D matrix preparation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#modulo.utils.read_db.ReadData._data_processing"><code class="docutils literal notranslate"><span class="pre">_data_processing()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="black_box.html">Computing decompositions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exercises.html">New Tutorial Exercises</a></li>
+<li class="toctree-l1"><a class="reference internal" href="min_versions.html">Minimum Version of Python and NumPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MODULO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Importing data and D matrix preparation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/importing_data.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="importing-data-and-d-matrix-preparation">
+<h1>Importing data and D matrix preparation<a class="headerlink" href="#importing-data-and-d-matrix-preparation" title="Link to this heading">¶</a></h1>
+<p>MODULO can operate with two options.</p>
+<p><strong>Option 1</strong>: the snapshot matrix is provided by the users. MODULO accepts <code class="docutils literal notranslate"><span class="pre">numpy.array</span></code> data matrices only.
+We use this feature in Example 1.</p>
+<p><strong>Option 2</strong>: a folder containing the data is provided and MOUDLO must assemble the snapshot mtrix.
+We use this feature in Example 2.</p>
+<p>When operating with MEMORY_SAVING=True, MODULO will refrain from working on them full matrix D.
+If this matrix was provided (Option 1), but MEMORY_SAVING=True, MODULO will break the data into chunks, store it in a local folder and delete it from memory.
+If only the data folder was provided (Option 2), then MODULO will assemble the various portions and store them in a local folder.</p>
+<p>The format expected for the data is <code class="docutils literal notranslate"><span class="pre">.dat</span></code> or <code class="docutils literal notranslate"><span class="pre">.txt</span></code>.  Variants for <code class="docutils literal notranslate"><span class="pre">.csv</span></code> files are in preparation.</p>
+<p>The codes to generate the matrix D are availble in  <code class="docutils literal notranslate"><span class="pre">ReadData</span></code>. The main function is
+<em>_data_processing</em>, documented below:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="modulo.utils.read_db.ReadData._data_processing">
+<span class="sig-prename descclassname"><span class="pre">modulo.utils.read_db.ReadData.</span></span><span class="sig-name descname"><span class="pre">_data_processing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FOLDER_OUT</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_PARTITIONS</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MR</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_D</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FOLDER_IN</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_T</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo.utils.read_db.ReadData._data_processing" title="Link to this definition">¶</a></dt>
+<dd><p>First, if the D matrix is not provided, this method attempts to load the data and assembles the D matrix.
+Then, it performs pre-processing operations on the data matrix, D. if MR=True, the mean (per each column - i.e.: snapshot at time t_i) is removed;
+If the MEMORY_SAVING=True the data matrix is splitted to optimize memory usage. Moreover, D is stored on disk and removed from the live memory.
+Finally, if in this condition, also the data type of the matrix is self is changed: from float64 -&gt; float32, with the same purpose.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>D</strong> – np.array
+data matrix D</p></li>
+<li><p><strong>FOLDER_OUT</strong> – str
+folder in which the data (partitions and/or data matrix itself) will be eventually saved.</p></li>
+<li><p><strong>MEMORY_SAVING</strong> – bool, optional
+If True, memory saving feature is activated. Passed through __init__</p></li>
+<li><p><strong>N_PARTITIONS</strong> – int
+In memory saving environment, this parameter refers to the number of partitions to be applied
+to the data matrix. If the number indicated by the user is not a multiple of the N_T
+i.e.: if (N_T % N_PARTITIONS) !=0 - then an additional partition is introduced, that contains
+the remaining columns</p></li>
+<li><p><strong>MR</strong> – bool, optional
+If True, it removes the mean (per column) from each snapshot</p></li>
+<li><p><strong>SAVE_D</strong> – bool, optional
+If True, the matrix D is saved into memory. If the Memory Saving feature is active, this is performed
+by default.</p></li>
+<li><p><strong>FOLDER_IN</strong> – str, optional. Needed only if database=None
+If the D matrix is not provided (database = None), read it from the path FOLDER_IN</p></li>
+<li><p><strong>filename</strong> – str, optional. Needed only if database=None
+If the database is not provided, read it from the files filename
+The files must be named “filenamexxxx.dat” where x is the number of the file
+that goes from 0 to the number of time steps saved</p></li>
+<li><p><strong>h</strong> – int, optional. Needed only if database=None
+Lines to be skipped from the header of filename</p></li>
+<li><p><strong>f</strong> – int, optional. Needed only if database=None
+Lines to be skipped from the footer of filename</p></li>
+<li><p><strong>c</strong> – int, optional. Needed only if database=None
+Columns to be skipped (for example if the first c columns contain the mesh grid.)</p></li>
+<li><p><strong>N</strong> – int, optional. Needed only if database=None
+Components to be analysed.</p></li>
+<li><p><strong>N_S</strong> – int, optional. Needed only if database=None
+Number of points in space.</p></li>
+<li><p><strong>N_T</strong> – int, optional. Needed only if database=None
+components to be analysed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>There are four possible scenario:</dt><dd><ol class="arabic simple">
+<li><p>if N_Partitions ==1 and MR = True, return is D,D_MEAN (the mean snapshot!)</p></li>
+<li><p>if N_Partitions ==1 and MR = False, return is D.</p></li>
+<li><p>if N_Partitions &gt;1 and MR = True, return is D_MEAN</p></li>
+<li><p>if N_Partitions &gt;1 and MR=False, return is None</p></li>
+</ol>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 von Karman Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
