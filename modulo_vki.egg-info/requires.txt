@@ -8,5 +8,4 @@ ipython-genutils
 ipywidgets
 matplotlib
 pyvista
-os
-time
+imageio
