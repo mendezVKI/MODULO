@@ -9,7 +9,8 @@ to perform the POD.
 .. code-block:: python
 
     from modulo.modulo import MODULO    
-    m = MODULO(data=D); Phi_POD, Psi_POD, Sigma_POD = m.compute_POD_K()
+    m = MODULO(data=D)
+	Phi_POD, Psi_POD, Sigma_POD = m.compute_POD_K()
 
 
 

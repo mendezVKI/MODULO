@@ -68,6 +68,7 @@ setup(
         "ipywidgets",
         "matplotlib",
         "pyvista",
+        "imageio", #to be moved to optional, tutorial only
     ],
     license='BSD (3-clause)',
     classifiers=[
