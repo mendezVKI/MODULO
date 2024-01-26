@@ -5,7 +5,6 @@
 
 
 from .utils.read_db import *
-#from .utils._data_matrix import *
 from .utils._utils import *
 from .utils._plots import *
 from .utils.others import *
@@ -21,4 +20,4 @@ from .core._pod_space import *
 from .core._spod_s import *
 from .core._spod_t import *
 
-from .modulo import MODULO
+from modulo.modulo import MODULO

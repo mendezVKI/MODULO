@@ -33,7 +33,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as readme_file:
 
 setup(
     name='modulo_vki',
-    version='2.0.1',
+    version='2.0.3',
     description="MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform "
                 "Multiscale Modal Analysis of numerical and experimental data using the Multiscale Proper "
                 "Orthogonal Decomposition (mPOD).",
