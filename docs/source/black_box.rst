@@ -41,7 +41,7 @@ SPOD_t
 .. autofunction:: modulo.modulo.MODULO.compute_SPOD_t
 
 
-DMD ( or PIP)
+DMD (or PIP)
 +++++++++++++++++++++++++++++++++++++
 
 .. autofunction:: modulo.modulo.MODULO.compute_DMD_PIP

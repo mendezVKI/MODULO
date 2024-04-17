@@ -4,7 +4,7 @@ import numpy as np
 import math
 
 
-def CorrelationMatrix(N_T, N_PARTITIONS=1, MEMORY_SAVING=False, FOLDER_OUT='./', SAVE_K=True, D=None,weights = np.array([])):
+def CorrelationMatrix(N_T, N_PARTITIONS=1, MEMORY_SAVING=False, FOLDER_OUT='./', SAVE_K=False, D=None,weights = np.array([])):
     """
     This method computes the temporal correlation matrix, given a data matrix as input. It's possible to use memory saving
     then splitting the computing in different tranches if computationally heavy. If D has been computed using MODULO

@@ -19,7 +19,7 @@ The inlet velocity is 10m/s, with a TI of 5%. The sampling frequency in the data
 import numpy as np # we use this to manipulate data 
 import matplotlib.pyplot as plt # this is for plotting
 import os  # this is to create/rename/delete folders
-from modulo_vki.modulo import MODULO # this is to create modulo objects
+from modulo_vki import ModuloVKI # this is to create modulo objects
 
 # this is for plotting/animation purposes
 from modulo_vki.utils.others import Animation_2D_CFD_Cyl
@@ -101,7 +101,7 @@ if not os.path.exists(FOLDER_POD_RESULTS):
     os.makedirs(FOLDER_POD_RESULTS)
 
 # --- Initialize MODULO object
-m = MODULO(data=np.nan_to_num(D))
+m = ModuloVKI(data=np.nan_to_num(D))
 # Compute the POD using Sirovinch's method
 Phi_POD, Psi_POD, Sigma_POD = m.compute_POD_K()
 
