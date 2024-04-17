@@ -20,7 +20,6 @@ from modulo_vki.utils._utils import switch_svds
 
 from modulo_vki.utils.read_db import ReadData
 
-
 class ModuloVKI:
     """
     MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform Multiscale
@@ -44,6 +43,7 @@ class ModuloVKI:
     def __init__(self, data: np.array,
                  N_PARTITIONS: int = 1,
                  FOLDER_OUT='./',
+                 SAVE_K: bool = False,
                  N_T: int = 100,
                  N_S: int = 200,
                  n_Modes: int = 10,
@@ -55,34 +55,37 @@ class ModuloVKI:
         This function initializes the main parameters needed by MODULO.
 
         Attributes:
-       
-        :param data: This is the data matrix to factorize. It is a np.array with 
+
+        :param data: This is the data matrix to factorize. It is a np.array with
                shape ((N_S, N_T)). If the data has not yet been prepared in the form of a np.array,
-               the method ReadData in MODULO can be used (see ReadData). If the memory saving is active (N_PARTITIONS >1), the folder with partitions should be prepared.  
+               the method ReadData in MODULO can be used (see ReadData). If the memory saving is active (N_PARTITIONS >1), the folder with partitions should be prepared.
                If the memory saving is active, this entry = None. The data matrix is assumed to big to be saved and the
-              
+
         :param N_PARTITIONS: If memory saving feature is active, this parameter sets the number of partitions
                that will be used to store the data matrices during the computations.
-        
-        :param FOLDER_OUT: Folder in which the output will be stored.The output includes the matrices Phi, Sigma and Psi (optional) and temporary files 
+
+        :param FOLDER_OUT: Folder in which the output will be stored.The output includes the matrices Phi, Sigma and Psi (optional) and temporary files
                used for some of the calculations (e.g.: for memory saving).
-        
+
+        :param  SAVE_K:  A flag deciding if the matrix will be stored in the disk (in FOLDER_OUT/correlation_matrix) or not.
+            Default option is 'False'.
+
         :param N_T: Number of time steps, must be given when N_PARTITIONS >1
-        
+
         :param N_S: Number of grid points, must be given when N_PARTITIONS >1
-        
-        :param n_Modes: Number of Modes to be computed 
-        
+
+        :param n_Modes: Number of Modes to be computed
+
         :param dtype: Cast "data" with type dtype
-        
+
         :param eig_solver: Numerical solver to compute the eigen values
-        
+
         :param svd_solver: Numerical solver to compute the Single Value Decomposition
-        
+
         :param weights: weight vector [w_i,....,w_{N_s}] where w_i = area_cell_i/area_grid
                Only needed if grid is non-uniform.
-        
-        
+
+
         """
 
         print("MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform "
@@ -160,40 +163,15 @@ class ModuloVKI:
 
         self.FOLDER_OUT = FOLDER_OUT
 
+        self.SAVE_K = SAVE_K
+
         if self.MEMORY_SAVING:
             os.makedirs(self.FOLDER_OUT, exist_ok=True)
 
-    def _correlation_matrix(self,
-                            SAVE_K: bool = True):
-        """
-        This method computes the time correlation matrix. Here the memory saving is
-        beneficial for large datasets. Since the matrix could be potentially heavy, it is automatically stored on disk to 
-        minimize the usage of the RAM. This feature can be deactivated by setting SAVE_K = False. 
-        In this case, the correlation matrix is returned to the main class.
-
-        :param SAVE_K: bool
-            A flag deciding if the matrix will be stored in the disk (in FOLDER_OUT/MODULO_tmp) or not. 
-            Default option is 'True'. This attribute is passed to the class 
-            in order to decide if it has to be loaded from disk or not.
-
-
-        :return K: np.array
-                The correlation matrix D^T D (as class attribute) if Memory saving is not active. 
-                Otherwise, it returns None and the matrix is automatically saved on disk.
-
-        """
-
-        self.SAVE_K = SAVE_K
-
-        self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, self.MEMORY_SAVING,
-                                   self.FOLDER_OUT, self.SAVE_K, D=self.Dstar, weights=self.weights)
-
-        return
-
     def _temporal_basis_POD(self,
-                            SAVE_T_POD: bool = True):
+                            SAVE_T_POD: bool = False):
         """
-        This method computes the temporal structure for the Proper Orthogonal Decomposition (POD) computation. 
+        This method computes the temporal structure for the Proper Orthogonal Decomposition (POD) computation.
         The theoretical background of the POD is briefly recalled here:
 
         https://youtu.be/8fhupzhAR_M
@@ -214,10 +192,10 @@ class ModuloVKI:
         https://docs.microsoft.com/en-us/windows/wsl/install-win10
 
         :param SAVE_T_POD: bool
-                Flag deciding if the results will be stored on the disk. 
+                Flag deciding if the results will be stored on the disk.
                 Default value is True, to limit the RAM's usage.
                 Note that this might cause a minor slowdown for the loading,
-                but the tradeoff seems worthy. 
+                but the tradeoff seems worthy.
                 This attribute is passed to the MODULO class.
 
 
@@ -245,25 +223,25 @@ class ModuloVKI:
     def _spatial_basis_POD(self, Psi_P, Sigma_P,
                            SAVE_SPATIAL_POD: bool = True):
         """
-        This method computes the spatial structure for the Proper Orthogonal Decomposition (POD) computation. 
+        This method computes the spatial structure for the Proper Orthogonal Decomposition (POD) computation.
         The theoretical background of the POD is briefly recalled here:
 
         https://youtu.be/8fhupzhAR_M
-        
+
         :param Psi_P: np.array
                 POD temporal basis
         :param Sigma_P: np.array
                 POD Sigmas
         :param SAVE_SPATIAL_POD: bool
-                Flag deciding if the results will be stored on the disk. 
+                Flag deciding if the results will be stored on the disk.
                 Default value is True, to limit the RAM's usage.
                 Note that this might cause a minor slowdown for the loading,
-                but the tradeoff seems worthy. 
+                but the tradeoff seems worthy.
                 This attribute is passed to the MODULO class.
 
         :return Phi_P: np.array
             POD Phis
-            
+
         """
 
         self.SAVE_SPATIAL_POD = SAVE_SPATIAL_POD
@@ -299,10 +277,10 @@ class ModuloVKI:
         :param boundaries: str -> {'nearest', 'reflect', 'wrap' or 'extrap'}
                 Define the boundary conditions for the filtering process, in order to avoid edge effects.
                 The available boundary conditions are the classic ones implemented for image processing:
-                nearest', 'reflect', 'wrap' or 'extrap'. See also https://docs.scipy.org/doc/scipy/reference/tutorial/ndimage.html      
+                nearest', 'reflect', 'wrap' or 'extrap'. See also https://docs.scipy.org/doc/scipy/reference/tutorial/ndimage.html
         :param MODE: str -> {‘reduced’, ‘complete’, ‘r’, ‘raw’}
                 A QR factorization is used to enforce the orthonormality of the mPOD basis, to compensate
-                for the non-ideal frequency response of the filters. 
+                for the non-ideal frequency response of the filters.
                 The option MODE from np.linalg.qr carries out this operation.
 
         :return PSI_M: np.array
@@ -322,7 +300,7 @@ class ModuloVKI:
 
     def _spatial_basis_mPOD(self, D, PSI_M, SAVE):
         """
-        This function implements the last step of the mPOD algorithm: 
+        This function implements the last step of the mPOD algorithm:
         completing the decomposition. Here we project from psis, to get phis and sigmas
 
         :param D: np.array
@@ -380,10 +358,10 @@ class ModuloVKI:
                 A QR factorization is used to enforce the orthonormality of the mPOD basis, to compensate
                 for the non-ideal frequency response of the filters.
                 The option MODE from np.linalg.qr carries out this operation.
-                
+
         :param SAT: Maximum number of modes per scale.
                     Only used for mPOD (max number of modes per scale)
-       
+
         :param dt: float
                 temporal step
 
@@ -399,7 +377,7 @@ class ModuloVKI:
         print('Computing correlation matrix D matrix...')
         self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS,
                                    self.MEMORY_SAVING,
-                                   self.FOLDER_OUT, D=self.Dstar)
+                                   self.FOLDER_OUT, self.SAVE_K, D=self.Dstar)
 
         if self.MEMORY_SAVING:
             self.K = np.load(self.FOLDER_OUT + '/correlation_matrix/k_matrix.npz')['K']
@@ -432,7 +410,7 @@ class ModuloVKI:
 
         return Phi_M, Psi_M, Sigma_M
 
-    def compute_POD_K(self, SAVE_T_POD: bool = True):
+    def compute_POD_K(self, SAVE_T_POD: bool = False):
         """
         This method computes the Proper Orthogonal Decomposition (POD) of a dataset
         using the snapshot approach, i.e. working on the temporal correlation matrix.
@@ -440,7 +418,7 @@ class ModuloVKI:
         The theoretical background of the POD is briefly recalled here:
 
         https://youtu.be/8fhupzhAR_M
-        
+
         :return Psi_P: np.array
                 POD Psis
 
@@ -454,7 +432,7 @@ class ModuloVKI:
         print('Computing correlation matrix D matrix...')
         self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS,
                                    self.MEMORY_SAVING,
-                                   self.FOLDER_OUT, D=self.Dstar, weights=self.weights)
+                                   self.FOLDER_OUT, self.SAVE_K, D=self.Dstar, weights=self.weights)
 
         if self.MEMORY_SAVING:
             self.K = np.load(self.FOLDER_OUT + '/correlation_matrix/k_matrix.npz')['K']
@@ -487,7 +465,7 @@ class ModuloVKI:
 
         return Phi_P, Psi_P, Sigma_P
 
-    def compute_POD_svd(self, SAVE_T_POD: bool = True):
+    def compute_POD_svd(self, SAVE_T_POD: bool = False):
         """
         This method computes the Proper Orthogonal Decomposition (POD) of a dataset
         using the SVD decomposition. The svd solver is defined by 'svd_solver'.
@@ -495,7 +473,7 @@ class ModuloVKI:
         the SVD must be performed over the entire dataset.
 
         https://youtu.be/8fhupzhAR_M
-    
+
         :return Psi_P: np.array
             POD Psis
 
@@ -537,25 +515,25 @@ class ModuloVKI:
     def compute_DMD_PIP(self, SAVE_T_DMD: bool = True, F_S=1):
         """
         This method computes the Dynamic Mode Decomposition of the data
-        using the algorithm in https://arxiv.org/abs/1312.0041, which is basically the same as 
-        the PIP algorithm proposed in https://www.sciencedirect.com/science/article/abs/pii/0167278996001248   
+        using the algorithm in https://arxiv.org/abs/1312.0041, which is basically the same as
+        the PIP algorithm proposed in https://www.sciencedirect.com/science/article/abs/pii/0167278996001248
         See v1 of this paper https://arxiv.org/abs/2001.01971 for more details (yes, reviewers did ask to omit this detail in v2).
-        
+
         :return Phi_D: np.array
                 DMD Phis. As for the DFT, these are complex.
 
         :return Lambda_D: np.array
                 DMD Eigenvalues (of the reduced propagator). These are complex.
-                
+
         :return freqs: np.array
                 Frequencies (in Hz, associated to the DMD modes)
-                
+
         :return a0s: np.array
-                Initial Coefficients of the Modes        
-                
+                Initial Coefficients of the Modes
+
         """
 
-        # If Memory saving is active, we must load back the data 
+        # If Memory saving is active, we must load back the data
         if self.MEMORY_SAVING:
             if self.N_T % self.N_PARTITIONS != 0:
                 tot_blocks_col = self.N_PARTITIONS + 1
@@ -622,7 +600,7 @@ class ModuloVKI:
         :param L_B: float,
                 lenght of the chunks
         :param O_B: float,
-                Overlapping between blocks in the chunk 
+                Overlapping between blocks in the chunk
         :param n_Modes: float,
                number of modes to be computed for each frequency
         :param SAVE_SPOD: bool,
@@ -630,13 +608,13 @@ class ModuloVKI:
         :return Psi_P_hat: np.array
                 Spectra of the SPOD Modes
         :return Sigma_P: np.array
-                Amplitudes of the SPOD Modes. 
+                Amplitudes of the SPOD Modes.
         :return Phi_P: np.array
-                SPOD Phis             
+                SPOD Phis
         :return freq: float
-                frequency bins for the Spectral POD                
-                
-                
+                frequency bins for the Spectral POD
+
+
         """
         if self.D is None:
             D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
@@ -655,8 +633,8 @@ class ModuloVKI:
     def compute_SPOD_s(self, F_S, N_O=100, f_c=0.3, n_Modes=10, SAVE_SPOD=True):
         """
         This method computes the Spectral POD of your data.
-        This is the one by Sieber 
-        et al (https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/spectral-proper-orthogonal-decomposition/DCD8A6EDEFD56F5A9715DBAD38BD461A)    
+        This is the one by Sieber
+        et al (https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/spectral-proper-orthogonal-decomposition/DCD8A6EDEFD56F5A9715DBAD38BD461A)
 
         :param F_S: float,
                 Sampling Frequency [Hz]
@@ -664,15 +642,15 @@ class ModuloVKI:
                 Semi-Order of the diagonal filter.
                 Note that the filter order will be 2 N_o +1 (to make sure it is odd)
         :param f_c: float,
-                cut-off frequency of the diagonal filter 
+                cut-off frequency of the diagonal filter
         :param n_Modes: float,
-               number of modes to be computed 
+               number of modes to be computed
         :param SAVE_SPOD: bool,
                 If True, MODULO will save the output in self.FOLDER OUT/MODULO_tmp
         :return Psi_P: np.array
                 SPOD Psis
         :return Sigma_P: np.array
-                SPOD Sigmas. 
+                SPOD Sigmas.
         :return Phi_P: np.array
                 SPOD Phis
         """
@@ -681,7 +659,7 @@ class ModuloVKI:
             D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
 
             self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, self.MEMORY_SAVING,
-                                       self.FOLDER_OUT, D=D)
+                                       self.FOLDER_OUT, self.SAVE_K, D=D)
 
             Phi_sP, Psi_sP, Sigma_sP = compute_SPOD_s(D, self.K, F_S, self.N_S, self.N_T, N_O, f_c,
                                                       n_Modes, SAVE_SPOD, self.FOLDER_OUT, self.MEMORY_SAVING,
@@ -689,7 +667,7 @@ class ModuloVKI:
 
         else:
             self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, self.MEMORY_SAVING,
-                                       self.FOLDER_OUT, D=self.D)
+                                       self.FOLDER_OUT, self.SAVE_K, D=self.D)
 
             Phi_sP, Psi_sP, Sigma_sP = compute_SPOD_s(self.D, self.K, F_S, self.N_S, self.N_T, N_O, f_c,
                                                       n_Modes, SAVE_SPOD, self.FOLDER_OUT, self.MEMORY_SAVING,
@@ -759,25 +737,25 @@ class ModuloVKI:
 
         return Phi_sP, Psi_sP, Sigma_sP
 
-    def compute_kPOD(self, M_DIST=[1,10],k_m=0.1, cent=True,
-                     n_Modes=10,alpha=1e-6,metric='rbf',K_out=False):
+    def compute_kPOD(self, M_DIST=[1, 10], k_m=0.1, cent=True,
+                     n_Modes=10, alpha=1e-6, metric='rbf', K_out=False):
         """
         This function implements the kernel PCA as described in the VKI course https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023
 
         The computation of the kernel function is carried out as in https://arxiv.org/pdf/2208.07746.pdf.
 
-        
+
         :param M_DIST: array,
                 position of the two snapshots that will be considered to
                 estimate the minimal k. They should be the most different ones.
         :param k_m: float,
                 minimum value for the kernelized correlation
         :param alpha: float
-                regularization for K_zeta        
+                regularization for K_zeta
         :param cent: bool,
                 if True, the matrix K is centered. Else it is not
         :param n_Modes: float,
-               number of modes to be computed 
+               number of modes to be computed
         :param metric: string,
                This identifies the metric for the kernel matrix. It is a wrapper to 'pairwise_kernels' from sklearn.metrics.pairwise
                Note that different metrics would need different set of parameters. For the moment, only rbf was tested; use any other option at your peril !
@@ -786,14 +764,14 @@ class ModuloVKI:
         :return Psi_xi: np.array
                kPOD's Psis
         :return Sigma_xi: np.array
-               kPOD's Sigmas. 
+               kPOD's Sigmas.
         :return Phi_xi: np.array
-               kPOD's Phis               
+               kPOD's Phis
         :return K_zeta: np.array
-               Kernel Function from which the decomposition is computed. 
+               Kernel Function from which the decomposition is computed.
                (exported only if K_out=True)
-               
-                
+
+
         """
         if self.D is None:
             D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
@@ -811,19 +789,19 @@ class ModuloVKI:
         print('Kernel K ready')
 
         # Compute the Kernel Matrix
-        n_t=np.shape(D)[1]
+        n_t = np.shape(D)[1]
         # Center the Kernel Matrix (if cent is True):
-        if cent :
-         H=np.eye(n_t)-1/n_t*np.ones_like(K_zeta)   
-         K_zeta=H@K_zeta@H.T  
-         print('K_zeta centered')
+        if cent:
+            H = np.eye(n_t) - 1 / n_t * np.ones_like(K_zeta)
+            K_zeta = H @ K_zeta @ H.T
+            print('K_zeta centered')
         # Diagonalize and Sort
         lambdas, Psi_xi = linalg.eigh(K_zeta + alpha * np.eye(n_t), subset_by_index=[n_t - n_Modes, n_t - 1])
         lambdas, Psi_xi = lambdas[::-1], Psi_xi[:, ::-1];
         Sigma_xi = np.sqrt(lambdas);
         print('K_zeta diagonalized')
         # Encode
-        # Z_xi=np.diag(Sigma_xi)@Psi_xi.T 
+        # Z_xi=np.diag(Sigma_xi)@Psi_xi.T
         # We compute the spatial structures as projections of the data
         # onto the Psi_xi!
         R = Psi_xi.shape[1]
@@ -846,6 +824,6 @@ class ModuloVKI:
         print('Phi_xi computed')
 
         if K_out:
-         return Phi_xi, Psi_xi, Sigma_xi, K_zeta
-        else: 
-         return Phi_xi, Psi_xi, Sigma_xi
+            return Phi_xi, Psi_xi, Sigma_xi, K_zeta
+        else:
+            return Phi_xi, Psi_xi, Sigma_xi
