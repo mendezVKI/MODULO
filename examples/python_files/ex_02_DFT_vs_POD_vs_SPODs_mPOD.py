@@ -20,12 +20,12 @@ We refer you to those work for details on the experimental set up and the flow c
 import numpy as np # we use this to manipulate data 
 import matplotlib.pyplot as plt # this is for plotting
 import os  # this is to create/rename/delete folders
-from modulo.modulo import MODULO # this is to create modulo objects
+from modulo_vki.modulo import MODULO # this is to create modulo objects
 
 # these are some utility functions 
-from modulo.utils.others import Plot_Field_TEXT_JET, Plot_Field_JET # plotting
-from modulo.utils.others import Animation_JET # for animations 
-from modulo.utils.read_db import ReadData # to read the data
+from modulo_vki.utils.others import Plot_Field_TEXT_JET, Plot_Field_JET # plotting
+from modulo_vki.utils.others import Animation_JET # for animations 
+from modulo_vki.utils.read_db import ReadData # to read the data
 
 
 # This is for plot customization

@@ -10,12 +10,12 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import os; import shutil # to move things around 
 
-from modulo.modulo import MODULO
+from modulo_vki.modulo import MODULO
 
-from modulo.utils.others import Animation_2D_CFD_Cyl
-from modulo.utils.others import Plot_2D_CFD_Cyl
+from modulo_vki.utils.others import Animation_2D_CFD_Cyl
+from modulo_vki.utils.others import Plot_2D_CFD_Cyl
 
-from modulo.utils.read_db import ReadData # we will use it only to remove the mean
+from modulo_vki.utils.read_db import ReadData # we will use it only to remove the mean
 
 plt.ioff() # To avoid plotting too much on the window.
 

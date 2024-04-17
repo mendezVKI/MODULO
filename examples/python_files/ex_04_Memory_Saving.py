@@ -22,10 +22,10 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import os  # To create folders an delete them
 
-from modulo.utils.read_db import ReadData # to read the data
+from modulo_vki.utils.read_db import ReadData # to read the data
 
-from modulo.modulo import MODULO
-from modulo.utils.others import plot_grid_cylinder_flow,Plot_Field_TEXT_Cylinder
+from modulo_vki.modulo import MODULO
+from modulo_vki.utils.others import plot_grid_cylinder_flow,Plot_Field_TEXT_Cylinder
 
 
 ### Plot Customization (Optional )

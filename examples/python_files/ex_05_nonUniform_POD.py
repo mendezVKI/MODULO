@@ -15,7 +15,7 @@ import os
 import urllib.request
 from zipfile import ZipFile
 
-from modulo.utils.read_db import ReadData # to read the data
+from modulo_vki.utils.read_db import ReadData # to read the data
 
 ''' 
 
@@ -173,7 +173,7 @@ pl.show()
 #%% # Compute the POD of the jet
 #!with or without memory saving ! 
 
-from modulo.modulo import MODULO
+from modulo_vki.modulo import MODULO
 
 if N_PARTITIONS==1:
     m = MODULO(data=D, n_Modes=5, dtype='float32' ,weights =weights_for_D)
