@@ -1,29 +1,29 @@
-=====================
-MODULO: Introduction
-=====================
-
-MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute toperform data-driven modal decompositions.
-Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it has recently been extended to perform also other decompositions.
-
 .. image:: modulo_logo.png
   :target: https://imgur.com/ylm0cyv
   :width: 700
   :align: center
   :alt: Alternative text
 
+=====================
+MODULO: Introduction
+=====================
+
+MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute for Fluid Dynamics to perform data-driven modal decompositions.
+Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it has recently been extended to perform also other decompositions that include POD, SPODs, DFT, DMD, mPOD. 
+
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
 What are data-driven decompositions? Some literature
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-These seeks to partition a dataset as a linear combination of elementary contributions called modes.
+Data-driven decompositions seek to partition a dataset as a linear combination of elementary contributions called modes.
 For a brief overview of the context, we refer to: 
 
 - Ninni, D., Mendez, M. A. (2020), "MODULO: A Software for Multiscale Proper Orthogonal Decomposition of data", Software X, Vol 12, 100622, https://doi.org/10.1016/j.softx.2020.100622.
 
 - Poletti, R., Schena, L., Ninni, D., Mendez, M.A (2024) "MODULO: a python toolbox for data-driven modal decomposition", Submitted to Journal of Open Source Software. Preprint available at https://www.researchgate.net/publication/376885484_MODULO_a_python_toolbox_for_data-driven_modal_decomposition
 
-The first article also presents the first version of MODULO (available in the OLD_Matlab_Implementation branch) and its GUI developed by D. Ninni. The second introduces MODULO v2 in this branch and alternative open source projects.
-While many projects allows for computing common decompositions such as POD, DMD and the SPODs, MODULO is currently the only opensource project allowing to compute the mPOD.
+The first article also presents the first version of MODULO and its GUI developed by D. Ninni (available in the Old_Matlab_Implementation branch). The second article introduces MODULO v2 from this branch and alternative open source projects.
+While many projects allows for computing common decompositions such as POD, DMD and the SPODs, MODULO is currently the only opensource code allowing to compute the mPOD.
 
 For a more comprehensive overview on the theory of data-driven decompositions, we refer to the chapter:
 
@@ -61,7 +61,7 @@ A minicourse on data-driven decompositions and the usage of MODULO was provided 
 https://www.youtube.com/watch?v=ED3x00H4yN4&list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR&index=1
 
 Although much of the material covered in these videos is still relevant, a new version of this minicourse is being prepared.
-This is a compressed version of the course "Data-Driven Modal Analysis" that I give at the Research Master Program at the von Karman Institute (https://www.vki.ac.be/index.php/research-master-in-fluid-dynamics)
+This is a compressed version of the course "Data-Driven Modal Analysis" that I give as part of the Research Master Program at the von Karman Institute (https://www.vki.ac.be/index.php/research-master-in-fluid-dynamics)
 
 This first MODULO version implemented POD, DFT and mPOD and was already equipped with the first version of the memory-saving feature.
 The GUI was also available as an executable that the user could install without needing a Matlab license.
@@ -73,5 +73,5 @@ A tutorial on how to use that version is given here:
 
 https://www.youtube.com/watch?v=y2uSvdxAwHk&list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR&index=9
 
-The current architecture of MODULO v2 is built from that version but has been considerably expanded. This first Python version is still accessible from the branch "Old_Python_Implementation" together with the first (unpacked) versions of the codes. These are still used in some courses for didactic purposes.
+The current architecture of MODULO v2 is built from that version but has been considerably expanded. This first Python version is still accessible from the branch "Old_Python_Implementation" together with the first (unpackaged) versions of the codes. These are still used in some courses for didactic purposes.
 

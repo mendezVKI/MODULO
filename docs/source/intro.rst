@@ -73,5 +73,5 @@ A tutorial on how to use that version is given here:
 
 https://www.youtube.com/watch?v=y2uSvdxAwHk&list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR&index=9
 
-The current architecture of MODULO v2 is built from that version but has been considerably expanded. This first Python version is still accessible from the branch "Old_Python_Implementation" together with the first (unpacked) versions of the codes. These are still used in some courses for didactic purposes.
+The current architecture of MODULO v2 is built from that version but has been considerably expanded. This first Python version is still accessible from the branch "Old_Python_Implementation" together with the first (unpackaged) versions of the codes. These are still used in some courses for didactic purposes.
 

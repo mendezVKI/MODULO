@@ -13,11 +13,11 @@ For example, the method compute_POD_K acts in three steps: 1. compute K, 2. diag
 
 These are handled by three methods, with use the functions in modulo.core: 
 
-.. autofunction:: modulo.core._k_matrix.CorrelationMatrix  
+.. autofunction:: modulo_vki.core._k_matrix.CorrelationMatrix  
 
-.. autofunction:: modulo.core._pod_time.Temporal_basis_POD
+.. autofunction:: modulo_vki.core._pod_time.Temporal_basis_POD
 
-.. autofunction:: modulo.core._pod_space.Spatial_basis_POD
+.. autofunction:: modulo_vki.core._pod_space.Spatial_basis_POD
 
 
 ++++++++++++++++++++++
@@ -26,21 +26,21 @@ Functions for the mPOD
 
  Similarly, the equivalent version of these functions for the mPOD are:
 
-.. autofunction:: modulo.core._mpod_time.temporal_basis_mPOD
+.. autofunction:: modulo_vki.core._mpod_time.temporal_basis_mPOD
 
-.. autofunction:: modulo.core._mpod_space.spatial_basis_mPOD
+.. autofunction:: modulo_vki.core._mpod_space.spatial_basis_mPOD
 
 ++++++++++++++++++++++
 Functions for the DFT
 ++++++++++++++++++++++
 
-.. autofunction:: modulo.core._dft.dft_fit
+.. autofunction:: modulo_vki.core._dft.dft_fit
 
 +++++++++++++++++++++++++++
 Functions for the DMD (PIP)
 +++++++++++++++++++++++++++
 
-.. autofunction:: modulo.core._dmd_s.dmd_s
+.. autofunction:: modulo_vki.core._dmd_s.dmd_s
 
 
 For the SPODs, currently these are implemented in a single function.
@@ -51,14 +51,14 @@ MODULO acts as a wrapper to these. The memory saving feature on these is not yet
 Functions for the SPOD_S 
 +++++++++++++++++++++++++++
 
-.. autofunction:: modulo.core._spod_s.compute_SPOD_s
+.. autofunction:: modulo_vki.core._spod_s.compute_SPOD_s
 
 
 +++++++++++++++++++++++++++
 Functions for the SPOD_T
 +++++++++++++++++++++++++++
 
-.. autofunction:: modulo.core._spod_t.compute_SPOD_t
+.. autofunction:: modulo_vki.core._spod_t.compute_SPOD_t
 
 
 

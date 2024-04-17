@@ -14,7 +14,7 @@
   <![endif]-->
   
         <script src="_static/documentation_options.js?v=f5cff4aa"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -83,10 +83,36 @@
              
   <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
-<p>You can access the latest update of the modulo python package on PyPI. At the command line:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install modulo-vki
-</pre></div>
-</div>
+<p>You can access the latest update of the modulo python package on PyPI using the command line:</p>
+<blockquote>
+<div><p>$ pip install modulo_vki</p>
+</div></blockquote>
+<p>Alternatively, you can clone the repository and install the package locally:</p>
+<blockquote>
+<div><p>$ git clone <a class="reference external" href="https://github.com/mendezVKI/MODULO.git">https://github.com/mendezVKI/MODULO.git</a>
+$ cd MODULO
+$ python setup.py install</p>
+</div></blockquote>
+<p>The package requires the following dependencies:</p>
+<ul class="simple">
+<li><p>“tqdm”,</p></li>
+<li><p>“numpy”,</p></li>
+<li><p>“scipy”,</p></li>
+<li><p>“scikit-learn”,</p></li>
+<li><p>“ipykernel”,</p></li>
+<li><p>“ipython”,</p></li>
+<li><p>“ipython-genutils”,</p></li>
+<li><p>“ipywidgets”,</p></li>
+<li><p>“matplotlib”.</p></li>
+</ul>
+<p>To run the Jupyter notebooks, you will also need to install the Jupyter notebook package:</p>
+<blockquote>
+<div><p>$ pip install jupyter</p>
+</div></blockquote>
+<p>and the additional packages:
+- “pyvista”,
+- “imageio”,</p>
+<p>that are specified in the <cite>setup.py</cite> file as optional dependencies.</p>
 </section>
 
 

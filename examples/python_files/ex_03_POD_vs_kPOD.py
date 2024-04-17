@@ -10,10 +10,9 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import os; import shutil # to move things around 
 
-from modulo_vki.modulo import MODULO
+from modulo_vki import ModuloVKI
 
-from modulo_vki.utils.others import Animation_2D_CFD_Cyl
-from modulo_vki.utils.others import Plot_2D_CFD_Cyl
+from modulo_vki.utils.others import Animation_2D_CFD_Cyl, Plot_2D_CFD_Cyl
 
 from modulo_vki.utils.read_db import ReadData # we will use it only to remove the mean
 
@@ -132,7 +131,7 @@ D,D_MEAN=ReadData._data_processing(D,MR=True)
 D_MEAN_mat=np.array([D_MEAN, ] * n_t).transpose()    
 
 # --- Initialize MODULO object
-m = MODULO(data=D,svd_solver='svd_scipy_sparse')
+m = ModuloVKI(data=D,svd_solver='svd_scipy_sparse')
 
 Phi_POD, Psi_POD, Sigma_POD = m.compute_POD_svd()
 # We here plot the POD modes and their structures

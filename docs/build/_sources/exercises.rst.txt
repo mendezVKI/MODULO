@@ -3,7 +3,7 @@ New Tutorial Exercises
 ================================
 
 
-The installation provides five exercises to explore MODULO's features while familiarizing with data-driven decompositions. These are available in the /exercise/ folder in plain Python format and jupyter notebooks. 
+The installation provides five exercises to explore MODULO's features while familiarizing with data-driven decompositions. These are available in the examples folder in plain Python format and jupyter notebooks. 
 Some of these are adapted from the previous exercises  `in our YouTube channel <https://www.youtube.com/channel/UC-RoU7LisZSLy6o-EO4BUDA/featured>`_, while others are new.
 
 Tutorials
@@ -17,7 +17,7 @@ Tutorials
 
 - **Exercise 4**. We consider the flow past a cylinder again, but this time in transient conditions and on an experimental test case taken from https://arxiv.org/abs/2001.01971. In this exercise, you can reproduce the same results from the article to see how the mPOD allows to achieve both time and frequency localization without compromising much of the convergence of the POD. The dataset is quite large, so you might have difficulties handling it if you have less than 32 GB of RAM. But fear not: the memory saving feature allows to compute POD and mPOD without loading the data into memory!
 
-- **Exercise 5**. We consider the flow of an impinging gas jet again, but this time on a numerical test case. This dataset was produced by Yannic Lowenstein during his STP at VKI at the end of 2023, with the help of Dr. Maria Faruoli. The Reynolds number is two orders of magnitude higher than in exercise 2, yet the flow features you will observe are pretty similar, at least qualitatively. From a learning perspective, the key feature of this test case is that the data is not available on a uniform grid. But fear not: with the new features, it is possible to compute the decompositions using appropriate weights!
+- **Exercise 5**. We consider the flow of an impinging gas jet again, but this time on a numerical test case. This dataset was produced by Yannic Lowenstein during his STP at VKI at the end of 2023, with the help of Dr. Maria Faruoli. The Reynolds number is two orders of magnitude higher than in exercise 2, yet the flow features you will observe are pretty similar, at least qualitatively. From a learning perspective, the key feature of this test case is that the data are not available on a uniform grid. But fear not: with the new features, it is possible to compute the decompositions using appropriate weights!
  
 
 

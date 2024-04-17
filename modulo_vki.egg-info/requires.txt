@@ -7,5 +7,3 @@ ipython
 ipython-genutils
 ipywidgets
 matplotlib
-pyvista
-imageio
