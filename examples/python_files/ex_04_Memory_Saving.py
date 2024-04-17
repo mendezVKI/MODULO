@@ -22,10 +22,10 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import os  # To create folders an delete them
 
-from modulo.utils.read_db import ReadData # to read the data
+from modulo_vki.utils.read_db import ReadData # to read the data
 
-from modulo.modulo import MODULO
-from modulo.utils.others import plot_grid_cylinder_flow,Plot_Field_TEXT_Cylinder
+from modulo_vki import ModuloVKI
+from modulo_vki.utils.others import plot_grid_cylinder_flow,Plot_Field_TEXT_Cylinder
 
 
 ### Plot Customization (Optional )
@@ -93,7 +93,7 @@ D = ReadData._data_processing(D=None,FOLDER_IN=FOLDER+os.sep+'data',
                               FOLDER_OUT=FOLDER+os.sep+'MODULO_tmp')
 
 # --- Initialize MODULO object
-m = MODULO(data=None,N_T=N_T,
+m = ModuloVKI(data=None,N_T=N_T,
            FOLDER_OUT=FOLDER+os.sep,
            N_S=2*nxny,
            n_Modes=100,
@@ -168,7 +168,7 @@ Nf=np.array([1201,801,801,801,801]);
 Keep=np.array([1,0,1,1,0])
 Ex=1203; boundaries = 'nearest'; MODE = 'reduced'
 # Compute the mPOD 
-m = MODULO(None,
+m = ModuloVKI(None,
            N_T=13200,
            N_S=2*nxny,
            N_PARTITIONS=10,

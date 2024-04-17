@@ -20,12 +20,12 @@ We refer you to those work for details on the experimental set up and the flow c
 import numpy as np # we use this to manipulate data 
 import matplotlib.pyplot as plt # this is for plotting
 import os  # this is to create/rename/delete folders
-from modulo.modulo import MODULO # this is to create modulo objects
+from modulo_vki import ModuloVKI # this is to create modulo objects
 
 # these are some utility functions 
-from modulo.utils.others import Plot_Field_TEXT_JET, Plot_Field_JET # plotting
-from modulo.utils.others import Animation_JET # for animations 
-from modulo.utils.read_db import ReadData # to read the data
+from modulo_vki.utils.others import Plot_Field_TEXT_JET, Plot_Field_JET # plotting
+from modulo_vki.utils.others import Animation_JET # for animations 
+from modulo_vki.utils.read_db import ReadData # to read the data
 
 
 # This is for plot customization
@@ -152,7 +152,7 @@ D,D_MEAN=ReadData._data_processing(D,MR=True)
 D_MEAN_mat=np.array([D_MEAN, ] * n_t).transpose()    
 
 # --- Initialize MODULO object
-m = MODULO(data=D)
+m = ModuloVKI(data=D)
 # Compute the DFT
 Sorted_Freqs, Phi_F, Sorted_Sigmas = m.compute_DFT(Fs)
 
@@ -271,7 +271,7 @@ Mex=Animation_JET(Name_GIF,D_F+D_MEAN_mat,X_S,Y_S,500,600,1)
 # The POD provides the best decomposition convergence.
 # Here is how to perform it:
 # --- Initialize MODULO object
-m2 = MODULO(data=m.D,n_Modes=50)
+m2 = ModuloVKI(data=m.D,n_Modes=50)
 # --- Check for D
 Phi_P, Psi_P, Sigma_P = m2.compute_POD_svd() # POD via svd
 
@@ -462,7 +462,7 @@ if not os.path.exists(FOLDER_SPOD_RESULTS):
 
 
 # Initialize a 'MODULO Object'
-m = MODULO(data=m.D)
+m = ModuloVKI(data=m.D)
 # Prepare (partition) the dataset
 # Compute the POD
 Phi_S, Psi_S, Sigma_S = m.compute_SPOD_s(Fs,N_O=100,
