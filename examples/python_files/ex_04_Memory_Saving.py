@@ -94,7 +94,7 @@ D = ReadData._data_processing(D=None,FOLDER_IN=FOLDER+os.sep+'data',
 
 # --- Initialize MODULO object
 m = ModuloVKI(data=None,N_T=N_T,
-           FOLDER_OUT=FOLDER+os.sep,
+           FOLDER_OUT=FOLDER+os.sep+'MODULO_tmp',
            N_S=2*nxny,
            n_Modes=100,
            N_PARTITIONS=10,eig_solver='svd_sklearn_randomized')

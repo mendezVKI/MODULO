@@ -120,7 +120,7 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING, N_T, FOLDER_OUT='./', N_
                 np.copyto(dr[:, C1:C2], di[R1:R2, :])
 
             PHI_SIGMA_BLOCK = np.dot(dr, PSI_P)
-            np.savez(FOLDER_OUT + f"/POD/PHI_SIGMA_{i}",
+            np.savez(FOLDER_OUT + f"/PHI_SIGMA_{i}",
                      phi_sigma=PHI_SIGMA_BLOCK)
 
         # 3 - Converting partitions R to partitions C and get Sigmas
@@ -144,7 +144,7 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING, N_T, FOLDER_OUT='./', N_
 
             for b in range(1, tot_blocks_row + 1):
 
-                PHI_SIGMA_BLOCK = np.load(FOLDER_OUT + f"/POD/PHI_SIGMA_{b}.npz")['phi_sigma']
+                PHI_SIGMA_BLOCK = np.load(FOLDER_OUT + f"/PHI_SIGMA_{b}.npz")['phi_sigma']
 
                 if (i == tot_blocks_col) and (R - dim_col * N_PARTITIONS > 0) and fixed == 0:
                     R1 = R2
@@ -169,16 +169,16 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING, N_T, FOLDER_OUT='./', N_
                     jj = j - R1
                     Sigma_P[jj] = np.linalg.norm(dps[:, jj])
                     Phi_P = dps[:, jj] / Sigma_P[jj]
-                    np.savez(FOLDER_OUT + f"/POD/phi_{j + 1}", phi_p=Phi_P)
+                    np.savez(FOLDER_OUT + f"/phi_{j + 1}", phi_p=Phi_P)
             else:
                 for j in range(R1, R2):
                     jj = j - R1
                     Phi_P = dps[:, jj] / Sigma_P[jj]
-                    np.savez(FOLDER_OUT + f"/POD/phi_{j + 1}", phi_p=Phi_P)
+                    np.savez(FOLDER_OUT + f"/phi_{j + 1}", phi_p=Phi_P)
 
         Phi_P_M = np.zeros((N_S, R))
         for j in range(R):
-            Phi_P_V = np.load(FOLDER_OUT + f"/POD/phi_{j + 1}.npz")['phi_p']
+            Phi_P_V = np.load(FOLDER_OUT + f"/phi_{j + 1}.npz")['phi_p']
             Phi_P_M[:, j] = Phi_P_V
 
         return Phi_P_M

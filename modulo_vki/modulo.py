@@ -429,7 +429,7 @@ class ModuloVKI:
                 POD Phis
         """
 
-        print('Computing correlation matrix D matrix...')
+        print('Computing correlation matrix...')
         self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS,
                                    self.MEMORY_SAVING,
                                    self.FOLDER_OUT, self.SAVE_K, D=self.Dstar, weights=self.weights)
@@ -443,24 +443,23 @@ class ModuloVKI:
         print("Done.")
         print("Computing Spatial Basis...")
 
-        if hasattr(self, 'D'):  # if self.D is available:
-            print('Computing Phi from D...')
-            Phi_P = Spatial_basis_POD(self.D, N_T=self.N_T,
-                                      PSI_P=Psi_P,
-                                      Sigma_P=Sigma_P,
-                                      MEMORY_SAVING=self.MEMORY_SAVING,
-                                      FOLDER_OUT=self.FOLDER_OUT,
-                                      N_PARTITIONS=self.N_PARTITIONS)
-
-        else:  # if not, the memory saving is on and D will not be used. We pass a dummy D
+        if self.MEMORY_SAVING:  # if self.D is available:
             print('Computing Phi from partitions...')
             Phi_P = Spatial_basis_POD(np.array([1]), N_T=self.N_T,
-                                      PSI_P=Psi_P,
-                                      Sigma_P=Sigma_P,
-                                      MEMORY_SAVING=self.MEMORY_SAVING,
-                                      FOLDER_OUT=self.FOLDER_OUT,
-                                      N_PARTITIONS=self.N_PARTITIONS)
+                             PSI_P=Psi_P,
+                             Sigma_P=Sigma_P,
+                             MEMORY_SAVING=self.MEMORY_SAVING,
+                             FOLDER_OUT=self.FOLDER_OUT,
+                             N_PARTITIONS=self.N_PARTITIONS)
 
+        else:  # if not, the memory saving is on and D will not be used. We pass a dummy D
+           print('Computing Phi from D...')
+           Phi_P = Spatial_basis_POD(self.D, N_T=self.N_T,
+                                    PSI_P=Psi_P,
+                                    Sigma_P=Sigma_P,
+                                    MEMORY_SAVING=self.MEMORY_SAVING,
+                                    FOLDER_OUT=self.FOLDER_OUT,
+                                    N_PARTITIONS=self.N_PARTITIONS)
         print("Done.")
 
         return Phi_P, Psi_P, Sigma_P
