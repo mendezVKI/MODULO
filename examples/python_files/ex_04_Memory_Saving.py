@@ -170,6 +170,7 @@ Ex=1203; boundaries = 'nearest'; MODE = 'reduced'
 # Compute the mPOD 
 m = ModuloVKI(None,
            N_T=13200,
+           FOLDER_OUT=FOLDER+os.sep+'MODULO_tmp',
            N_S=2*nxny,
            N_PARTITIONS=10,
            n_Modes = 500,           
