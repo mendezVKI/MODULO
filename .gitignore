@@ -13,4 +13,4 @@ modulo/utils/__pycache__
 *.npz
 *.npy
 
-*.DS_Store
+.DS_Store
