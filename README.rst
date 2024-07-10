@@ -24,7 +24,7 @@ Modal decompositions aim to describe the data as a linear combination of *modes*
 onto a suitable set of basis. For instance, consider a matrix $D(x, t)$, where $x$ and $t$ are the spatial and temporal
 coordinates, respectively, the modal decomposition can be written as:
 
-$D(x_i, t_k) = \\phi(x_i) \; \\Sigma \; \\psi(t_k)^T$
+$D(x_i, t_k) = \\phi(x_i) \\Sigma \\psi(t_k)^T$
 
 where $\\phi(x_i)$ is the spatial basis, $\\psi(t_k)$ is the temporal basis, and $\\Sigma$ is the modal coefficients. 
 Different decompositions employ different basis, such as prescribed Fourier basis ($\\psi_\\mathcal{F}$) for 
