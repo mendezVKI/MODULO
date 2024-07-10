@@ -167,6 +167,7 @@ fabric.properties
 *.npz
 *.png
 *.gif
+*.DS_Store
 
 # removing undesired folders
 __pycache__/
