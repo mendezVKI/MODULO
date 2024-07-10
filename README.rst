@@ -1,7 +1,7 @@
 
 
-MODULO: MODal mULtiscale pOd
------------------------------
+MODULO: a python toolbox for data-driven modal decomposition
+-----------------------------------------------------------
 
 .. image:: https://readthedocs.org/projects/modulo/badge/?version=latest
     :target: https://modulo.readthedocs.io/en/latest/?badge=latest
@@ -23,7 +23,7 @@ While the discontinued MATLAB version of MODULO (ninni2020modulo) is accessible 
 it is no longer maintained. The latest decomposition techniques are exclusively available in the current Python version.
 
 As a part of the MODULO project, we provide a series of lectures on data-driven modal decomposition, and its applications.
-These are available at the MODULO YouTube channel (https://www.youtube.com/@modulompod5682).
+These are available at the `MODULO YouTube channel <https://www.youtube.com/@modulompod5682>`_.
 
 
 .. contents:: Table of contents
