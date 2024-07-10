@@ -129,8 +129,9 @@ ax.set_xlabel('$r$',fontsize=16)
 ax.set_ylabel('$\sigma_{\mathcal{P}}$',fontsize=16)
 plt.tight_layout()
 Name=FOLDER_POD_RESULTS+os.sep+'Sigma_P.png'
-plt.show()
-plt.savefig(Name, dpi=300) 
+
+plt.savefig(Name, dpi=300)
+# plt.show() 
 
 
 # Here is the approximation with the leading 3 POD modes
@@ -174,8 +175,8 @@ ax.set_xlabel('$\mathcal{R}\{\lambda_{\mathcal{D}r}\}$',fontsize=16)
 ax.set_ylabel('$\mathcal{R}\{\lambda_{\mathcal{D}r}\}$',fontsize=16)
 plt.tight_layout()
 Name=FOLDER_DMD_RESULTS+os.sep+'lambdas_D.png'
-plt.show()
 plt.savefig(Name, dpi=300) 
+# plt.show()
 
 #%% Plot DMD Spectra vs frequency
 fig, ax = plt.subplots(figsize=(6, 4)) # This creates the figure
@@ -184,8 +185,8 @@ ax.set_xlabel('$f_n [Hz]$',fontsize=16)
 ax.set_ylabel('$||\lambda_{\mathcal{D}r}||$',fontsize=16)
 plt.tight_layout()
 Name=FOLDER_DMD_RESULTS+os.sep+'lambdas_D_Freqs.png'
-plt.show()
 plt.savefig(Name, dpi=300) 
+# plt.show()
 
 # We plot the spatial structures of these mode:
 U_D=np.real(Phi_D[0:nxny,:])

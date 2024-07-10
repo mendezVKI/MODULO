@@ -1,5 +1,5 @@
 LICENSE
-README.md
+README.rst
 setup.py
 modulo_vki/__init__.py
 modulo_vki/modulo.py

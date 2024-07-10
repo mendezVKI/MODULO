@@ -23,8 +23,8 @@ def Plot_Field_TEXT_JET(File):
     nxny = Dat.shape[0]  # is the to be doubled at the end we will have n_s=2 * n_x * n_y
     n_s = 2 * nxny
     ## 1. Reconstruct Mesh from file
-    X_S = Dat[:, 0];
-    Y_S = Dat[:, 1];
+    X_S = Dat[:, 0]
+    Y_S = Dat[:, 1]
     # Reshape also the velocity components
     V_X = Dat[:, 2]  # U component
     V_Y = Dat[:, 3]  # V component
@@ -194,7 +194,7 @@ def Animation_JET(Giff_NAME,D,X_S,Y_S,In,Fin,Step):
 
 
 
-def Plot_2D_CFD_Cyl(Xg,Yg,U,V,k=10,CL=16,Name=''):
+def Plot_2D_CFD_Cyl(Xg,Yg,U,V,k=10,CL=16,Name='', verbose=False):
     # Make a 2D plot of the 2D cylinder test case in Openfoam.
     n_x,n_y=np.shape(Xg)
     U_g=U[:,k].reshape(n_y,n_x).T
@@ -222,7 +222,9 @@ def Plot_2D_CFD_Cyl(Xg,Yg,U,V,k=10,CL=16,Name=''):
     if len(Name) !=0:
         plt.savefig(Name, dpi=200)
         plt.close(fig)
-        print('Image exported')
+        
+        if verbose:
+            print('Image exported')
     
     return 
 
@@ -416,34 +418,35 @@ def Plot_Scalar_Field_Cylinder(X_S,Y_S,V_X,V_Y,Scalar,PLOT,Step,Scale):
 
 
 def plot_grid_cylinder_flow(Xg,Yg,Vxg,Vyg):
- STEPx=1;  STEPy=1
- # This creates the figure
- fig, ax = plt.subplots(figsize=(6, 3)) 
- Magn=np.sqrt(Vxg**2+Vyg**2)
- # Plot Contour
- #CL=plt.contourf(Xg,Yg,Magn,levels=np.linspace(0,np.max(Magn),5))
- CL=plt.contourf(Xg,Yg,Magn,20,cmap='viridis',alpha=0.95)
- # One possibility is to use quiver
- STEPx=1;  STEPy=1
- plt.quiver(Xg[::STEPx,::STEPy],Yg[::STEPx,::STEPy],\
+    STEPx=1;  STEPy=1
+    # This creates the figure
+    fig, ax = plt.subplots(figsize=(6, 3)) 
+    Magn=np.sqrt(Vxg**2+Vyg**2)
+    # Plot Contour
+    #CL=plt.contourf(Xg,Yg,Magn,levels=np.linspace(0,np.max(Magn),5))
+    CL=plt.contourf(Xg,Yg,Magn,20,cmap='viridis',alpha=0.95)
+    # One possibility is to use quiver
+    STEPx=1;  STEPy=1
+    plt.quiver(Xg[::STEPx,::STEPy],Yg[::STEPx,::STEPy],\
             Vxg[::STEPx,::STEPy],Vyg[::STEPx,::STEPy],color='k')
- plt.rc('text', usetex=True)      
- plt.rc('font', family='serif')
- plt.rc('xtick',labelsize=12)
- plt.rc('ytick',labelsize=12)
- #fig.colorbar(CL,pad=0.05,fraction=0.025)
- ax.set_aspect('equal') # Set equal aspect ratio
- ax.set_xlabel('$x[mm]$',fontsize=13)
- ax.set_ylabel('$y[mm]$',fontsize=13)
- #ax.set_title('Tutorial 2: Cylinder Wake',fontsize=12)
- ax.set_xticks(np.arange(0,70,10))
- ax.set_yticks(np.arange(-10,11,10))
- ax.set_xlim([0,50])
- ax.set_ylim(-10,10)
- circle = plt.Circle((0,0),2.5,fill=True,color='r',edgecolor='k',alpha=0.5)
- plt.gcf().gca().add_artist(circle)
- plt.tight_layout()
- plt.show()
+    plt.rc('text', usetex=True)      
+    plt.rc('font', family='serif')
+    plt.rc('xtick',labelsize=12)
+    plt.rc('ytick',labelsize=12)
+    #fig.colorbar(CL,pad=0.05,fraction=0.025)
+    ax.set_aspect('equal') # Set equal aspect ratio
+    ax.set_xlabel('$x[mm]$',fontsize=13)
+    ax.set_ylabel('$y[mm]$',fontsize=13)
+    #ax.set_title('Tutorial 2: Cylinder Wake',fontsize=12)
+    ax.set_xticks(np.arange(0,70,10))
+    ax.set_yticks(np.arange(-10,11,10))
+    ax.set_xlim([0,50])
+    ax.set_ylim(-10,10)
+    circle = plt.Circle((0,0),2.5,fill=True,color='r',edgecolor='k',alpha=0.5)
+    plt.gcf().gca().add_artist(circle)
+    plt.tight_layout()
+    
+    return fig, ax
 
 
 

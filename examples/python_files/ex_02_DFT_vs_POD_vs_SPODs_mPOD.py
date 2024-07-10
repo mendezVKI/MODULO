@@ -108,7 +108,7 @@ ax.invert_yaxis() # Invert Axis for plotting purpose
 plt.tight_layout()
 Name=FOLDER+os.sep+'Snapshot_JET_'+str(SNAP)+'.png'
 plt.savefig(Name, dpi=200) 
-plt.show()
+# plt.show()
 
 
 #%% Step 1: Prepare the snapshot matrix

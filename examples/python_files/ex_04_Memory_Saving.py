@@ -126,7 +126,7 @@ for r in range(5):
  plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
  Name=FOLDER_POD_RESULTS+os.sep+'POD_Phi_'+str(r)+'R.png'
  plt.savefig(Name, dpi=200) 
- plt.show()
+#  plt.show()
 
  #%% Plot the temporal evolution of the structure 
  fig, ax = plt.subplots(figsize=(6, 3)) # This creates the figure
@@ -140,7 +140,7 @@ for r in range(5):
  plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
  Name=FOLDER_POD_RESULTS+os.sep+'POD_Psi_'+str(r)+'R.png'
  plt.savefig(Name, dpi=200) 
- plt.show()
+#  plt.show()
 
  #%% Plot the spectral content of the structure 
  fig, ax = plt.subplots(figsize=(6, 3)) # This creates the figure
@@ -156,7 +156,7 @@ for r in range(5):
  plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
  Name=FOLDER_POD_RESULTS+os.sep+'POD_Psi_hat_'+str(r)+'R.png'
  plt.savefig(Name, dpi=200) 
- plt.show()
+#  plt.show()
 
 #%% compute the mPOD
 
@@ -205,7 +205,7 @@ for r in range(5):
  plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
  Name=FOLDER_mPOD_RESULTS+os.sep+'mPOD_Phi_'+str(r)+'R.png'
  plt.savefig(Name, dpi=200) 
- plt.show()
+#  plt.show()
 
  #%% Plot the temporal evolution of the structure 
  fig, ax = plt.subplots(figsize=(6, 3)) # This creates the figure
@@ -219,7 +219,7 @@ for r in range(5):
  plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
  Name=FOLDER_mPOD_RESULTS+os.sep+'mPOD_Psi_'+str(r)+'R.png'
  plt.savefig(Name, dpi=200) 
- plt.show()
+#  plt.show()
 
  #%% Plot the spectral content of the structure 
  fig, ax = plt.subplots(figsize=(6, 3)) # This creates the figure
@@ -235,7 +235,7 @@ for r in range(5):
  plt.tight_layout(pad=0.6, w_pad=0.3, h_pad=0.8)
  Name=FOLDER_mPOD_RESULTS+os.sep+'mPOD_Psi_hat_'+str(r)+'R.png'
  plt.savefig(Name, dpi=200) 
- plt.show()
+#  plt.show()
 
 
 
