@@ -1,23 +1,14 @@
-# Excluding datasets of exercises from commit
-#/examples/Cylinder_DATASET_CFD/
-#/examples/Ex_2_TR_PIV_Jet
-#/examples/Ex_4_TR_PIV_Jet
-#/examples/Ex_4_TR_PIV.zip
-
-# Excluding draft of Spods
-#/new_functions/
-
-# Exclude MODULO tmp
-#/MODULO_tmp/
-
 # Exclude all _py_chache
 modulo/__pycache__/
 modulo/core/__pycache__
 modulo/utils/__pycache__
 
-# Exclude development tests
-#/tests/
-
-# Extra files here and there 
-#dev_tests
-#TO_DO
+# Exclude all undesired files
+*.pyc
+*.pyo
+*.DS_Store
+*.env
+*.pickle 
+*.log
+*.npz
+*.npy
