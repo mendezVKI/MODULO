@@ -1,5 +1,5 @@
 ---
-title: 'MODULO: a python toolbox for data-driven modal decomposition'
+title: 'MODULO: A Python toolbox for data-driven modal decomposition'
 tags:
   - Python
   - fluid dynamics 
@@ -57,14 +57,14 @@ Both the constraint of energy optimality and harmonic modes can lead to poor per
 Finally, recent developments in nonlinear methods such as kernel PCA and their applications to fluid dynamics (see [@mendez_2023]) have motivated the interest in the connection between nonlinear methods and the most general Karhunen–Loeve expansion (KL). This generalizes the POD as the decomposition of data onto the eigenfunction of a kernel function (the POD being a KL for the case of linear kernel). 
 
 
-MODULO provides a unified tool to carry out potentially widely different decompositions, with a common API. This streamlines the comparison and benchmarking of the different methods and allows for a more straightforward application of the most suitable method to a given dataset (problem). In addition, it is the only package that includes the mPOD and the generalized KL with kernel functions interfacing with SciKit-learn. For decomposition-specific packages, we refer the reader to many excellent Python APIs that are available to POD, DMD, and both SPODs (see for example [@py_DMD], [@Mengaldo2021], [@SpyOD], [@rogowski2024unlocking], [@demo2018pydmd]).
+MODULO provides a unified tool to carry out different decompositions with a shared API. This simplifies comparison between different techniques and streamlines their application to a given dataset (problem). In addition, it is the only package that includes the mPOD and the generalized KL with kernel functions interfacing with SciKit-learn. For decomposition-specific packages, we refer the reader to many excellent Python APIs that are available to compute the POD, DMD, and both SPODs, for example [@py_DMD], [@Mengaldo2021], [@SpyOD], [@rogowski2024unlocking], [@demo2018pydmd].
 
 
 # New Features 
-This manuscript accompanies version 2.0 of MODULO. This version features four new decompositions: the two SPODs, the DMD, and the general KL. It also allows for different approaches to computing the POD (interfacing with various SVD/EIG solvers from Scipy and ScikiLearn) as well as a first implementation for nonuniform grids. The memory-saving feature has been improved and the software can now handle 3D decompositions.
+This manuscript accompanies version 2.0 of MODULO. This version features four new decompositions: the two SPODs, the DMD, and the general KL. It also allows for different approaches to computing the POD (interfacing with various SVD/EIG solvers from Scipy and SciKit-learn) as well as a first implementation for nonuniform grids. The memory-saving feature has been improved and the software can now handle 3D decompositions.
 
 # Conclusions
 MODULO is a versatile and user-friendly toolbox for data-driven modal decomposition. It provides a unified interface to a variety of decomposition methods, allowing for a straightforward comparison and benchmarking of the different methods. The package allows for modal decompositions in one line of code. It is also designed to handle large datasets via the so-called "memory saving" option and it can handle nonuniformly sampled data. 
 
 # Acknowledgements
-R. Poletti and L. Schena are supported by Fonds Wetenschappelijk Onderzoek (FWO). 
+R. Poletti and L. Schena are supported by Fonds Wetenschappelijk Onderzoek (FWO), grant numbers 1SD7823N and 1S75825N, respectively.
