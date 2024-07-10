@@ -257,6 +257,7 @@ References
 Related projects
 ----------------
 MODULO encapsulates a wide range of decomposition techniques, but not all of them. We refer to the project below for an additional set of decomposition techniques:
+
 - ModRed, https://github.com/belson17/modred
 
 There are also decomposition-specific projects, some of which are listed below:
