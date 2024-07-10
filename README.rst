@@ -27,7 +27,7 @@ coordinates, respectively, the modal decomposition can be written as:
 .. math::
     D(x_i, t_k) = \phi(x_i) \Sigma \psi(t_k)^T,
 
-where :math:`\phi(x_i)` is the spatial basis, :math:`\psi(t_k)` is the temporal basis, and :math:`\Sigma` is the modal coefficients. 
+where $\phi(x_i)$ is the spatial basis, :math:`\psi(t_k)` is the temporal basis, and :math:`\Sigma` is the modal coefficients. 
 Different decompositions employ different basis, such as prescribed Fourier basis (:math:`\psi_\mathcal{F}`) for 
 the Discrete Fourier Transform (DFT), or data-driven basis, i.e. tailored on the dataset at hand, 
 for the Proper Orthogonal Decomposition (POD). 
