@@ -1,3 +1,4 @@
 # Removing undesired files 
 *.zip 
 *.gif 
+*.mat 
