@@ -3,13 +3,17 @@
 MODULO: MODal mULtiscale pOd
 -----------------------------
 
+.. image:: https://readthedocs.org/projects/modulo/badge/?version=latest
+    :target: https://modulo.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 **MODULO** is a modal decomposition package developed at the von Karman Institute for Fluid Dynamics (VKI). 
 It offers a wide range of decomposition techniques, enabling users to select the most suitable method based 
 on the specific physics of their problem and their desired outcomes. MODULO can natively handle large
 datasets efficiently, featuring a memory-saving option that partitions the data and computes the decomposition in 
-chunks (cite_ninni). Additionally, it supports non-uniform meshes through its weighted inner product formulation.
+chunks (ninni2020modulo). Additionally, it supports non-uniform meshes through its weighted inner product formulation.
 
-While the discontinued MATLAB version of MODULO (cite_ninni) is accessible in the “Old_Matlab_Implementation” branch, 
+While the discontinued MATLAB version of MODULO (ninni2020modulo) is accessible in the “Old_Matlab_Implementation” branch, 
 it is no longer maintained. The latest decomposition techniques are exclusively available in the current Python version.
 
 As a part of the MODULO project, we provide a series of lectures on data-driven modal decomposition, and its applications.
@@ -244,6 +248,7 @@ References
 - Mendez, M. A. (2023) "Generalized and Multiscale Modal Analysis". In : Mendez M.A., Ianiro, A., Noack, B.R., Brunton, S. L. (Eds), 
   "Data-Driven Fluid Mechanics: Combining First Principles and Machine Learning". Cambridge University Press, 2023:153-181. 
   https://doi.org/10.1017/9781108896214.013. The pre-print is available at https://arxiv.org/abs/2208.12630.
+- Ninni, Davide, and Miguel A. Mendez. "MODULO: A software for Multiscale Proper Orthogonal Decomposition of data." SoftwareX 12 (2020): 100622.
 - Mendez, Miguel A. "Linear and nonlinear dimensionality reduction from fluid mechanics to machine learning." Measurement Science and Technology 34.4 (2023): 042001. 
 - Briggs, William L., and Van Emden Henson. The DFT: an owner's manual for the discrete Fourier transform. Society for Industrial and Applied Mathematics, 1995.
 - Berkooz, Gal, Philip Holmes, and John L. Lumley. "The proper orthogonal decomposition in the analysis of turbulent flows." Annual review of fluid mechanics 25.1 (1993): 539-575.
