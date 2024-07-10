@@ -261,8 +261,7 @@ MODULO encapsulates a wide range of decomposition techniques, but not all of the
 
 There are also decomposition-specific projects, some of which are listed below:
 
-- Rogowski, Marcin, Brandon CY Yeung, Oliver T. Schmidt, Romit Maulik, Lisandro Dalcin, Matteo Parsani, and Gianmarco Mengaldo. "Unlocking massively parallel spectral 
-proper orthogonal decompositions in the PySPOD package." Computer Physics Communications 302 (2024): 109246.
+- Rogowski, Marcin, Brandon CY Yeung, Oliver T. Schmidt, Romit Maulik, Lisandro Dalcin, Matteo Parsani, and Gianmarco Mengaldo. "Unlocking massively parallel spectral proper orthogonal decompositions in the PySPOD package." Computer Physics Communications 302 (2024): 109246.
 - Lario, A., Maulik, R., Schmidt, O.T., Rozza, G. and Mengaldo, G., 2022. Neural-network learning of SPOD latent dynamics. Journal of Computational Physics, 468, p.111475.
 - Ichinaga, Andreuzzi, Demo, Tezzele, Lapo, Rozza, Brunton, Kutz. PyDMD: A Python package for robust dynamic mode decomposition. arXiv preprint, 2024.
 - Rogowski, Marcin, et al. "Unlocking massively parallel spectral proper orthogonal decompositions in the PySPOD package." Computer Physics Communications 302 (2024): 109246.
