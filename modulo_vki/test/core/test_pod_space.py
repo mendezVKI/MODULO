@@ -72,6 +72,8 @@ class TestPhi(unittest.TestCase):
     def tearDown(self):
         if os.path.isdir("Tutorial_1_2D_Cylinder_CFD_POD_DMD"):
             shutil.rmtree("Tutorial_1_2D_Cylinder_CFD_POD_DMD")
+        if os.path.isdir("MODULO_tmp"):
+            shutil.rmtree("MODULO_tmp")
 
 
     def test_phi_pod(self):
