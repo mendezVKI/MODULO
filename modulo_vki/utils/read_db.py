@@ -114,7 +114,7 @@ class ReadData:
                 '''Saving data matrix in FOLDER_OUT'''
                 os.makedirs(FOLDER_OUT + "/data_matrix", exist_ok=True)
                 print(f"Saving the matrix D in {FOLDER_OUT}")
-                np.savez(FOLDER_OUT + '/data_matrix/database', D=database, n_t=N_T, n_s=N_S)
+                np.savez(FOLDER_OUT + '/data_matrix/database', D=D.astype('float32', casting='same_kind'), n_t=N_T, n_s=N_S)
         else:  # try to read the data
             print("Data matrix was not provided, reading it from {}".format(FOLDER_IN))
             # First check if the data were saved in the supported format

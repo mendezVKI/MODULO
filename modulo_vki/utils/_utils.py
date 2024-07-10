@@ -334,6 +334,8 @@ def switch_eigs(A, n_modes, eig_solver):
         idx = np.flip(np.argsort(Lambda_P))
         Lambda_P = Lambda_P[idx]
         Psi_P = Psi_P[:, idx]
+    else:
+        raise ValueError('eig_solver must be svd_sklearn_randomized, eigh or eigsh')
 
     Sigma_P = np.sqrt(Lambda_P)
 
