@@ -27,7 +27,7 @@ coordinates, respectively, the modal decomposition can be written as:
 .. math::
     D(x_i, t_k) = \phi(x_i) \Sigma \psi(t_k)^T,
 
-where :math:`\phi(x_i)` is the spatial basis, :math:`\psi(t_k)` is the temporal basis, and $\Sigma$ is the modal coefficients. 
+where :math:`\phi(x_i)` is the spatial basis, :math:`\psi(t_k)` is the temporal basis, and :math:`\Sigma` is the modal coefficients. 
 Different decompositions employ different basis, such as prescribed Fourier basis (:math:`\psi_\mathcal{F}`) for 
 the Discrete Fourier Transform (DFT), or data-driven basis, i.e. tailored on the dataset at hand, 
 for the Proper Orthogonal Decomposition (POD). 
@@ -40,7 +40,7 @@ MODULO currently features the following decompositions:
 - Multi-Scale Proper Orthogonal Decomposition (mPOD) (mendez2019multi)
 - Dynamic Mode Decomposition (DMD) (schmid2010dynamic)
 - Spectral Proper Orthogonal Decomposition (SPOD) (csieber2016spectral, towne2018spectral), note that the two are 
-    different formulations, and both are available in MODULO.
+different formulations, and both are available in MODULO.
 - Kernel Proper Orthogonal Decomposition (KPOD) (mika1998kernel)
 
 We remind the curious reader to the respective references for a detailed description of each decomposition, and to the
