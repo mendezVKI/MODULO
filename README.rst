@@ -7,7 +7,12 @@ MODULO: MODal mULtiscale pOd
     :target: https://modulo.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. _image-link: https://modulo.readthedocs.io/en/latest/_images/modulo_logo.png
+.. |modulo_logo| image:: https://modulo.readthedocs.io/en/latest/_images/modulo_logo.png
+   :alt: Modulo Logo
+   :width: 400
+   :align: center
+
+`|modulo_logo|`_
 
 **MODULO** is a modal decomposition package developed at the von Karman Institute for Fluid Dynamics (VKI). 
 It offers a wide range of decomposition techniques, enabling users to select the most suitable method based 
