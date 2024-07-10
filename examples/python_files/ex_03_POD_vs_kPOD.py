@@ -246,7 +246,7 @@ plt.tight_layout(pad=1, w_pad=0.5, h_pad=1.0)
 Name=FOLDER_kPOD_RESULTS+os.sep+'K_Matrices.png' 
 print(Name+' Saved')
 plt.savefig(Name, dpi=300)  
-plt.show()
+# plt.show()
 
 
 ''' 
@@ -291,7 +291,7 @@ ax.set_ylabel('$\sigma_{\mathcal{K}}$',fontsize=16)
 plt.tight_layout()
 Name=FOLDER_kPOD_RESULTS+os.sep+'Sigma_P_vs_K.png'
 plt.savefig(Name, dpi=300) 
-plt.show()
+# plt.show()
 
 
 # Here is the approximation with the leading 3 POD modes
@@ -337,7 +337,9 @@ for i in range(4):
     axs[1, i].set(xlabel='$f$ (Hz)')
 
 fig.tight_layout()
-plt.show()
+plt.savefig(FOLDER + os.sep + 'Comparison_POD_vs_kPOD.png', dpi=300)
+plt.close('all')
+# plt.show()
 
 # %% Spatial Structures
 
@@ -390,7 +392,8 @@ for row in range(rows):
           axs[row, col].set(title='$\phi_{\mathcal{K}' + str(int(col + 1))+'}$')      
     
 fig.tight_layout()
-plt.show()
+plt.savefig(FOLDER + os.sep + 'Comparison_POD_vs_kPOD_Structures.png', dpi=300)
+# plt.show()
 
 
 
