@@ -21,7 +21,7 @@ class TestReadDb(unittest.TestCase):
             shutil.rmtree("MODULO_tmp")
 
     def test_meanComputation(self):
-        """Test if mean is computed correctly & susbstracted from D"""
+        """Test if mean is computed correctly & substracted from D"""
         N_PARTITIONS = 1
         FOLDER_OUT =  './MODULO_tmp'
         MR = True
@@ -91,7 +91,6 @@ class TestReadDb(unittest.TestCase):
 
         D_MR = (self.D_orig - np.ones(np.shape(self.D)) * self.D_MEAN.reshape(-1, 1))
         np.testing.assert_allclose(D_rec,D_MR ,rtol=self.rtol, atol=self.atol)
-
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

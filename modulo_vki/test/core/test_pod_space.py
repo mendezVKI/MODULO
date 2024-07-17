@@ -104,8 +104,5 @@ class TestPhi(unittest.TestCase):
 
         np.testing.assert_allclose(Phi_P_mat,Phi_P_memorySaving ,rtol=self.rtol, atol=self.atol)
 
-
-
-
 if __name__ == "__main__":
     unittest.main(verbosity=2)

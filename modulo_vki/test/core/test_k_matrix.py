@@ -38,7 +38,5 @@ class TestKMatrix(unittest.TestCase):
         K_test = np.load(self.FOLDER_OUT + '/correlation_matrix/k_matrix.npz')['K']
         self.assertListEqual(K_test.tolist(), self.K.tolist())
 
-
-
 if __name__ == "__main__":
     unittest.main(verbosity=2)

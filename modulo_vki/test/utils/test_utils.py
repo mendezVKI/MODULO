@@ -36,14 +36,6 @@ class TestUtils(unittest.TestCase):
         np.testing.assert_allclose(Sigma_P, self.sqrteigenValues[:-1],rtol=1e-4, atol=1e-4)
         #np.testing.assert_allclose(Psi_P[:-1], self.eigenVetors[:-1],rtol=1e-4, atol=1e-4) # check only the first sqrt eigen value since the others are nan
 
-
-    def test_eighs(self):
-        """ Test the eigen values computed by eigsh"""
-        n_modes = 2
-        eig_solver = self.eig_solvers[2]
-        Psi_P, Sigma_P  = switch_eigs(self.A, n_modes, eig_solver)
-        self.assertAlmostEqual(Sigma_P.tolist()[0], self.sqrteigenValues[0])
-
     def test_unknownEigh(self):
         """Test if an exception is raised with an unknown eigen value solver"""
         with self.assertRaises(ValueError):

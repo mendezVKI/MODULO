@@ -154,7 +154,7 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING, N_T, FOLDER_OUT='./', N_
                     R1 = (i - 1) * dim_col
                     R2 = i * dim_col
 
-                if (b == tot_blocks_row) and (N_S - dim_row * N_PARTITIONS > 0): # Change here !!!
+                if (b == tot_blocks_row) and (N_S - dim_row * N_PARTITIONS > 0): # Change here
                     C1 = C2
                     C2 = C1 + (N_S - dim_row * N_PARTITIONS)
                 else:
@@ -173,7 +173,7 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING, N_T, FOLDER_OUT='./', N_
             else:
                 for j in range(R1, R2):
                     jj = j - R1
-                    Phi_P = dps[:, jj] / Sigma_P[jj]
+                    Phi_P = dps[:, jj] / Sigma_P[j] # Change here
                     np.savez(FOLDER_OUT + f"/phi_{j + 1}", phi_p=Phi_P)
 
         Phi_P_M = np.zeros((N_S, R))
