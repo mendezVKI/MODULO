@@ -44,12 +44,13 @@ for the Proper Orthogonal Decomposition (POD).
 We refer to (mendez2022statistical, mendez2022generalizedmultiscalemodalanalysis, Mendez_2023) for an introduction to the topic.
 
 MODULO currently features the following decompositions: 
+
 - Discrete Fourier Transform (DFT) (briggs1995dft)
 - Proper Orthogonal Decomposition (POD) (sirovich1987turbulence, berkooz1993proper)
 - Multi-Scale Proper Orthogonal Decomposition (mPOD) (mendez2019multi)
 - Dynamic Mode Decomposition (DMD) (schmid2010dynamic)
-- Spectral Proper Orthogonal Decomposition (SPOD) (csieber2016spectral, towne2018spectral), note that the two are 
-different formulations, and both are available in MODULO.
+- Spectral Proper Orthogonal Decomposition (SPOD) (csieber2016spectral, towne2018spectral), 
+  note that the two are different formulations, and both are available in MODULO.
 - Kernel Proper Orthogonal Decomposition (KPOD) (mika1998kernel)
 
 We remind the curious reader to the respective references for a detailed description of each decomposition, and to the
@@ -62,35 +63,35 @@ The latest version of MODULO (v2.0) includes the following updates:
 
 1. **Faster EIG/SVD algorithms**, using powerful randomized svd solvers from scikit_learn 
     (see `here<https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html>`_ 
-    and `here <https://scikit-learn.org/stable/modules/generated/sklearn.utils.extmath.randomized_svd.html>`_.) 
+    and `here<https://scikit-learn.org/stable/modules/generated/sklearn.utils.extmath.randomized_svd.html>`_.) 
     It is now possible to select various options as "eig_solver" and "svd_solver", 
     offering different trade-offs in terms of accuracy vs computational time.
 
 2. **Computation the POD directly via SVD**, using any of the four "svd_solver" options.
 This is generally faster but requires more memory.
 
-1. **Faster subscale estimators for the mPOD:** the previous version used the rank of the correlation matrix in each scale to define 
+3. **Faster subscale estimators for the mPOD:** the previous version used the rank of the correlation matrix in each scale to define 
 the number of modes to be computed in each portion of the splitting vector before assembling the full basis. 
 This is computationally very demanding. This estimation has been replaced by a 
 frequency-based threshold (i.e. based on the frequency bins within each portion) since one can show that the 
 frequency-based estimator is always more "conservative" than the rank-based estimator.
 
-1. **Major improvement on the memory saving option**: the previous version of modulo always required in input the matrix D. 
+4. **Major improvement on the memory saving option**: the previous version of modulo always required in input the matrix D. 
 Then, if the memory saving option was active, the matrix was partitioned and stored locally to free the RAM before computing the 
-correlation matrix (see [this tutorial by D. Ninni](https://www.youtube.com/watch?v=LclxO1WTuao)). 
+correlation matrix (see `this tutorial by D. Ninni<https://www.youtube.com/watch?v=LclxO1WTuao>`_). 
 In the new version, it is possible to initialize a modulo object *without* the matrix D (see exercise 5 in the examples). 
 Instead, one can create the partitions without loading the matrix D.
 
-1. **Implementation of Dynamic Mode Decomposition (DMD)** from (Schmid, P.J 2010)
+5. **Implementation of Dynamic Mode Decomposition (DMD)** from (Schmid, P.J 2010)
 
-2. **Implementation of the two Spectral POD formulations**, namely the one from (Sieber et al 2016), 
+6. **Implementation of the two Spectral POD formulations**, namely the one from (Sieber et al 2016), 
    and the one from (Towne et al 2018).
 
-3. **Implementation of a kernel version of the POD**, in which the correlation matrix is replaced by a kernel matrix. 
+7. **Implementation of a kernel version of the POD**, in which the correlation matrix is replaced by a kernel matrix. 
 This is described in Lecture 15 of the course `Hands on Machine Learning for Fluid dynamics 2023 <https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023>`_. 
 We refer also to: `https://arxiv.org/abs/2208.07746`. 
 
-1. **Implementation of a formulation for non-uniform meshes**, using a weighted matrix for all the relevant inner products. 
+8. **Implementation of a formulation for non-uniform meshes**, using a weighted matrix for all the relevant inner products. 
 This is currently available only for POD and mPOD but allows for handling data produced from CFD simulation without resampling on a uniform grid (see exercise 4). 
 It can be used both with and without the memory-saving option.
 
@@ -237,6 +238,7 @@ If you find a bug, or you encounter unexpected behaviour, please open an issue o
 
 Ask for help
 ^^^^^^^^^^^^
+If you have troubles using MODULO, or you need help with a specific decomposition, please open an issue on the MODULO GitHub repository.
 
 Citation
 ---------
