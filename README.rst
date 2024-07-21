@@ -62,8 +62,8 @@ Release Notes
 The latest version of MODULO (v2.0) includes the following updates:
 
 1. **Faster EIG/SVD algorithms**, using powerful randomized svd solvers from scikit_learn 
-    (see `here<https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html>`_ 
-    and `here<https://scikit-learn.org/stable/modules/generated/sklearn.utils.extmath.randomized_svd.html>`_.) 
+    (see `here <https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html>`_ 
+    and `here <https://scikit-learn.org/stable/modules/generated/sklearn.utils.extmath.randomized_svd.html>`_.) 
     It is now possible to select various options as "eig_solver" and "svd_solver", 
     offering different trade-offs in terms of accuracy vs computational time.
 
@@ -78,7 +78,7 @@ frequency-based estimator is always more "conservative" than the rank-based esti
 
 4. **Major improvement on the memory saving option**: the previous version of modulo always required in input the matrix D. 
 Then, if the memory saving option was active, the matrix was partitioned and stored locally to free the RAM before computing the 
-correlation matrix (see `this tutorial by D. Ninni<https://www.youtube.com/watch?v=LclxO1WTuao>`_). 
+correlation matrix (see `this tutorial by D. Ninni <https://www.youtube.com/watch?v=LclxO1WTuao>`_). 
 In the new version, it is possible to initialize a modulo object *without* the matrix D (see exercise 5 in the examples). 
 Instead, one can create the partitions without loading the matrix D.
 
@@ -89,7 +89,7 @@ Instead, one can create the partitions without loading the matrix D.
 
 7. **Implementation of a kernel version of the POD**, in which the correlation matrix is replaced by a kernel matrix. 
 This is described in Lecture 15 of the course `Hands on Machine Learning for Fluid dynamics 2023 <https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023>`_. 
-We refer also to: `https://arxiv.org/abs/2208.07746`. 
+We refer also to: `Mendez, 2022 <https://arxiv.org/abs/2208.07746>`_. 
 
 8. **Implementation of a formulation for non-uniform meshes**, using a weighted matrix for all the relevant inner products. 
 This is currently available only for POD and mPOD but allows for handling data produced from CFD simulation without resampling on a uniform grid (see exercise 4). 
@@ -133,7 +133,7 @@ Documentation
 
 The documentation of MODULO is available `here <https://modulo.readthedocs.io/en/latest/intro.html>`_. It 
 contains a comprehensive guide on how to install and use the package, as well as a detailed description of the
-decompositions required inputs and outputs. A `list of YouTube videos<https://www.youtube.com/@modulompod5682>`_ 
+decompositions required inputs and outputs. A `list of YouTube videos <https://www.youtube.com/@modulompod5682>`_ 
 is also available to guide the introduce the user to modal decomposition and MODULO.
 
 Example 
