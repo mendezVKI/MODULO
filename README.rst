@@ -215,7 +215,18 @@ Community guidelines
 
 Contributing to MODULO
 ^^^^^^^^^^^^^^^^^^^^^^^
-We welcome contributions to MODULO. To create a new feature, please submit a pull request, specifying the proposed changes and 
+We welcome contributions to MODULO. 
+
+It is recommended to perform a shallow clone of the repository to avoid downloading the entire history of the project:
+
+.. code-block:: bash
+
+    $ git clone --depth 1 https://github.com/mendezVKI/MODULO.git
+
+This will download only the latest version of the repository, which is sufficient for contributing to the project, and will save 
+you time and disk space.
+
+To create a new feature, please submit a pull request, specifying the proposed changes and 
 providing an example of how to use the new feature (that will be included in the `examples/` folder).
 
 The pull request will be reviewed by the MODULO team before being merged into the main branch, and your contribution duly acknowledged.
