@@ -13,18 +13,13 @@ MODULO: a python toolbox for data-driven modal decomposition
        <img src="https://modulo.readthedocs.io/en/latest/_images/modulo_logo.png" alt="Modulo Logo" width="500"/>
    </div>
 
-**MODULO** is a modal decomposition package developed at the von Karman Institute for Fluid Dynamics (VKI). 
-It offers a wide range of decomposition techniques, enabling users to select the most suitable method based 
-on the specific physics of their problem and their desired outcomes. MODULO can natively handle large
-datasets efficiently, featuring a memory-saving option that partitions the data and computes the decomposition in 
-chunks (ninni2020modulo). Additionally, it supports non-uniform meshes through its weighted inner product formulation.
+**MODULO** is a modal decomposition package developed at the von Karman Institute for Fluid Dynamics (VKI). It offers a wide range of decomposition techniques, allowing users to choose the most appropriate method for their specific problem. MODULO can efficiently handle large datasets natively, thanks to a memory-saving feature that partitions the data and processes the decomposition in chunks (ninni2020modulo). Moreover, it supports non-uniform meshes through a weighted inner product formulation. Currently, MODULO heavily relies on NumPy routines and does not offer additional parallel computing capabilities beyond those naturally provided by NumPy.
 
 While the discontinued MATLAB version of MODULO (ninni2020modulo) is accessible in the “Old_Matlab_Implementation” branch, 
 it is no longer maintained. The latest decomposition techniques are exclusively available in the current Python version.
 
 As a part of the MODULO project, we provide a series of lectures on data-driven modal decomposition, and its applications.
 These are available at the `MODULO YouTube channel <https://www.youtube.com/@modulompod5682>`_.
-
 
 .. contents:: Table of contents
 
@@ -37,7 +32,7 @@ coordinates, respectively, the modal decomposition can be written as:
 $D(x_i, t_k) = \\phi(x_i) \\Sigma \\psi(t_k)^T$
 
 where $\\phi(x_i)$ is the spatial basis, $\\psi(t_k)$ is the temporal basis, and $\\Sigma$ is the modal coefficients. 
-Different decompositions employ different basis, such as prescribed Fourier basis ($\\psi_\\mathcal{F}$) for 
+Different decompositions employ different bases, such as prescribed Fourier basis ($\\psi_\\mathcal{F}$) for 
 the Discrete Fourier Transform (DFT), or data-driven basis, i.e. tailored on the dataset at hand, 
 for the Proper Orthogonal Decomposition (POD). 
 
