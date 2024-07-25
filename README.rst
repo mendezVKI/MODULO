@@ -222,7 +222,7 @@ Given a dataset of size ``n_s \times n_t``, we consider the computation of ``n_r
      - Phase 3: $\Psi$
      - Phase 4: $\Phi$
    * - No Memory Saving
-     - $n_s \times n_t$
+     - $n_s \\times n_t$
      - $n_t^2$
      - $n_t^2 + n_t \times n_r$
      - $n_s \times n_t + n_t \times n_r + n_s \times n_r$
