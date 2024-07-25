@@ -204,7 +204,36 @@ you can use the weighted inner product formulation (refer to `examples/ex_05_non
     # Compute the POD decomposition
     phi_POD, Sigma_POD, psi_POD = m.Compute_POD_K()
 
+Computational Cost Estimates
+----------------------------
 
+To guide the user in choosing the appropriate setting for the specific dataset at hand, we provide a rough estimate of the computational 
+cost of the MODULO decompositions, with and without the memory-saving option.
+
+Given a dataset of size $n_s \\times n_t$, we consider the computation of $n_r$ modes. When using the memory saving option, we refer to 
+$n_t' = n_t / n_p$ as the number of time steps in each partition, and to $n_s' = n_s / n_p$ as the number of spatial points in each partition.
+
+.. list-table::
+    :widths: 25 25 25 25
+    :header-rows: 1
+
+    * - 
+      - Phase 1: $D$ 
+      - Phase 2: $K$
+      - Phase 3: $\\Psi$
+      - Phase 4: $\\Phi$
+    * - No Memory Saving
+      - $n_s \\times n_t$
+      - $n_t^2$
+      - $n_t^2 + n_t \\times n_r $
+      - $n_s \\times n_t + n_t \\times n_r + n_s \\times n_r$
+    * - Memory Saving
+      - /
+      - $n_s \\times n_t' + n_t' \\times n_t'$
+      - $n_t^2 + r \\cdot n_t$
+      - $(n_s \\times n_t') + n_s' \\times n_t + n_s \\times n_r$
+
+As shown in the table, the computational cost of the decomposition is dominated by the computation of the correlation matrix $K$ in Phase 2.
 
 Community guidelines
 ---------------------
