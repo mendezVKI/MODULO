@@ -209,9 +209,8 @@ Computational Cost Estimates
 To guide the user in choosing the appropriate setting for the specific dataset at hand, we provide a rough estimate of the computational 
 cost of the MODULO decompositions, with and without the memory-saving option.
 
-Given a dataset of size ``n_s \times n_t``, we consider the computation of ``n_r`` modes. When using the memory saving option, we refer to 
-``n_t' = n_t / n_p`` as the number of time steps in each partition, and to ``n_s' = n_s / n_p`` as the number of spatial points in each partition.
-
+Given a dataset of size $n_s \\times n_t$, we consider the computation of $n_r$ modes. When using the memory saving option, we refer to 
+$n_t' = n_t / n_p$ as the number of time steps in each partition, and to $n_s' = n_s / n_p$ as the number of spatial points in each partition.
 
 .. list-table::
    :header-rows: 1
