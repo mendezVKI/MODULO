@@ -231,7 +231,7 @@ $n_t' = n_t / n_p$ as the number of time steps in each partition, and to $n_s' =
      - $n_t^2 + n_t \\times n_r$
      - $n_s \\times n_t' + n_s' \\times n_t + n_s \\times n_r$
 
-As shown in the table, the computational cost of the decomposition is dominated by the computation of the correlation matrix ``K`` in Phase 2. The 
+As shown in the table, the computational cost of the decomposition is dominated by the computation of the correlation matrix $K$ in Phase 2. The 
 memory-saving option significantly reduces the computational cost of this phase, as the correlation matrix is computed for each partition, rather than
 for the entire dataset.
 
