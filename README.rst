@@ -224,13 +224,13 @@ Given a dataset of size ``n_s \times n_t``, we consider the computation of ``n_r
    * - No Memory Saving
      - $n_s \\times n_t$
      - $n_t^2$
-     - $n_t^2 + n_t \times n_r$
-     - $n_s \times n_t + n_t \times n_r + n_s \times n_r$
+     - $n_t^2 + n_t \\times n_r$
+     - $n_s \\times n_t + n_t \\times n_r + n_s \\times n_r$
    * - Memory Saving
      - /
-     - $n_s \times n_t' + n_t' \times n_t'$
-     - $n_t^2 + r \cdot n_t$
-     - $n_s \times n_t' + n_s' \times n_t + n_s \times n_r$
+     - $n_s \\times n_t' + n_t' \\times n_t'$
+     - $n_t^2 + r \\cdot n_t$
+     - $n_s \\times n_t' + n_s' \\times n_t + n_s \\times n_r$
 
 As shown in the table, the computational cost of the decomposition is dominated by the computation of the correlation matrix ``K`` in Phase 2. The 
 memory-saving option significantly reduces the computational cost of this phase, as the correlation matrix is computed for each partition, rather than
