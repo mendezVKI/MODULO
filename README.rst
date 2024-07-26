@@ -206,8 +206,8 @@ you can use the weighted inner product formulation (refer to `examples/ex_05_non
 
 Computational Cost Estimates
 ----------------------------
-To guide the user in choosing the appropriate setting for the specific dataset at hand, we provide a rough estimate of the computational 
-cost of the MODULO decompositions, with and without the memory-saving option.
+We here provide a rough estimate of the amoung of RAM required to decompose a test case with and without the memory saving option. 
+This option reduces the memory usage at the cost of increasing the computational time (see https://www.youtube.com/watch?v=LclxO1WTuao)
 
 Given a dataset $D \\in \\mathbb{R}^{n_s \\times n_t}$, we consider the computation of $n_r$ modes. When using the memory saving option, we refer to 
 $n_t' = n_t / n_p$ as the number of time steps in each partition, and to $n_s' = n_s / n_p$ as the number of spatial points in each partition.
@@ -231,9 +231,31 @@ $n_t' = n_t / n_p$ as the number of time steps in each partition, and to $n_s' =
      - $n_t^2 + n_t \\times n_r$
      - $n_s \\times n_t' + n_s' \\times n_t + n_s \\times n_r$
 
-As shown in the table, the computational cost of the decomposition is dominated by the computation of the correlation matrix $K$ in Phase 2. The 
-memory-saving option significantly reduces the computational cost of this phase, as the correlation matrix is computed for each partition, rather than
-for the entire dataset.
+If the memory saving option is active, the memory requirements are mostly linked to the storage of the correlation matrix $K$ in Phase 2. 
+This table can be used to estimate if a dataset is too large for the available RAM, recalling that data in single precision requires 4 bytes (or 32 bits).
+
+For example, for a dataset with n_s=100 000 and n_t = 5000  the following table estimates the RAM required in the two cases:
+
+.. list-table::
+   :header-rows: 1
+
+   * - 
+     - Phase 1: $D$
+     - Phase 2: $K$
+     - Phase 3: $\\Psi$
+     - Phase 4: $\\Phi$
+   * - No Memory Saving
+     - 1.86 GB
+     - 96 MB
+     - ≈96 MB
+     - ≈1.95 GB
+   * - Memory Saving
+     - /
+     - 190 MB + 0.95 MB
+     - ≈96 MB
+     - 1.86 GB + 190 MB + 3.81 MB
+
+
 
 Community guidelines
 ---------------------
