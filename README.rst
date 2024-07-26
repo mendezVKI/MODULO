@@ -234,7 +234,7 @@ $n_t' = n_t / n_p$ as the number of time steps in each partition, and to $n_s' =
 If the memory saving option is active, the memory requirements are mostly linked to the storage of the correlation matrix $K$ in Phase 2. 
 This table can be used to estimate if a dataset is too large for the available RAM, recalling that data in single precision requires 4 bytes (or 32 bits).
 
-For example, for a dataset with n_s=100 000 and n_t = 5000  the following table estimates the RAM required in the two cases:
+For example, for a dataset with n_s=1 000 000 and n_t = 5000  the following table estimates the RAM required in the two cases, considering n_b=10 partitions in the case of memory saving:
 
 .. list-table::
    :header-rows: 1
@@ -245,15 +245,15 @@ For example, for a dataset with n_s=100 000 and n_t = 5000  the following table 
      - Phase 3: $\\Psi$
      - Phase 4: $\\Phi$
    * - No Memory Saving
-     - 1.86 GB
-     - 96 MB
-     - ≈96 MB
-     - ≈1.95 GB
+     - 18.6 GB
+     - 0.093 GB
+     - ≈0.112 GB
+     - ≈22.39 GB
    * - Memory Saving
      - /
-     - 190 MB + 0.95 MB
-     - ≈96 MB
-     - 0.19 GB + 190 MB + 3.81 MB
+     - ≈1.86 GB
+     - ≈ 0.0026 GB
+     - ≈ 4.20 GB
 
 
 
