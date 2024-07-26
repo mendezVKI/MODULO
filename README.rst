@@ -253,7 +253,7 @@ For example, for a dataset with n_s=100 000 and n_t = 5000  the following table 
      - /
      - 190 MB + 0.95 MB
      - ≈96 MB
-     - 1.86 GB + 190 MB + 3.81 MB
+     - 0.19 GB + 190 MB + 3.81 MB
 
 
 
