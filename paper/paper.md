@@ -57,7 +57,7 @@ Both the constraint of energy optimality and harmonic modes can lead to poor con
 Finally, recent developments in nonlinear methods such as kernel PCA and their applications to fluid dynamics (see [@mendez_2023]) have motivated the interest in the connection between nonlinear methods and the most general Karhunen-Loeve expansion (KL). This generalizes the POD as the decomposition of data onto the eigenfunction of a kernel function (the POD being a KL for the case of linear kernel). 
 
 
-MODULO provides a unified tool to carry out different decompositions with a shared API. This simplifies comparing different techniques and streamlines their application to a given dataset (problem). In addition, it is the only package that includes the mPOD and the generalized KL with kernel functions interfacing with SciKit-learn. For decomposition-specific packages, we refer the reader to many excellent Python APIs that are available to compute the POD, DMD, and both SPODs, for example [@py_DMD], [@Mengaldo2021], [@SpyOD], [@rogowski2024unlocking], [@demo2018pydmd].
+MODULO provides a unified tool to carry out different decompositions with a shared API. This simplifies comparing different techniques and streamlines their application to a given dataset (problem). In addition, it is the only package that includes the mPOD and the generalized KL with kernel functions interfacing with SciKit-learn. For decomposition-specific packages, we refer the reader to many excellent Python APIs that are available to compute the POD, DMD, and both SPODs, for example [@py_DMD], [@Mengaldo2021], [@SpyOD], [@rogowski2024unlocking].
 
 
 # New Features 
