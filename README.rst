@@ -7,13 +7,7 @@ MODULO: a python toolbox for data-driven modal decomposition
     :target: https://modulo.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. raw:: html
-
-   <div style="text-align: center;">
-       <img src="https://modulo.readthedocs.io/en/latest/_images/modulo_logo.png" alt="Modulo Logo" width="500"/>
-   </div>
-
-|DOI| |PyPI| |GitHub|
+|DOI| |PyPI| 
 
 .. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.13939519.svg
    :target: https://doi.org/10.5281/zenodo.13939519
@@ -21,9 +15,13 @@ MODULO: a python toolbox for data-driven modal decomposition
 .. |PyPI| image:: https://img.shields.io/pypi/v/modulo_vki
     :target: https://pypi.org/project/modulo_vki/
 
-.. |GitHub| image:: https://img.shields.io/github/stars/mendezVKI/MODULO?style=social
-    :target:
-    
+.. raw:: html
+
+   <div style="text-align: center;">
+       <img src="https://modulo.readthedocs.io/en/latest/_images/modulo_logo.png" alt="Modulo Logo" width="500"/>
+   </div>
+
+
 **MODULO** is a modal decomposition package developed at the von Karman Institute for Fluid Dynamics (VKI). It offers a wide range of decomposition techniques, allowing users to choose the most appropriate method for their specific problem. MODULO can efficiently handle large datasets natively, thanks to a memory-saving feature that partitions the data and processes the decomposition in chunks (ninni2020modulo). Moreover, it supports non-uniform meshes through a weighted inner product formulation. Currently, MODULO heavily relies on NumPy routines and does not offer additional parallel computing capabilities beyond those naturally provided by NumPy.
 
 While the discontinued MATLAB version of MODULO (ninni2020modulo) is accessible in the “Old_Matlab_Implementation” branch, 
