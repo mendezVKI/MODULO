@@ -86,9 +86,9 @@ correlation matrix (see `this tutorial by D. Ninni <https://www.youtube.com/watc
 In the new version, it is possible to initialize a modulo object *without* the matrix D (see exercise 5 in the examples). 
 Instead, one can create the partitions without loading the matrix D.
 
-5. **Implementation of Dynamic Mode Decomposition (DMD)** from (Schmid, P.J 2010)
+5.**Implementation of Dynamic Mode Decomposition (DMD)** from (Schmid, P.J 2010)
 
-6. **Implementation of the two Spectral POD formulations**, namely the one from (Sieber et al 2016), 
+6.**Implementation of the two Spectral POD formulations**, namely the one from (Sieber et al 2016), 
    and the one from (Towne et al 2018).
 
 7. **Implementation of a kernel version of the POD**, in which the correlation matrix is replaced by a kernel matrix. 
