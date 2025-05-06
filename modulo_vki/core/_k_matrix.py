@@ -3,6 +3,7 @@ from tqdm import tqdm
 import numpy as np
 import math
 
+# TODO: is it necessary to use the full D matrix to compute the correlation matrix for vectorial quantities? each entry could be computed separately and then assembled.
 
 def CorrelationMatrix(N_T, N_PARTITIONS=1, MEMORY_SAVING=False, FOLDER_OUT='./', SAVE_K=False, D=None,weights = np.array([])):
     """

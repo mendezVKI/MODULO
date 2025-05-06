@@ -672,68 +672,6 @@ class ModuloVKI:
                                                       n_Modes, SAVE_SPOD, self.FOLDER_OUT, self.MEMORY_SAVING,
                                                       self.N_PARTITIONS)
 
-        # if self.D is None:
-        #     D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
-        #     SAVE_SPOD = True
-        #     # TODO : Lorenzo check this stuff
-        # else:
-        #     D = self.D
-        #
-        # n_s = self.N_S  # Repeat variable for debugging compatibility
-        # n_t = self.N_T
-        #
-        # print('Computing Correlation Matrix \n')
-        #
-        # # The first step is the same as the POD: we compute the correlation matrix
-        # K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, self.MEMORY_SAVING,
-        #                       self.FOLDER_OUT, D=self.D)
-        #
-        # # 1. Initialize the extended
-        # K_e = np.zeros((n_t + 2 * N_o, n_t + 2 * N_o))
-        # # From which we clearly know that:
-        # K_e[N_o:n_t + N_o, N_o:n_t + N_o] = K
-        #
-        # # 2. We fill the edges ( a bit of repetition but ok.. )
-        #
-        # # Row-wise, Upper part
-        # for i in range(0, N_o):
-        #     K_e[i, i:i + n_t] = K[0, :]
-        #
-        # # Row-wise, bottom part
-        # for i in range(N_o + n_t, n_t + 2 * N_o):
-        #     K_e[i, i - n_t + 1:i + 1] = K[-1, :]
-        #
-        #     # Column-wise, left part
-        # for j in range(0, N_o):
-        #     K_e[j:j + n_t, j] = K[:, 0]
-        #
-        #     # Column-wise, right part
-        # for j in range(N_o + n_t, 2 * N_o + n_t):
-        #     K_e[j - n_t + 1:j + 1, j] = K[:, -1]
-        #
-        # # Now you create the diagonal kernel in 2D
-        # h_f = firwin(N_o, f_c)  # Kernel in 1D
-        # # This is also something that must be put in a separate file:
-        # # To cancel the phase lag we make this non-causal with a symmetric
-        # # shift, hence with zero padding as equal as possible on both sides
-        # n_padd_l = round((n_t - N_o) / 2);
-        # n_padd_r = n_t - N_o - n_padd_l
-        #
-        # h_f_pad = np.pad(h_f, (n_padd_l, n_padd_r))  # symmetrically padded kernel in 1D
-        # h_f_2 = np.diag(h_f_pad)
-        #
-        # # Finally the filtered K is just
-        # K_F = signal.fftconvolve(K_e, h_f_2, mode='same')[N_o:n_t + N_o, N_o:n_t + N_o]
-        # # plt.plot(np.diag(K),'b--'); plt.plot(np.diag(K_F_e),'r')
-        #
-        # # From now on it's just POD:
-        # Psi_P, Sigma_P = Temporal_basis_POD(K_F, SAVE_SPOD,
-        #                                     self.FOLDER_OUT, self.n_Modes)
-        #
-        # Phi_P = Spatial_basis_POD(self.D, N_T=self.N_T, PSI_P=Psi_P, Sigma_P=Sigma_P,
-        #                           MEMORY_SAVING=self.MEMORY_SAVING, FOLDER_OUT=self.FOLDER_OUT,
-        #                           N_PARTITIONS=self.N_PARTITIONS)
-
         return Phi_sP, Psi_sP, Sigma_sP
 
     def compute_kPOD(self, M_DIST=[1, 10], k_m=0.1, cent=True,
