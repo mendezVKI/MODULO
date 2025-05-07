@@ -1,9 +1,15 @@
 ================================
-What is new in this V 2.0? 
+Changelog Details 
 ================================
 
 
-The major updates are the following :
+2.1.0
+=====
+- `mPOD` bug fix: the previous version of the mPOD was skipping the last scale of the frequency splitting vector. Fixed in this version.
+
+2.0.7
+=====
+Major updates:
 
 1. Faster EIG/SVD algorithms, using powerful randomized svd solvers from scikit_learn (see `TruncatedSVD
 <https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html>`_
@@ -24,7 +30,4 @@ and
 7. Implementation of a kernel version of the POD, in which the correlation matrix is replaced by a kernel matrix. This is described in Lecture 15 of the course *Hands on Machine Learning for Fluid dynamics 2023*: https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023. See also https://arxiv.org/abs/2208.07746).
 
 8. Implementation of a formulation for non-uniform meshes, using a weighted matrix for all the relevant inner products. This is currently available only for POD and mPOD which allows for handling data produced from CFD simulation without resampling on a uniform grid (see exercise 5). It can be used both with and without the memory-saving option.
-
-
-
 
