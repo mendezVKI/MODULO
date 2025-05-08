@@ -3,22 +3,53 @@ from tqdm import tqdm
 import numpy as np
 import math
 
-# TODO: is it necessary to use the full D matrix to compute the correlation matrix for vectorial quantities? each entry could be computed separately and then assembled.
 
-def CorrelationMatrix(N_T, N_PARTITIONS=1, MEMORY_SAVING=False, FOLDER_OUT='./', SAVE_K=False, D=None,weights = np.array([])):
+def CorrelationMatrix(N_T,
+                      N_PARTITIONS=1,
+                      MEMORY_SAVING=False,
+                      FOLDER_OUT='./',
+                      SAVE_K=False,
+                      D=None,
+                      weights=np.array([])):
     """
-    This method computes the temporal correlation matrix, given a data matrix as input. It's possible to use memory saving
-    then splitting the computing in different tranches if computationally heavy. If D has been computed using MODULO
-    then the dimension dim_col and N_PARTITIONS is automatically loaded
+    Computes the temporal correlation matrix from the provided data matrix.
 
-    :param N_T: int. Number of temporal snapshots
-    :param D: np.array. Data matrix
-    :param SAVE_K: bool. If SAVE_K=True, the matrix K is saved on disk. If the MEMORY_SAVING feature is active, this is done by default.
-    :param MEMORY_SAVING: bool. If MEMORY_SAVING = True, the computation of the correlation matrix is done by steps. It requires the data matrix to be partitioned, following algorithm in MODULO._data_processing.
-    :param FOLDER_OUT: str. Folder in which the temporal correlation matrix will be stored
-    :param N_PARTITIONS: int. Number of partitions to be read in computing the correlation matrix. If _data_processing is used to partition the data matrix, this is inherited from the main class
-    :param weights: weight vector [w_i,....,w_{N_s}] where w_i = area_cell_i/area_grid. Only needed if grid is non-uniform & MEMORY_SAVING== True
-    :return: K (: np.array) if the memory saving is not active. None type otherwise.
+    If MEMORY_SAVING is active, computation is split into partitions to reduce memory load.
+    If data matrix D has been computed using MODULO, parameters like dimensions and number of partitions
+    will automatically be inferred.
+
+    Parameters
+    ----------
+    N_T : int
+        Number of temporal snapshots.
+
+    N_PARTITIONS : int, default=1
+        Number of partitions for memory-saving computation.
+        Inherited automatically if using MODULO's partitioning.
+
+    MEMORY_SAVING : bool, default=False
+        Activates partitioned computation of the correlation matrix to reduce memory usage.
+        Requires pre-partitioned data according to MODULO's `_data_processing`.
+
+    FOLDER_OUT : str, default='./'
+        Output directory where the temporal correlation matrix will be saved if required.
+
+    SAVE_K : bool, default=False
+        Flag to save the computed correlation matrix K to disk. Automatically enforced
+        if MEMORY_SAVING is active.
+
+    D : np.ndarray, optional
+        Data matrix used to compute the correlation matrix. Required if MEMORY_SAVING is False.
+
+    weights : np.ndarray, default=np.array([])
+        Weight vector `[w_1, w_2, ..., w_Ns]` defined as `w_i = area_cell_i / area_grid`.
+        Needed only for non-uniform grids when MEMORY_SAVING is True.
+
+    Returns
+    -------
+    K : np.ndarray or None
+        Temporal correlation matrix if MEMORY_SAVING is False; otherwise returns None,
+        as matrix is managed via disk storage in partitioned computations.
     """
 
     if not MEMORY_SAVING:

@@ -31,7 +31,7 @@ An example of the usage of the mPOD routine, extracted from the `examples` folde
     Ex = 203  # This must be at least as Nf.
     dt = 1/2000; boundaries = 'reflective'; MODE = 'reduced'
     # Here 's the mPOD
-    Phi_M, Psi_M, Sigmas_M = m.compute_mPOD(Nf, Ex, F_V, Keep, 20 ,boundaries, MODE, dt, False)
+    Phi_M, Psi_M, Sigmas_M = m.mPOD(Nf, Ex, F_V, Keep, 20 ,boundaries, MODE, dt, False)
 
 The variable `Keep` is a vector of size `len(F_V) + 1`, defines whether the scale is processed or not, 
 while `Nf` is a vector of size `len(F_V) + 1` is the number of points in the frequency domain, and 

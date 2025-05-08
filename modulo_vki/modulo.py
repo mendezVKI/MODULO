@@ -7,7 +7,7 @@ from sklearn.metrics.pairwise import pairwise_kernels
 from tqdm import tqdm
 
 # All the functions from the modulo package 
-from modulo_vki.core._dft import dft_fit
+from modulo_vki.core._dft import dft_fit, dft
 from modulo_vki.core._dmd_s import dmd_s
 from modulo_vki.core._k_matrix import CorrelationMatrix
 from modulo_vki.core._mpod_space import spatial_basis_mPOD
@@ -22,27 +22,32 @@ from modulo_vki.utils.read_db import ReadData
 
 class ModuloVKI:
     """
-    MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform Multiscale
-    Modal Analysis of numerical and experimental data using the Multiscale Proper Orthogonal Decomposition (mPOD).
+    MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute
+    to perform Multiscale Modal Analysis using Multiscale Proper Orthogonal Decomposition (mPOD)
+    on numerical and experimental data.
 
-    Theoretical foundation can be found at:
-    https://arxiv.org/abs/1804.09646
+    References
+    ----------
+    - Theoretical foundation:
+      https://arxiv.org/abs/1804.09646
 
-    Presentation of the MODULO framework available here:
-    https://arxiv.org/pdf/2004.12123.pdf
+    - MODULO framework presentation:
+      https://arxiv.org/pdf/2004.12123.pdf
 
-    YouTube channel with hands-on tutorials can be found at:
-    https://youtube.com/playlist?list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR
+    - Hands-on tutorial videos:
+      https://youtube.com/playlist?list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR
 
-    All the codes so far assume that the dataset is equally spaced both in space (i.e. along a Cartesian grid)
-    and in time. The extension to non-uniformly sampled data will be included in future releases.
-
-
+    Notes
+    -----
+    MODULO operations assume the dataset is uniformly spaced in both space
+    (Cartesian grid) and time. For non-cartesian grids, the user must 
+    provide a weights vector `[w_1, w_2, ..., w_Ns]` where `w_i = area_cell_i / area_grid`.
     """
 
-    def __init__(self, data: np.array,
+    def __init__(self,
+                 data: np.ndarray,
                  N_PARTITIONS: int = 1,
-                 FOLDER_OUT='./',
+                 FOLDER_OUT: str = './',
                  SAVE_K: bool = False,
                  N_T: int = 100,
                  N_S: int = 200,
@@ -50,42 +55,50 @@ class ModuloVKI:
                  dtype: str = 'float32',
                  eig_solver: str = 'eigh',
                  svd_solver: str = 'svd_sklearn_truncated',
-                 weights: np.array = np.array([])):
+                 weights: np.ndarray = np.array([])):
         """
-        This function initializes the main parameters needed by MODULO.
+        Initialize the MODULO analysis.
 
-        Attributes:
+        Parameters
+        ----------
+        data : np.ndarray
+            Data matrix of shape (N_S, N_T) to factorize. If not yet formatted, use the `ReadData`
+            method provided by MODULO. When memory saving mode (N_PARTITIONS > 1) is active,
+            set this parameter to None and use prepared partitions instead.
 
-        :param data: This is the data matrix to factorize. It is a np.array with
-               shape ((N_S, N_T)). If the data has not yet been prepared in the form of a np.array,
-               the method ReadData in MODULO can be used (see ReadData). If the memory saving is active (N_PARTITIONS >1), the folder with partitions should be prepared.
-               If the memory saving is active, this entry = None. The data matrix is assumed to big to be saved and the
+        N_PARTITIONS : int, default=1
+            Number of partitions used for memory-saving computation. If set greater than 1,
+            data must be partitioned in advance and `data` set to None.
 
-        :param N_PARTITIONS: If memory saving feature is active, this parameter sets the number of partitions
-               that will be used to store the data matrices during the computations.
+        FOLDER_OUT : str, default='./'
+            Directory path to store output (Phi, Sigma, Psi matrices) and intermediate
+            calculation files (e.g., partitions, correlation matrix).
 
-        :param FOLDER_OUT: Folder in which the output will be stored.The output includes the matrices Phi, Sigma and Psi (optional) and temporary files
-               used for some of the calculations (e.g.: for memory saving).
+        SAVE_K : bool, default=False
+            Whether to store the correlation matrix K to disk in
+            `FOLDER_OUT/correlation_matrix`.
 
-        :param  SAVE_K:  A flag deciding if the matrix will be stored in the disk (in FOLDER_OUT/correlation_matrix) or not.
-            Default option is 'False'.
+        N_T : int, default=100
+            Number of temporal snapshots. Mandatory when using partitions (N_PARTITIONS > 1).
 
-        :param N_T: Number of time steps, must be given when N_PARTITIONS >1
+        N_S : int, default=200
+            Number of spatial grid points. Mandatory when using partitions (N_PARTITIONS > 1).
 
-        :param N_S: Number of grid points, must be given when N_PARTITIONS >1
+        n_Modes : int, default=10
+            Number of modes to compute.
 
-        :param n_Modes: Number of Modes to be computed
+        dtype : str, default='float32'
+            Data type for casting input data.
 
-        :param dtype: Cast "data" with type dtype
+        eig_solver : str, default='eigh'
+            Solver for eigenvalue decomposition.
 
-        :param eig_solver: Numerical solver to compute the eigen values
+        svd_solver : str, default='svd_sklearn_truncated'
+            Solver for Singular Value Decomposition (SVD).
 
-        :param svd_solver: Numerical solver to compute the Single Value Decomposition
-
-        :param weights: weight vector [w_i,....,w_{N_s}] where w_i = area_cell_i/area_grid
-               Only needed if grid is non-uniform.
-
-
+        weights : np.ndarray, default=np.array([])
+            Weights vector `[w_1, w_2, ..., w_Ns]` to account for non-uniform spatial grids.
+            Defined as `w_i = area_cell_i / area_grid`. Leave empty for uniform grids.
         """
 
         print("MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform "
@@ -94,45 +107,6 @@ class ModuloVKI:
         if not isinstance(data, np.ndarray) and N_PARTITIONS == 1:
             raise TypeError(
                 "Please check that your database is in an numpy array format. If D=None, then you must have memory saving (N_PARTITIONS>1)")
-
-        # Load the data matrix
-        if isinstance(data, np.ndarray):
-            # Number of points in time and space
-            self.N_T = data.shape[1]
-            self.N_S = data.shape[0]
-            # Check the data type
-            self.D = data.astype(dtype)
-        else:
-            self.D = None  # D is never saved when N_partitions >1
-            self.N_S = N_S  # so N_S and N_t must be given as parameters of modulo
-            self.N_T = N_T
-
-        # Load and applied the weights to the D matrix
-        if weights.size != 0:
-            if len(weights) == self.N_S:
-                print("The weights you have input have the size of the columns of D \n"
-                      "MODULO has considered that you have already duplicated the dimensions of the weights "
-                      "to match the dimensions of the D columns \n")
-                self.weights = weights
-            elif 2 * len(weights) == self.N_S:  # 2D computation only
-                self.weights = np.concatenate((weights, weights))
-                print("Modulo assumes you have a 2D domain and has duplicated the weight "
-                      "array to match the size of the D columns \n")
-                print(weights)
-            else:
-                raise AttributeError("Make sure the size of the weight array is twice smaller than the size of D")
-            # Dstar is used to compute the K matrix
-            if isinstance(data, np.ndarray):
-                # Apply the weights only if D exist.
-                # If not (i.e. N_partitions >1), weights are applied in _k_matrix.py when loading partitions of D
-                self.Dstar = np.transpose(np.transpose(self.D) * np.sqrt(self.weights))
-            else:
-                self.Dstar = None
-        else:
-            print("Modulo assumes you have a uniform grid. "
-                  "If not, please give the weights as parameters of MODULO!")
-            self.weights = weights
-            self.Dstar = self.D
 
         if N_PARTITIONS > 1:
             self.MEMORY_SAVING = True
@@ -160,13 +134,77 @@ class ModuloVKI:
         #                          "try again.")
 
         self.N_PARTITIONS = N_PARTITIONS
-
         self.FOLDER_OUT = FOLDER_OUT
-
         self.SAVE_K = SAVE_K
 
         if self.MEMORY_SAVING:
             os.makedirs(self.FOLDER_OUT, exist_ok=True)
+        
+        # Load the data matrix
+        if isinstance(data, np.ndarray):
+            # Number of points in time and space
+            self.N_T = data.shape[1]
+            self.N_S = data.shape[0]
+            # Check the data type
+            self.D = data.astype(dtype)
+        else:
+            self.D = None  # D is never saved when N_partitions >1
+            self.N_S = N_S  # so N_S and N_t must be given as parameters of modulo
+            self.N_T = N_T
+        
+        '''If the grid is not cartesian, ensure inner product is properly defined using weights.'''
+        
+        if weights.size == 0:
+                print('Modulo assumes you have a uniform grid. If not, please provide weights as parameters.')
+        else: 
+                if len(weights) == self.N_S:
+                        print("The weights you have input have the size of the columns of D \n"
+                                  "MODULO has considered that you have already duplicated the dimensions of the weights "
+                                  "to match the dimensions of the D columns \n")
+                        self.weights = weights
+                elif len(weights) == 2 * self.N_S:
+                        print("Assuming 2D domain. Automatically duplicating the weights to match the dimension of the D columns \n")
+                        self.weights = np.concatenate((weights, weights))
+                else:
+                        raise AttributeError("Make sure the size of the weight array is twice smaller than the size of D")
+                
+                if isinstance(data, np.ndarray):
+                        # Apply the weights only if D exist.
+                        # If not (i.e. N_partitions >1), weights are applied in _k_matrix.py when loading partitions of D
+                        self.Dstar = np.transpose(np.transpose(self.D) * np.sqrt(self.weights))
+                else:
+                        self.Dstar = None
+                        
+        # # Load and applied the weights to the D matrix
+        # if weights.size != 0:
+        #     if len(weights) == self.N_S:
+        #         print("The weights you have input have the size of the columns of D \n"
+        #               "MODULO has considered that you have already duplicated the dimensions of the weights "
+        #               "to match the dimensions of the D columns \n")
+        #         self.weights = weights
+        #     elif 2 * len(weights) == self.N_S:  # 2D computation only
+        #         self.weights = np.concatenate((weights, weights))
+        #         print("Modulo assumes you have a 2D domain and has duplicated the weight "
+        #               "array to match the size of the D columns \n")
+        #         print(weights)
+        #     else:
+        #         raise AttributeError("Make sure the size of the weight array is twice smaller than the size of D")
+        #     # Dstar is used to compute the K matrix
+        #     if isinstance(data, np.ndarray):
+        #         # Apply the weights only if D exist.
+        #         # If not (i.e. N_partitions >1), weights are applied in _k_matrix.py when loading partitions of D
+        #         self.Dstar = np.transpose(np.transpose(self.D) * np.sqrt(self.weights))
+        #     else:
+        #         self.Dstar = None
+        # else:
+        #     print("Modulo assumes you have a uniform grid. "
+        #           "If not, please give the weights as parameters of MODULO!")
+        #     self.weights = weights
+        #     self.Dstar = self.D
+        
+        pass 
+
+
 
     def _temporal_basis_POD(self,
                             SAVE_T_POD: bool = False):
@@ -409,6 +447,7 @@ class ModuloVKI:
         print("Done.")
 
         return Phi_M, Psi_M, Sigma_M
+
 
     def compute_POD_K(self, SAVE_T_POD: bool = False):
         """
@@ -764,3 +803,137 @@ class ModuloVKI:
             return Phi_xi, Psi_xi, Sigma_xi, K_zeta
         else:
             return Phi_xi, Psi_xi, Sigma_xi
+
+
+    # --- updated functions down here --- # 
+    
+    def mPOD(self, Nf, Ex, F_V, Keep, SAT, boundaries, MODE, dt, SAVE=False, K_in=None):
+        """
+        Multi-Scale Proper Orthogonal Decomposition (mPOD) of a signal.
+
+        Parameters
+        ----------
+        Nf : np.array
+                Orders of the FIR filters used to isolate each scale.
+        
+        Ex : int
+                Extension length at the boundaries to impose boundary conditions (must be at least as large as Nf).
+        
+        F_V : np.array
+                Frequency splitting vector, containing the cutoff frequencies for each scale. Units depend on the temporal step `dt`.
+        
+        Keep : np.array
+                Boolean array indicating scales to retain.
+        
+        SAT : int
+                Maximum number of modes per scale.
+        
+        boundaries : {'nearest', 'reflect', 'wrap', 'extrap'}
+                Boundary conditions for filtering to avoid edge effects. Refer to:
+                https://docs.scipy.org/doc/scipy/reference/tutorial/ndimage.html
+        
+        MODE : {'reduced', 'complete', 'r', 'raw'}
+                Mode option for QR factorization, used to enforce orthonormality of the mPOD basis to account for non-ideal filter responses.
+        
+        dt : float
+                Temporal step size between snapshots.
+        
+        SAVE : bool, default=False
+                Whether to save intermediate results to disk.
+
+        load_existing_K : bool, default=True
+                If True and MEMORY_SAVING is active, attempts to load an existing correlation matrix K from disk,
+                skipping recomputation if possible.
+
+        Returns
+        -------
+        Phi_M : np.array
+                Spatial mPOD modes (spatial structures matrix).
+        
+        Psi_M : np.array
+                Temporal mPOD modes (temporal structures matrix).
+        
+        Sigma_M : np.array
+                Modal amplitudes.
+        """
+        
+        if K_in is None:
+                print('Computing correlation matrix D matrix...')
+                self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS,
+                                        self.MEMORY_SAVING,
+                                        self.FOLDER_OUT, self.SAVE_K, D=self.Dstar)
+
+                if self.MEMORY_SAVING:
+                        self.K = np.load(self.FOLDER_OUT + '/correlation_matrix/k_matrix.npz')['K']
+        else:
+                print('Using K matrix provided by the user...')
+                self.K = K_in
+
+
+        print("Computing Temporal Basis...")
+        PSI_M = temporal_basis_mPOD(
+                K=self.K, Nf=Nf, Ex=Ex, F_V=F_V, Keep=Keep, boundaries=boundaries,
+                MODE=MODE, dt=dt, FOLDER_OUT=self.FOLDER_OUT,
+                n_Modes=self.n_Modes, MEMORY_SAVING=self.MEMORY_SAVING, SAT=SAT,
+                eig_solver=self.eig_solver
+        )
+        print("Temporal Basis computed.")
+
+        if hasattr(self, 'D'):
+                print('Computing spatial modes Phi from D...')
+                Phi_M, Psi_M, Sigma_M = spatial_basis_mPOD(
+                self.D, PSI_M, N_T=self.N_T, N_PARTITIONS=self.N_PARTITIONS,
+                N_S=self.N_S, MEMORY_SAVING=self.MEMORY_SAVING,
+                FOLDER_OUT=self.FOLDER_OUT, SAVE=SAVE
+                )
+        else:
+                print('Computing spatial modes Phi from partitions...')
+                Phi_M, Psi_M, Sigma_M = spatial_basis_mPOD(
+                np.array([1]), PSI_M, N_T=self.N_T,
+                N_PARTITIONS=self.N_PARTITIONS, N_S=self.N_S,
+                MEMORY_SAVING=self.MEMORY_SAVING,
+                FOLDER_OUT=self.FOLDER_OUT, SAVE=SAVE
+                )
+
+        print("Spatial modes computed.")
+
+        return Phi_M, Psi_M, Sigma_M
+
+    def DFT(self, F_S, SAVE_DFT=False):
+        """
+        Computes the Discrete Fourier Transform (DFT) of the dataset.
+
+        For detailed guidance, see the tutorial video:
+        https://www.youtube.com/watch?v=8fhupzhAR_M&list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR&index=2
+
+        Parameters
+        ----------
+        F_S : float
+                Sampling frequency in Hz.
+
+        SAVE_DFT : bool, default=False
+                If True, saves the computed DFT outputs to disk under:
+                `self.FOLDER_OUT/MODULO_tmp`.
+
+        Returns
+        -------
+        Phi_F : np.ndarray
+                Spatial DFT modes (spatial structures matrix).
+                
+        Psi_F : np.ndarray
+                Temporal DFT modes (temporal structures matrix).
+
+        Sigma_F : np.ndarray
+                Modal amplitudes.
+        """
+        if self.D is None:
+            D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
+            SAVE_DFT = True
+            Phi_F, Psi_F, Sigma_F = dft(self.N_T, F_S, D, self.FOLDER_OUT, SAVE_DFT=SAVE_DFT)
+
+        else:
+            Phi_F, Psi_F, Sigma_F = dft(self.N_T, F_S, self.D, self.FOLDER_OUT, SAVE_DFT=SAVE_DFT)
+
+        return Phi_F, Psi_F, Sigma_F
+
+        
