@@ -27,7 +27,7 @@ The reminder of this section overviews the salient theoretical aspects of the im
 implementation in MODULO. The following decompositions are available:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :glob:
    
    dft/*

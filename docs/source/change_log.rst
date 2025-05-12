@@ -3,11 +3,11 @@ Versions
 
 
 2.1.0
-=====
+------
 - `mPOD` bug fix: the previous version of the mPOD was skipping the last scale of the frequency splitting vector. Fixed in this version.
 
 2.0.7
-=====
+------
 Major updates:
 
 1. Faster EIG/SVD algorithms, using powerful randomized svd solvers from scikit_learn (see `TruncatedSVD
@@ -32,7 +32,7 @@ and
 
 
 Before MODULO 2.0: previous versions
-=====================================
+-------------------------------------
 
 The first version was developed in Matlab and was equipped with a GUI by D. Ninni.
 A minicourse on data-driven decompositions and the usage of MODULO was provided here:
