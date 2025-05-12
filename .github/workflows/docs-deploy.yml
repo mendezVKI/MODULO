@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Add this to fetch all history for proper link resolution
 
       - name: Set up Python
         uses: actions/setup-python@v3
@@ -30,5 +32,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: dev #  The branch where the documentation will be deployed.  CHANGED to dev
+          branch: gh-pages #  The branch where the documentation will be deployed.  CHANGED to gh-pages
           folder: docs/_build/html # The output directory of your built documentation
