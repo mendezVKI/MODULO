@@ -1,4 +1,4 @@
-Dynamic Mode Decomposition (DMD) 
+DMD
 =================================
 
 .. autofunction:: modulo_vki.modulo.ModuloVKI.DMD

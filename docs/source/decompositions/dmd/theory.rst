@@ -22,14 +22,14 @@ Then, the linear system propagator :math:`\mathbf{P}: \mathbf{d}_{t} \rightarrow
 be solved by least square. This can be computed via POD: 
 
 .. math::
-    \mathbf{P} \approx \mathbf{D}_2 \mathbf{Psi}_P \mathbf{\Sigma}_P^{-1} \mathbf{\Phi}_P^\top \;.
+    \mathbf{P} \approx \mathbf{D}_2 \mathbf{\Psi}_P \mathbf{\Sigma}_P^{-1} \mathbf{\Phi}_P^\top \;.
 
 Yet, this can be ill-conditioned and computationally prohibitive to compute and it is further projected onto a reduced POD space spanned 
-by the basis :math:`\tilde{\mathbf{\Phi}} = [\phi^\bullet, \dots, \phi^\bullet_{R}]`, where :math:`n_r \lle n_t`. This leads to a system 
+by the basis :math:`\tilde{\mathbf{\Phi}} = [\phi^\bullet, \dots, \phi^\bullet_{R}]`, where :math:`n_r \ll n_t`. This leads to a system 
 in :math:`\mathbb{R}^{n_r \times n_r}` wich reads: 
 
 .. math::
-    \mathbf{D}_2 \approx \mathbf{P}{\mathbf{D}_1 \rightarrow \tilde{\mathbf{\Phi}}_P^\top \mathbf{D}_2 \approx \tilde{\mathbf{\Phi}}_P^\top \mathbf{P} \tilde{\mathbf{\Phi}}_P \tilde{\mathbf{\Phi}}_P^\top \mathbf{D}_1 \;,
+    \mathbf{D}_2 \approx \mathbf{P}{\mathbf{D}}_1 \rightarrow \tilde{\mathbf{\Phi}}_P^\top \mathbf{D}_2 \approx \tilde{\mathbf{\Phi}}_P^\top \mathbf{P} \tilde{\mathbf{\Phi}}_P \tilde{\mathbf{\Phi}}_P^\top \mathbf{D}_1 \;,
 
 that we can compact writing:
 
