@@ -6,24 +6,18 @@ Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it h
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Getting Started  
 
    intro
    installation
    importing_data
 
-Data-Driven Modal Decompositions
-==================================
-
 .. toctree::
    :maxdepth: 2
    :caption: Data-Driven Modal Decompositions
 
    decompositions/index
-
-API Reference
-=============
 
 .. toctree::
    :maxdepth: 1
@@ -33,8 +27,6 @@ API Reference
    api/pod 
    api/mpod
 
-Changelog
-==========
 
 .. toctree::
    :maxdepth: 1
