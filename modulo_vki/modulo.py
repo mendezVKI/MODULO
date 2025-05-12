@@ -952,27 +952,23 @@ class ModuloVKI:
                 Flag to save time-dependent POD data. Default is False.
         mode : str, optional
                 The mode of POD computation. Must be either 'K' or 'svd'.
-                'K' (default) uses the snapshot method, i.e. works on the 
-                        temporal correlation matrix
-                'svd' uses the SVD decomposition. Note that in this case 
-                        the memory saving option can't be leveraged, as 
-                        the full dataset D must be loaded into memory.
+                'K' (default) uses the snapshot method on the temporal
+                correlation matrix.
+                'svd' uses the SVD decomposition (full dataset must fit in memory).
 
         Returns
         -------
         Psi_P : numpy.ndarray
                 POD spatial modes.
         Sigma_P : numpy.ndarray
-                POD singular values.  If needed, eigenvalues (Lambda_P)
-                can be computed from the singular values:
-                ``Sigma_P = numpy.sqrt(Lambda_P)``.
+                POD singular values (eigenvalues are Sigma_P**2).
         Phi_P : numpy.ndarray
                 POD temporal modes.
 
         Raises
         ------
         ValueError
-                If `mode` is not 'K' or 'X'.
+                If `mode` is not 'k' or 'svd'.
 
         Notes
         -----
