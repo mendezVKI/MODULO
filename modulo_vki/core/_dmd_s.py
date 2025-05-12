@@ -5,63 +5,66 @@ from ..utils._utils import switch_svds
 
 
 def dmd_s(D_1, D_2, n_Modes, F_S,
-          SAVE_T_DMD=False,
-          FOLDER_OUT='./',
+          SAVE_T_DMD: bool = False,
+          FOLDER_OUT: str = './',
           svd_solver: str = 'svd_sklearn_truncated'):
     """
-    This method computes the Dynamic Mode Decomposition (DMD) using hte PIP algorithm from Penland.    
-    
-    :param D_1: np.array 
-           First portion of the data, i.e. D[:,0:n_t-1]            
-    :param D_2: np.array
-           Second portion of the data, i.e. D[:,1:n_t]
-    :param Phi_P, Psi_P, Sigma_P: np.arrays
-           POD decomposition of D1
-    :param F_S: float
-           Sampling frequency in Hz
-    :param FOLDER_OUT: str
-           Folder in which the results will be saved (if SAVE_T_DMD=True)
-    :param K: np.array
-           Temporal correlation matrix
-    :param SAVE_T_POD: bool
-           A flag deciding whether the results are saved on disk or not. If the MEMORY_SAVING feature is active, it is switched True by default.
-    :param n_Modes: int
-           number of modes that will be computed
-    :param svd_solver: str,
-           svd solver to be used 
-          
-     
-    :return1 Phi_D: np.array. 
-          DMD's complex spatial structures
-    :return2 Lambda_D: np.array. 
-          DMD Eigenvalues (of the reduced propagator)
-    :return3 freqs: np.array. 
-          Frequencies (in Hz, associated to the DMD modes)
-    :return4 a0s: np.array. 
-          Initial Coefficients of the Modes
-    """   
+    Compute the Dynamic Mode Decomposition (DMD) using the PIP algorithm.
+
+    This implementation follows the Penland & Sardeshmukh PIP approach and
+    recovers the same modes as the exact DMD of Tu et al. (2014).
+
+    Parameters
+    ----------
+    D_1 : ndarray, shape (n_features, n_time-1)
+        First snapshot matrix (columns 0 to n_t-2 of the full data).
+    D_2 : ndarray, shape (n_features, n_time-1)
+        Second snapshot matrix (columns 1 to n_t-1 of the full data).
+    n_Modes : int
+        Number of DMD modes to compute.
+    F_S : float
+        Sampling frequency in Hz.
+    SAVE_T_DMD : bool, optional
+        If True, save time‐series DMD results to disk. Default is False.
+    FOLDER_OUT : str, optional
+        Directory in which to save outputs when SAVE_T_DMD is True. Default is './'.
+    svd_solver : str, optional
+        SVD solver to use for the low‐rank approximation. Default is
+        'svd_sklearn_truncated'.
+
+    Returns
+    -------
+    Phi_D : ndarray, shape (n_features, n_Modes)
+        Complex spatial DMD modes.
+    Lambda_D : ndarray, shape (n_Modes,)
+        Complex eigenvalues of the reduced propagator.
+    freqs : ndarray, shape (n_Modes,)
+        Frequencies (Hz) associated with each DMD mode.
+    a0s : ndarray, shape (n_Modes,)
+        Initial amplitudes (coefficients) of the DMD modes.
+    """ 
     
     Phi_P, Psi_P, Sigma_P = switch_svds(D_1, n_Modes, svd_solver)
-    print('SVD of D1 rdy')
+#     print('SVD of D1 rdy')
     Sigma_inv = np.diag(1 / Sigma_P)
     dt = 1 / F_S
     # %% Step 3: Compute approximated propagator
     P_A = LA.multi_dot([np.transpose(Phi_P), D_2, Psi_P, Sigma_inv])
-    print('reduced propagator rdy')
+#     print('reduced propagator rdy')
 
     # %% Step 4: Compute eigenvalues of the system
     Lambda, Q = LA.eig(P_A) # not necessarily symmetric def pos! Avoid eigsh, eigh
     freqs = np.imag(np.log(Lambda)) / (2 * np.pi * dt)
-    print(' lambdas and freqs rdy')
+#     print(' lambdas and freqs rdy')
 
     # %% Step 5: Spatial structures of the DMD in the PIP style
     Phi_D = LA.multi_dot([D_2, Psi_P, Sigma_inv, Q])
-    print('Phi_D rdy')
+#     print('Phi_D rdy')
 
     # %% Step 6: Compute the initial coefficients
     # a0s=LA.lstsq(Phi_D, D_1[:,0],rcond=None)
     a0s = LA.pinv(Phi_D).dot(D_1[:, 0])
-    print('Sigma_D rdy')
+#     print('Sigma_D rdy')
 
     if SAVE_T_DMD:
         os.makedirs(FOLDER_OUT + "/DMD/", exist_ok=True)

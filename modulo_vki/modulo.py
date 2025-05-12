@@ -1041,4 +1041,67 @@ class ModuloVKI:
 
         return Phi_P, Psi_P, Sigma_P
 
+    
+    def DMD(self, SAVE_T_DMD: bool = True, F_S: float = 1.0):
+        """
+        Compute the Dynamic Mode Decomposition (DMD) of the dataset.
+
+        This implementation follows the algorithm in Tu et al. (2014) [1]_, which is
+        essentially the same as Penland (1996) [2]_.  For
+        additional low-level details see v1 of Mendez et al. (2020) [3]_.
+
+        Parameters
+        ----------
+        SAVE_T_DMD : bool, optional
+                If True, save time-dependent DMD results to disk. Default is True.
+        F_S : float, optional
+                Sampling frequency in Hz. Default is 1.0.
+
+        Returns
+        -------
+        Phi_D : numpy.ndarray
+                Complex DMD modes.
+        Lambda_D : numpy.ndarray
+                Complex eigenvalues of the reduced-order propagator.
+        freqs : numpy.ndarray
+                Frequencies (Hz) associated with each DMD mode.
+        a0s : numpy.ndarray
+                Initial amplitudes (coefficients) of the DMD modes.
+
+        References
+        ----------
+        .. [1] https://arxiv.org/abs/1312.0041
+        .. [2] https://www.sciencedirect.com/science/article/pii/0167278996001248
+        .. [3] https://arxiv.org/abs/2001.01971
+        """
+
+        # If Memory saving is active, we must load back the data
+        if self.MEMORY_SAVING:
+            if self.N_T % self.N_PARTITIONS != 0:
+                tot_blocks_col = self.N_PARTITIONS + 1
+            else:
+                tot_blocks_col = self.N_PARTITIONS
+
+            # Prepare the D matrix again
+            D = np.zeros((self.N_S, self.N_T))
+            R1 = 0
+
+            # print(' \n Reloading D from tmp...')
+            for k in tqdm(range(tot_blocks_col)):
+                di = np.load(self.FOLDER_OUT + f"/data_partitions/di_{k + 1}.npz")['di']
+                R2 = R1 + np.shape(di)[1]
+                D[:, R1:R2] = di
+                R1 = R2
+
+            # Compute the DMD
+            Phi_D, Lambda, freqs, a0s = dmd_s(D[:, 0:self.N_T - 1],
+                                              D[:, 1:self.N_T], self.n_Modes, F_S, svd_solver=self.svd_solver)
+
+        else:
+            Phi_D, Lambda, freqs, a0s = dmd_s(self.D[:, 0:self.N_T - 1],
+                                              self.D[:, 1:self.N_T], self.n_Modes, F_S, SAVE_T_DMD=SAVE_T_DMD,
+                                              svd_solver=self.svd_solver, FOLDER_OUT=self.FOLDER_OUT)
+
+        return Phi_D, Lambda, freqs, a0s
+
         
