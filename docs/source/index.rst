@@ -67,9 +67,11 @@ implementation in MODULO. The following decompositions are available:
    :maxdepth: 1
    :caption: API Reference
 
+   api/readdata
    api/dft 
    api/pod 
    api/mpod
+   api/dmd 
 
 
 .. toctree::
