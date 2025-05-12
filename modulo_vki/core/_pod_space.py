@@ -4,7 +4,8 @@ from tqdm import tqdm
 import os
 
 
-def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING, N_T, FOLDER_OUT='./', N_PARTITIONS=1, SAVE_SPATIAL_POD=False,
+def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING, 
+                      N_T, FOLDER_OUT='./', N_PARTITIONS=1, SAVE_SPATIAL_POD=False,
                       rescale=False):
     """
     This function computs the POD spatial basis from the temporal basis,
@@ -55,7 +56,7 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING, N_T, FOLDER_OUT='./', N_
 
         else:
             # We take only the first R modes.
-            Sigma_P_t = Sigma_P[0:R];
+            Sigma_P_t = Sigma_P[0:R]
             Sigma_P_Inv_V = 1 / Sigma_P_t
             # So we have the inverse
             Sigma_P_Inv = np.diag(Sigma_P_Inv_V)

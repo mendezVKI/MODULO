@@ -30,9 +30,6 @@ Key features of MODULO
   - On‐disk correlation matrices (Ninni et al., 2020) :cite:`ninni_modulo_2020`  
   
   
-.. bibliography:: references.bib
-   :style: unsrt
-   :cited:
 
 Quick Start 
 ------------
@@ -84,6 +81,13 @@ Ask for help
 ^^^^^^^^^^^^
 If you have troubles using MODULO, or you need help with a specific decomposition, please open an issue on the MODULO GitHub repository.
 
+
+References 
+-----------
+
+.. bibliography:: references.bib
+   :style: unsrt
+   :cited:
 
 .. ++++++++++++++++++++++++++++++++++++++++++++++++++++
 .. What are data-driven decompositions? Some literature

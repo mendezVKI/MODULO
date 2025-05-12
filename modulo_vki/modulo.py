@@ -10,7 +10,7 @@ from tqdm import tqdm
 from modulo_vki.core._dft import dft_fit
 from modulo_vki.core.temporal_structures import dft, temporal_basis_mPOD
 from modulo_vki.core._dmd_s import dmd_s
-from modulo_vki.core._k_matrix import CorrelationMatrix
+from modulo_vki.core._k_matrix import CorrelationMatrix, spectral_filter
 from modulo_vki.core._mpod_space import spatial_basis_mPOD
 # from modulo_vki.core._mpod_time import temporal_basis_mPOD
 from modulo_vki.core._pod_space import Spatial_basis_POD
@@ -1103,5 +1103,158 @@ class ModuloVKI:
                                               svd_solver=self.svd_solver, FOLDER_OUT=self.FOLDER_OUT)
 
         return Phi_D, Lambda, freqs, a0s
+
+    def compute_SPOD(
+        self,
+        mode: str,
+        F_S: float,
+        n_Modes: int = 10,
+        SAVE_SPOD: bool = True,
+        **kwargs
+        ):
+        """
+        Unified Spectral POD interface.
+
+        Parameters
+        ----------
+        mode : {"sieber", "towne"}
+                Which SPOD algorithm to run.
+        F_S : float
+                Sampling frequency [Hz].
+        n_Modes : int, optional
+                Number of modes to compute, by default 10.
+        SAVE_SPOD : bool, optional
+                Whether to save outputs, by default True.
+        **kwargs
+                For mode="sieber", accepts:
+                - N_O (int): semi‐order of the diagonal filter
+                - f_c (float): cutoff frequency
+                For mode="towne", accepts:
+                - L_B (int): block length
+                - O_B (int): block overlap
+        Returns
+        -------
+        Phi : ndarray
+                Spatial modes.
+        Sigma : ndarray
+                Modal amplitudes.
+        Aux : ndarray or tuple
+                Temporal modes & frequencies:
+                - for sieber: (Psi, )
+                - for towne: (Psi, freqs)
+        """
+        mode = mode.lower()
+        if mode == "sieber":
+                # pull out sieber‐specific args (with defaults)
+                N_O = kwargs.pop("N_O", 100)
+                f_c = kwargs.pop("f_c", 0.3)
+                return self.compute_SPOD_s(F_S=F_S, N_O=N_O, f_c=f_c,
+                                        n_Modes=n_Modes, SAVE_SPOD=SAVE_SPOD)
+        elif mode == "towne":
+                L_B = kwargs.pop("L_B", 500)
+                O_B = kwargs.pop("O_B", 250)
+                return self.compute_SPOD_t(L_B=L_B, O_B=O_B,
+                                        n_Modes=n_Modes, SAVE_SPOD=SAVE_SPOD)
+        else:
+                raise ValueError("mode must be 'sieber' or 'towne'")
+
+
+    def compute_SPOD_t(self, F_S, L_B=500, O_B=250, n_Modes=10, SAVE_SPOD=True):
+        """
+        Compute the CSD-based Spectral POD (Towne _et al._) of your data.
+
+        This implementation follows Towne et al. (2018), which estimates the
+        cross-spectral density via Welch’s method and then performs a POD
+        at each frequency bin.
+
+        Parameters
+        ----------
+        F_S : float
+                Sampling frequency in Hz.
+        L_B : int, optional
+                Length of each FFT block in samples (nperseg), by default 500.
+        O_B : int, optional
+                Number of samples to overlap between consecutive FFT blocks (noverlap),
+                by default 250.
+        n_Modes : int, optional
+                Number of SPOD modes to compute at each frequency bin, by default 10.
+        SAVE_SPOD : bool, optional
+                If True, save output under `self.FOLDER_OUT/MODULO_tmp`, by default True.
+
+        Returns
+        -------
+        Psi_P_hat : numpy.ndarray, shape (n_S, n_bins, n_Modes)
+                Complex SPOD modes in the frequency domain (one set per bin).
+        Sigma_P : numpy.ndarray, shape (n_bins, n_Modes)
+                Modal energies at each frequency bin.
+        Phi_P : numpy.ndarray, shape (n_S, n_bins, n_Modes)
+                Spatial SPOD modes corresponding to each frequency bin.
+        freqs : numpy.ndarray, shape (n_bins,)
+                Frequency values (Hz) corresponding to each spectral bin.
+        """
+        if self.D is None:
+            D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
+            Phi_SP, Sigma_SP, Freqs_Pos = compute_SPOD_t(D, F_S, L_B=L_B, O_B=O_B,
+                                                         n_Modes=n_Modes, SAVE_SPOD=SAVE_SPOD,
+                                                         FOLDER_OUT=self.FOLDER_OUT, possible_svds=self.svd_solver)
+        else:
+            Phi_SP, Sigma_SP, Freqs_Pos = compute_SPOD_t(self.D, F_S, L_B=L_B, O_B=O_B,
+                                                         n_Modes=n_Modes, SAVE_SPOD=SAVE_SPOD,
+                                                         FOLDER_OUT=self.FOLDER_OUT, possible_svds=self.svd_solver)
+
+        return Phi_SP, Sigma_SP, Freqs_Pos
+
+
+    def compute_SPOD_s(self, N_O=100, f_c=0.3, n_Modes=10, SAVE_SPOD=True):
+        """
+        Compute the filtered‐covariance Spectral POD (Sieber _et al._) of your data.
+
+        This implementation follows Sieber et al. (2016), which applies a zero‐phase
+        diagonal filter to the time‐lag covariance and then performs a single POD
+        on the filtered covariance matrix.
+
+        Parameters
+        ----------
+        N_O : int, optional
+                Semi‐order of the diagonal FIR filter. The true filter length is
+                2*N_O+1, by default 100.
+        f_c : float, optional
+                Normalized cutoff frequency of the diagonal filter (0 < f_c < 0.5),
+                by default 0.3.
+        n_Modes : int, optional
+                Number of SPOD modes to compute, by default 10.
+        SAVE_SPOD : bool, optional
+                If True, save output under `self.FOLDER_OUT/MODULO_tmp`, by default True.
+
+        Returns
+        -------
+        Phi_sP : numpy.ndarray, shape (n_S, n_Modes)
+                Spatial SPOD modes.
+        Psi_sP : numpy.ndarray, shape (n_t, n_Modes)
+                Temporal SPOD modes (filtered).
+        Sigma_sP : numpy.ndarray, shape (n_Modes,)
+                Modal energies (eigenvalues of the filtered covariance).
+        """
+        if self.D is None:
+                
+                D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
+
+        self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, self.MEMORY_SAVING, self.FOLDER_OUT, self.SAVE_K, D=D)
+                
+        # additional step: diagonal spectral filter of K 
+        K_F = spectral_filter(self.K, N_o=N_O, f_c=f_c)
+        
+        # and then proceed with normal POD procedure
+        Psi_P, Sigma_P = Temporal_basis_POD(K_F, SAVE_SPOD, self.FOLDER_OUT, n_Modes)
+        
+        # but with a normalization aspect to handle the non-orthogonality of the SPOD modes
+        Phi_P = Spatial_basis_POD(D, N_T=self.K.shape[0], 
+                                        PSI_P=Psi_P, Sigma_P=Sigma_P,
+                                MEMORY_SAVING=self.MEMORY_SAVING, 
+                                FOLDER_OUT=self.FOLDER_OUT,
+                                N_PARTITIONS=self.N_PARTITIONS,rescale=True)
+                        
+
+        return Phi_P, Psi_P, Sigma_P
 
         

@@ -2,7 +2,8 @@ import os
 from tqdm import tqdm
 import numpy as np
 import math
-
+from scipy.signal import firwin
+from scipy import signal
 
 def CorrelationMatrix(N_T,
                       N_PARTITIONS=1,
@@ -111,3 +112,51 @@ def CorrelationMatrix(N_T,
         np.savez(FOLDER_OUT + "/correlation_matrix/k_matrix", K=K)
 
     return K if not MEMORY_SAVING else None
+
+
+def spectral_filter(K: np.ndarray, N_o:int, f_c: float) -> np.ndarray:
+    """
+    Zero‐phase band‐pass filter of the correlation matrix K along its diagonals.
+    Used for the SPOD proposed by Sieber  et al.
+
+    Parameters
+    ----------
+    K : (n_t, n_t) array
+        Original temporal correlation matrix.
+    N_o : int
+        Semi‐order of the FIR filter (true filter length = 2*N_o+1).
+    f_c : float
+        Normalized cutoff frequency (0 < f_c < 0.5).
+
+    Returns
+    -------
+    K_F : (n_t, n_t) array
+        The filtered correlation matrix.
+    """
+    n_t = K.shape[0]
+    
+    # extend K for edge-padding
+    K_ext = np.pad(K, (N_o, N_o), (N_o, N_o)) 
+    
+    # K_e = np.zeros((n_t + 2 * N_o, n_t + 2 * N_o))
+    # From which we clearly know that:
+    # K_e[N_o:n_t + N_o, N_o:n_t + N_o] = K
+    
+    # create 2D kernel for FIR 
+    h1d = firwin(N_o, f_c)
+    L = K_ext.shape[0]
+    
+    pad_l = (L - N_o) // 2
+    pad_r = L - N_o - pad_l
+    
+    # symmetrically padded kernel in 1D
+    h1d_pad = np.pad(h1d, (pad_l, pad_r))
+    
+    # we make it 2D diagonal
+    h2d = np.diag(h1d_pad)
+    
+    # finally filter K_ext and return the trimmed filtered without boundaries
+    K_ext_filt = signal.fftconvolve(K_ext, h2d, mode='same')
+    K_F = K_ext_filt[N_o : N_o + n_t, N_o : N_o + n_t]
+    
+    return K_F
