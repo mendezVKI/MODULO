@@ -46,9 +46,9 @@ API Reference
    :maxdepth: 1
    :caption: Modules
 
-    api/dft 
-    api/pod 
-    api/mpod
+   api/dft 
+   api/pod 
+   api/mpod
 
 What’s New
 ==========
