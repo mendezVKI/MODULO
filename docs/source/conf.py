@@ -50,7 +50,7 @@ html_show_sphinx = False
 # Place your .bib files in this directory
 bibtex_bibfiles = ['paper.bib']
 bibtex_default_style = 'unsrt'
-
+suppress_warnings = ["ref.toctree"]
 # -- Intersphinx mapping -----------------------------------------------------
 intersphinx_mapping = {
     'python':   ('https://docs.python.org/3', None),
