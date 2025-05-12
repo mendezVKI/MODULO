@@ -24,6 +24,7 @@ direct computation of the spatial structures via correlation:
 
 .. math:: 
     \psi_r(x) = \frac{1}{\sigma_r}\langle \mathbf{u}(x, t), \psi_r(t) \rangle_T = \frac{1}{\sigma_r} \sum_{k=1}^{n_t} \mathbf{u}(x, t) \phi_r(x)\;.
+ 
 
 We note also that because of this joint orthonormality, one might decide to work with the temporal correlation matrix :math:`\mathbf{K}` or the spatial
 analogue :math:`\mathbf{C}` depending on the shape of the dataset, and arrive to the same result.
