@@ -2,7 +2,7 @@ import os
 import numpy as np
 from scipy.signal import firwin  # To create FIR kernels
 from tqdm import tqdm
-from utils import conv_m, switch_eigs
+from modulo_vki.utils import conv_m, switch_eigs
 
 
 def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep, 
