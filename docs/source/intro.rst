@@ -4,37 +4,39 @@ Introduction to MODULO
 MODULO (MODal mULtiscale pOd) is a Python package developed at the von Karman Institute for Fluid Dynamics to perform a variety of **data-driven modal decompositions**.  
 These decompositions seek to approximate a high-dimensional dataset as a linear combination of a small number of coherent building blocks—often called **modes**—which capture the most salient spatio-temporal patterns.
 
-Each mode \(r\) is characterized by:
+Each mode :math:`r`` is characterized by:
 
-- **Spatial structure** \(\phi_r(x)\), which encodes the “shape” of the pattern in space,  
-- **Temporal structure** \(\psi_r(t)\), which describes how that pattern evolves in time,  
-- **Amplitude** \(\sigma_r\), which quantifies the energy or variance captured by the mode.  
+- **Spatial structure** :math:`\mathbf{\phi}_r`, which encodes the the pattern in space,  
+- **Temporal structure** :math:`\mathbf{\psi}_r`, which describes how that pattern evolves in time,  
+- **Amplitude** :math:`\sigma_r`, which quantifies the modal amplitude, e.g. energy or variance captured by the mode.  
 
 The field of applications ranges from **reduced-order modeling** (ROM) and **flow control** to **filtering**, and **feature extraction**. 
-For a comprehensive review of modal methods in fluid dynamics, see Mendez _et al._ (2023) :cite:`mendez_2023`.
+For a comprehensive review of modal methods in fluid dynamics, see Mendez et al. (2023) :cite:`mendez_2023`.
 
 Key features of MODULO
 ----------------------
+- **Multiple decomposition algorithms**:
 
-- **Multiple decomposition algorithms**  
   - **POD** (Proper Orthogonal Decomposition) via the snapshot method or SVD  
-  - **mPOD** (Multiscale POD) for frequency-band separation  
+  - **mPOD** (Multiscale POD) for frequency‐band separation  
   - **SPOD** (Spectral POD)  
-  - **DFT** (Discrete Fourier Transform) 
-  - **DMD** (Dynamic Mode Decomposition)
+  - **DFT** (Discrete Fourier Transform)  
+  - **DMD** (Dynamic Mode Decomposition)  
   - **KPOD** (Kernel POD)  
-  
-- **Memory-efficient implementations**  
-  - Partition-based loading for very large datasets  
-  - On-disk correlation matrices (Ninni et _et al._ (2020) :cite:`ninni_modulo_2020`)
 
+- **Memory‐efficient implementations**:
+
+  - Partition‐based loading for very large datasets  
+  - On‐disk correlation matrices (Ninni et al., 2020) :cite:`ninni_modulo_2020`  
+  
+  
 .. bibliography:: references.bib
    :style: unsrt
    :cited:
 
 Quick Start 
 ------------
-MODULO is published on PyPI and can be installed with `pip install modulo_vki` (see :doc:`installation`). The user is first 
+MODULO is published on PyPI and can be installed with ``pip install modulo_vki`` (see :doc:`installation`). The user is first 
 requested to assemble the matrix field to be decomposed, or the folder of the raw files to be imported if she wants to use the 
 data loading routines present in the auxialliary code of MODULO. We refer the reader to :doc:`importing_data` for an example 
 on the usage of these routines, and now we illustrate the case in which the matrix :math:`\mathbf{D}` is already available in memory.
