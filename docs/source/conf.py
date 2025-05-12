@@ -48,7 +48,7 @@ html_show_sphinx = False
 
 # -- Bibliography configuration ---------------------------------------------
 # Place your .bib files in this directory
-bibtex_bibfiles = ['references.bib']
+bibtex_bibfiles = ['paper.bib']
 bibtex_default_style = 'unsrt'
 
 # -- Intersphinx mapping -----------------------------------------------------
