@@ -1,15 +1,14 @@
-=====================
-MODULO: Introduction
-=====================
+Introduction to MODULO 
+==========================
 
 MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute for Fluid Dynamics to perform data-driven modal decompositions.
 Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it has recently been extended to perform also other decompositions that include POD, SPODs, DFT, DMD, mPOD. 
 
 Quick Start 
-============
+------------
 
 Collaborate on GitHub
-======================
+----------------------
 
 
 .. ++++++++++++++++++++++++++++++++++++++++++++++++++++

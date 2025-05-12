@@ -30,9 +30,9 @@ implementation in MODULO. The following decompositions are available:
    :maxdepth: 1
    :glob:
    
-   dft/*
-   pod/*
-   dmd/*
-   mpod/*
-   kpod/*
-   spod/*
+   dft/index
+   pod/index
+   dmd/index
+   mpod/index
+   kpod/index
+   spod/index

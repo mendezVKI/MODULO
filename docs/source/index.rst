@@ -5,9 +5,6 @@ MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institut
 Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it has recently been extended to perform also other decompositions that include POD, SPODs, DFT, DMD, mPOD. 
 
 
-Quick Start 
------------
-
 .. toctree::
    :maxdepth: 1
    :caption: Getting Started  
@@ -16,12 +13,12 @@ Quick Start
    installation
    importing_data
 
-Tutorials & Theory
-==================
+Data-Driven Modal Decompositions
+==================================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Core Decompositions
+   :caption: Data-Driven Modal Decompositions
 
    decompositions/index
 
@@ -30,17 +27,17 @@ API Reference
 
 .. toctree::
    :maxdepth: 1
-   :caption: Modules
+   :caption: API Reference
 
    api/dft 
    api/pod 
    api/mpod
 
-Change Log
+Changelog
 ==========
 
 .. toctree::
    :maxdepth: 1
-   :caption: Change Log
+   :caption: Changelog
 
    change_log 
