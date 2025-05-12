@@ -9,4 +9,3 @@ This document offers a brief reference guide to the use of the Proper Orthogonal
 
    theory
    basic_usage
-   module_reference

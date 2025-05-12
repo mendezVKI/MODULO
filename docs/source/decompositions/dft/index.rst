@@ -10,5 +10,4 @@ This document offers a brief reference guide to the use of the Discrete Fourier 
 
 
    theory.rst
-   module_reference.rst
    basic_usage.rst

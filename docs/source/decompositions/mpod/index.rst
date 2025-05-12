@@ -10,5 +10,4 @@ This document offers a brief reference guide to the use of the Multiscale Proper
 
 
    theory.rst
-   modules_reference.rst
    basic_usage.rst
