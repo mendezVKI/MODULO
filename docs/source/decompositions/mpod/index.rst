@@ -1,7 +1,7 @@
 Multiscale Proper Orthogonal Decomposition (mPOD)
 =================================================
 
-This document offers a brief reference guide to the use of the Multiscale Proper Orthogonal Decomposition (mPOD) :cite:`mendez_balabane_buchlin_2019`.
+This document offers a brief reference guide to the use of the Multiscale Proper Orthogonal Decomposition (mPOD).
 
 .. toctree::
    :caption: Multiscale POD User Guide
