@@ -1,4 +1,4 @@
 API 
 ====
 
-.. autofunction:: modulo_vki.modulo.ModuloVKI.compute_POD_K
+.. autofunction:: modulo_vki.modulo.ModuloVKI.POD

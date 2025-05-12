@@ -2,7 +2,8 @@ mPOD example
 ========================
 An example of the usage of the mPOD routine, extracted from the `examples` folder is reported below.
 
-.. python:: 
+.. code-block:: python
+
     import numpy as np
     from modulo_vki.modulo import ModuloVKI
     from modulo_vki.utils import plot_mPOD

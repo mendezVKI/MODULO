@@ -7,11 +7,12 @@ from sklearn.metrics.pairwise import pairwise_kernels
 from tqdm import tqdm
 
 # All the functions from the modulo package 
-from modulo_vki.core._dft import dft_fit, dft
+from modulo_vki.core._dft import dft_fit
+from modulo_vki.core.temporal_structures import dft, temporal_basis_mPOD
 from modulo_vki.core._dmd_s import dmd_s
 from modulo_vki.core._k_matrix import CorrelationMatrix
 from modulo_vki.core._mpod_space import spatial_basis_mPOD
-from modulo_vki.core._mpod_time import temporal_basis_mPOD
+# from modulo_vki.core._mpod_time import temporal_basis_mPOD
 from modulo_vki.core._pod_space import Spatial_basis_POD
 from modulo_vki.core._pod_time import Temporal_basis_POD
 from modulo_vki.core._spod_s import compute_SPOD_s
@@ -935,5 +936,113 @@ class ModuloVKI:
             Phi_F, Psi_F, Sigma_F = dft(self.N_T, F_S, self.D, self.FOLDER_OUT, SAVE_DFT=SAVE_DFT)
 
         return Phi_F, Psi_F, Sigma_F
+
+    
+    def POD(self, SAVE_T_POD: bool = False, mode: str = 'K'):
+        """
+        Compute the Proper Orthogonal Decomposition (POD) of a dataset.
+
+        The POD is computed using the snapshot approach, working on the
+        temporal correlation matrix.  The eigenvalue solver for this
+        matrix is defined in the `eig_solver` attribute of the class.
+
+        Parameters
+        ----------
+        SAVE_T_POD : bool, optional
+                Flag to save time-dependent POD data. Default is False.
+        mode : str, optional
+                The mode of POD computation. Must be either 'K' or 'svd'.
+                'K' (default) uses the snapshot method, i.e. works on the 
+                        temporal correlation matrix
+                'svd' uses the SVD decomposition. Note that in this case 
+                        the memory saving option can't be leveraged, as 
+                        the full dataset D must be loaded into memory.
+
+        Returns
+        -------
+        Psi_P : numpy.ndarray
+                POD spatial modes.
+        Sigma_P : numpy.ndarray
+                POD singular values.  If needed, eigenvalues (Lambda_P)
+                can be computed from the singular values:
+                ``Sigma_P = numpy.sqrt(Lambda_P)``.
+        Phi_P : numpy.ndarray
+                POD temporal modes.
+
+        Raises
+        ------
+        ValueError
+                If `mode` is not 'K' or 'X'.
+
+        Notes
+        -----
+        A brief recall of the theoretical background of the POD is
+        available at https://youtu.be/8fhupzhAR_M
+        """
+        
+        mode = mode.lower()
+        assert mode in ('k', 'svd'), "POD mode must be either 'K', temporal correlation matrix, or 'svd'." 
+
+        if mode == 'k':
+                
+                print('Computing correlation matrix...')
+                self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS,
+                                        self.MEMORY_SAVING,
+                                        self.FOLDER_OUT, self.SAVE_K, D=self.Dstar, weights=self.weights)
+
+                if self.MEMORY_SAVING:
+                        self.K = np.load(self.FOLDER_OUT + '/correlation_matrix/k_matrix.npz')['K']
+
+                        print("Computing Temporal Basis...")
+                        Psi_P, Sigma_P = Temporal_basis_POD(self.K, SAVE_T_POD,
+                                                        self.FOLDER_OUT, self.n_Modes, eig_solver=self.eig_solver)
+                        print("Done.")
+                        print("Computing Spatial Basis...")
+
+                if self.MEMORY_SAVING:  # if self.D is available:
+                        print('Computing Phi from partitions...')
+                        Phi_P = Spatial_basis_POD(np.array([1]), N_T=self.N_T,
+                                        PSI_P=Psi_P,
+                                        Sigma_P=Sigma_P,
+                                        MEMORY_SAVING=self.MEMORY_SAVING,
+                                        FOLDER_OUT=self.FOLDER_OUT,
+                                        N_PARTITIONS=self.N_PARTITIONS)
+
+                else:  # if not, the memory saving is on and D will not be used. We pass a dummy D
+                        print('Computing Phi from D...')
+                        Phi_P = Spatial_basis_POD(self.D, N_T=self.N_T,
+                                                PSI_P=Psi_P,
+                                                Sigma_P=Sigma_P,
+                                                MEMORY_SAVING=self.MEMORY_SAVING,
+                                                FOLDER_OUT=self.FOLDER_OUT,
+                                                N_PARTITIONS=self.N_PARTITIONS)
+                        print("Done.")
+        
+        else:  
+                if self.MEMORY_SAVING:
+                        
+                        if self.N_T % self.N_PARTITIONS != 0:
+                                tot_blocks_col = self.N_PARTITIONS + 1
+                        else:
+                                tot_blocks_col = self.N_PARTITIONS
+
+                        # Prepare the D matrix again
+                        D = np.zeros((self.N_S, self.N_T))
+                        R1 = 0
+
+                        # print(' \n Reloading D from tmp...')
+                        for k in tqdm(range(tot_blocks_col)):
+                                di = np.load(self.FOLDER_OUT + f"/data_partitions/di_{k + 1}.npz")['di']
+                                R2 = R1 + np.shape(di)[1]
+                                D[:, R1:R2] = di
+                                R1 = R2
+
+                        # Now that we have D back, we can proceed with the SVD approach
+                        Phi_P, Psi_P, Sigma_P = switch_svds(D, self.n_Modes, self.svd_solver)
+
+                else:  # self.MEMORY_SAVING:
+                        Phi_P, Psi_P, Sigma_P = switch_svds(self.D, self.n_Modes, self.svd_solver)    
+
+        return Phi_P, Psi_P, Sigma_P
 
         
