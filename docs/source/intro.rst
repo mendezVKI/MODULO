@@ -1,14 +1,86 @@
 Introduction to MODULO 
 ==========================
 
-MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute for Fluid Dynamics to perform data-driven modal decompositions.
-Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it has recently been extended to perform also other decompositions that include POD, SPODs, DFT, DMD, mPOD. 
+MODULO (MODal mULtiscale pOd) is a Python package developed at the von Karman Institute for Fluid Dynamics to perform a variety of **data-driven modal decompositions**.  
+These decompositions seek to approximate a high-dimensional dataset as a linear combination of a small number of coherent building blocks—often called **modes**—which capture the most salient spatio-temporal patterns.
+
+Each mode \(r\) is characterized by:
+
+- **Spatial structure** \(\phi_r(x)\), which encodes the “shape” of the pattern in space,  
+- **Temporal structure** \(\psi_r(t)\), which describes how that pattern evolves in time,  
+- **Amplitude** \(\sigma_r\), which quantifies the energy or variance captured by the mode.  
+
+The field of applications ranges from **reduced-order modeling** (ROM) and **flow control** to **filtering**, and **feature extraction**. 
+For a comprehensive review of modal methods in fluid dynamics, see Mendez _et al._ (2023) :cite:`mendez_2023`.
+
+Key features of MODULO
+----------------------
+
+- **Multiple decomposition algorithms**  
+  - **POD** (Proper Orthogonal Decomposition) via the snapshot method or SVD  
+  - **mPOD** (Multiscale POD) for frequency-band separation  
+  - **SPOD** (Spectral POD)  
+  - **DFT** (Discrete Fourier Transform) 
+  - **DMD** (Dynamic Mode Decomposition)
+  - **KPOD** (Kernel POD)  
+  
+- **Memory-efficient implementations**  
+  - Partition-based loading for very large datasets  
+  - On-disk correlation matrices (Ninni et _et al._ (2020) :cite:`ninni_modulo_2020`)
+
+.. bibliography:: references.bib
+   :style: unsrt
+   :cited:
 
 Quick Start 
 ------------
+MODULO is published on PyPI and can be installed with `pip install modulo_vki` (see :doc:`installation`). The user is first 
+requested to assemble the matrix field to be decomposed, or the folder of the raw files to be imported if she wants to use the 
+data loading routines present in the auxialliary code of MODULO. We refer the reader to :doc:`importing_data` for an example 
+on the usage of these routines, and now we illustrate the case in which the matrix :math:`\mathbf{D}` is already available in memory.
+In this case, the decomposition can be carried out as: 
+
+.. code-block:: python 
+
+    from modulo_vki import ModuloVKI # this is to create modulo objects
+    
+    D = np.array([]) # snapshot matrix containing the data 
+
+    m = ModuloVKI(data=D)
+
+    # Compute the DFT
+    Phi_F, Psi_F, Sorted_Sigmas = m.DFT(Fs)
+
+This output is consistent regardless of the decomposition, e.g. MODULO will always yield the spatial structures first,
+then the temporal ones and lastly the amplitudes of the modes.
+
 
 Collaborate on GitHub
 ----------------------
+
+We welcome contributions to MODULO. 
+
+It is recommended to perform a shallow clone of the repository to avoid downloading the entire history of the project:
+
+.. code-block:: bash
+
+    $ git clone --depth 1 https://github.com/mendezVKI/MODULO.git
+
+This will download only the latest version of the repository, which is sufficient for contributing to the project, and will save 
+you time and disk space.
+
+To create a new feature, please submit a pull request, specifying the proposed changes and 
+providing an example of how to use the new feature (that will be included in the `examples/` folder).
+
+The pull request will be reviewed by the MODULO team before being merged into the main branch, and your contribution duly acknowledged.
+
+Report bugs 
+^^^^^^^^^^^^
+If you find a bug, or you encounter unexpected behaviour, please open an issue on the MODULO GitHub repository.
+
+Ask for help
+^^^^^^^^^^^^
+If you have troubles using MODULO, or you need help with a specific decomposition, please open an issue on the MODULO GitHub repository.
 
 
 .. ++++++++++++++++++++++++++++++++++++++++++++++++++++
