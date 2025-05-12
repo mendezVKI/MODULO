@@ -5,7 +5,7 @@ MODULO documentation
    :maxdepth: 2
    :caption: Introduction to the project
 
-   introduction
+   intro
    installation
    importing_data
 
