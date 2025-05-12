@@ -8,7 +8,6 @@ The temporal structures satisfying these properties are the eigenvectors of the 
 where :math:`\langle \cdot \rangle` defines a suitable inner product. Thus,
 
 .. math::
-
     \mathbf{K} \psi_{r}(t_k) = \lambda_r \psi_{r}(t_k) \quad r \in [1, R]
 
 that yields to the factorization of :math:`\mathbf{K}` as:
@@ -29,7 +28,9 @@ direct computation of the spatial structures via correlation:
 We note also that because of this joint orthonormality, one might decide to work with the temporal correlation matrix :math:`\mathbf{K}` or the spatial
 analogue :math:`\mathbf{C}` depending on the shape of the dataset, and arrive to the same result.
 
-An alternative path is offered by computing the SVD of the dataset :mathbf:`D`, yielding the same modes if the POD inner-product coincides with the 
+An alternative path is offered by computing the SVD of the dataset :math:`\mathbf{D}`, yielding the same modes if the POD inner-product coincides with the 
 standard Euclidean one used in the SVD procedure. 
 
-In MODULO, the default option is the computation via the temporal correlation matrix, while we retain the possibility of using the SVD.
+.. note::
+
+   By default, ``POD`` uses the temporal‐correlation approach; to switch to SVD, pass ``method='svd'``.
