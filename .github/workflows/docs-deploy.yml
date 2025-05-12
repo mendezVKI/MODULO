@@ -33,4 +33,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages #  The branch where the documentation will be deployed.  CHANGED to gh-pages
-          folder: docs/_build/html # The output directory of your built documentation
+          folder: docs/build/html # The output directory of your built documentation
