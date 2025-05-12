@@ -1,6 +1,5 @@
-=======================================
 Importing data and D matrix preparation
-=======================================
+----------------------------------------
 
 MODULO can operate with two options.
 

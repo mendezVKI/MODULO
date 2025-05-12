@@ -1,5 +1,5 @@
-mPOD example
-========================
+Example in MODULO
+------------------
 An example of the usage of the mPOD routine, extracted from the `examples` folder is reported below.
 
 .. code-block:: python

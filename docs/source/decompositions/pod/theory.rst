@@ -1,5 +1,5 @@
-Proper Orthogonal Decomposition (POD)
-======================================
+Theory
+--------------------------------------
 
 The POD is an energy-based decomposition, which provides the modes capturing the largest amount of energy (variance) in the dataset,
 such that the convergence of an approximation with increasing number of modes is optimal.

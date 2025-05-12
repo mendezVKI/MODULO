@@ -1,5 +1,5 @@
-POD Example
-=============
+Example in MODULO
+----------------
 
 .. code-block:: python
 

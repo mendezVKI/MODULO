@@ -1,5 +1,5 @@
-Discrete Fourier Transform (DFT)
-========================================================
+Theory
+---------------------------------
 
 The DFT is the only not strictly data-driven decomposition present in MODULO. In fact, the temporal basis :math:`\bm{\psi}_F` is the Fourier basis, computed *a priori*. 
 This reads:

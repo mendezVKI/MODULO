@@ -12,7 +12,7 @@ reads
 where :math:`\mathbf{\Phi} \in \mathbb{R}^{n_S \times r}` and :math:`\mathbf{\Psi} \in \mathbb{R}^{n_t \times r}` are the spatial and temporal modes, 
 respectively, and :math:`\mathbf{\Sigma} \in \mathbb{R}^{r \times r}` is a diagonal matrix containing the modal energy associated with each mode.
 
-All decompositions available in MODULO have an orthonormal temporal basis (:math:`\Psi^{-1}=\Psi^\cross`,  where :math:`\cross` denotes Hermitian transpose).
+All decompositions available in MODULO have an orthonormal temporal basis (:math:`\Psi^{-1}=\Psi^\dagger`,  where :math:`\dagger` denotes Hermitian transpose).
 Then, the spatial structures are readily computed from:
 
 .. math::

@@ -1,5 +1,5 @@
-Multiscale Proper Orthogonal Decomposition (mPOD)
-========================================================
+Theory
+-------------------------------------------------
 
 The main idea of the mPOD is to perform a POD on non-overlapping portions of the frequency domain of the signal :cite: `ninni_modulo_2020`.
 Considering a signal :math:`\mathbf{u}(t)` defined in the time domain, sampled with a sampling frequency :math:`f_s`, one can define to 

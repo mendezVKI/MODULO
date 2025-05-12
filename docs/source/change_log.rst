@@ -1,5 +1,4 @@
-================================
-Changelog Details 
+Versions
 ================================
 
 
@@ -30,4 +29,28 @@ and
 7. Implementation of a kernel version of the POD, in which the correlation matrix is replaced by a kernel matrix. This is described in Lecture 15 of the course *Hands on Machine Learning for Fluid dynamics 2023*: https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023. See also https://arxiv.org/abs/2208.07746).
 
 8. Implementation of a formulation for non-uniform meshes, using a weighted matrix for all the relevant inner products. This is currently available only for POD and mPOD which allows for handling data produced from CFD simulation without resampling on a uniform grid (see exercise 5). It can be used both with and without the memory-saving option.
+
+
+Before MODULO 2.0: previous versions
+=====================================
+
+The first version was developed in Matlab and was equipped with a GUI by D. Ninni.
+A minicourse on data-driven decompositions and the usage of MODULO was provided here:
+
+https://www.youtube.com/watch?v=ED3x00H4yN4&list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR&index=1
+
+Although much of the material covered in these videos is still relevant, a new version of this minicourse is being prepared.
+This is a compressed version of the course "Data-Driven Modal Analysis" that I give as part of the Research Master Program at the von Karman Institute (https://www.vki.ac.be/index.php/research-master-in-fluid-dynamics)
+
+This first MODULO version implemented POD, DFT and mPOD and was already equipped with the first version of the memory-saving feature.
+The GUI was also available as an executable that the user could install without needing a Matlab license.
+
+This first version is still accessible from the branch "Old_Matlab_Implementation", but it is no longer maintained.
+
+The main functions were then imported to Python, and L. Schena developed the first package PyPi.
+A tutorial on how to use that version is given here: 
+
+https://www.youtube.com/watch?v=y2uSvdxAwHk&list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR&index=9
+
+The current architecture of MODULO v2 is built from that version but has been considerably expanded. This first Python version is still accessible from the branch "Old_Python_Implementation" together with the first (unpackaged) versions of the codes. These are still used in some courses for didactic purposes.
 

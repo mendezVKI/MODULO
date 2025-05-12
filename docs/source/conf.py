@@ -43,6 +43,15 @@ html_theme = 'sphinx_rtd_theme'
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 html_static_path = ['_static']
 
+# Point Sphinx at your logo file:
+html_logo = '_static/modulo_logo.png'
+
+# Use the rtd theme’s “logo only” mode so it replaces the project name:
+html_theme = 'sphinx_rtd_theme'
+html_theme_options = {
+    'logo_only': True,
+    'display_version': True,   # or False if you don’t want the version next to it
+}
 # If true, show 'Created using Sphinx' in the footer
 html_show_sphinx = False
 
