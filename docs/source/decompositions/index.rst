@@ -1,3 +1,4 @@
+
 All modal decompositions are implemented in MODULO as matrix factorization of the snapshot matrix :math:`D(\mathbf{x}, t) \in \mathbb{R}^{n_S \times n_t}`.
 Each entry of the snapshot matrix is a flattened realization of the data, regardless of the data dimensionality (2D, 3D). Thus, this decomposition
 reads 
