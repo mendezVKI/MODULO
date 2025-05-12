@@ -17,5 +17,3 @@ The format expected for the data is ``.dat`` or ``.txt``.  Variants for ``.csv``
 
 The codes to generate the matrix D are available in  ``ReadData``. The main function is 
 *_data_processing*, documented below:
-
-.. autofunction:: modulo_vki.utils.read_db.ReadData._data_processing

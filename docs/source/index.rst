@@ -11,7 +11,16 @@ Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it h
 
    intro
    installation
+
+Data pre-processing routines
+---------------------------------
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Data pre-processing 
+
    importing_data
+   weights_inner
 
 
 Data-Driven Modal Decompositions
@@ -44,6 +53,7 @@ implementation in MODULO. The following decompositions are available:
 
 .. toctree::
    :maxdepth: 1
+   :caption: Data-Driven Modal Decompositions
    :glob:
    
    decompositions/dft/index
