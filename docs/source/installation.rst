@@ -1,16 +1,18 @@
-============
 Installation
 ============
 
 You can access the latest update of the modulo python package on PyPI using the command line:
 
-    $ pip install modulo_vki
+.. code-block:: 
+
+    pip install modulo_vki
 
 Alternatively, you can clone the repository and install the package locally:
-    
-        $ git clone https://github.com/mendezVKI/MODULO.git 
-        $ cd MODULO
-        $ python setup.py install
+
+.. code-block::
+        git clone https://github.com/mendezVKI/MODULO.git 
+        cd MODULO
+        python setup.py install
 
 The package requires the following dependencies:
 
@@ -26,7 +28,8 @@ The package requires the following dependencies:
 
 To run the Jupyter notebooks, you will also need to install the Jupyter notebook package:
 
-    $ pip install jupyter
+.. code-block::
+    pip install jupyter
 
 and the additional packages:
 - "pyvista",

@@ -159,3 +159,17 @@ abstract = {We propose a parallel (distributed) version of the spectral proper o
 Program summary
 Program Title: PySPOD CPC Library link to program files: https://doi.org/10.17632/jf5bf26jcj.1 Developer's repository link: https://github.com/MathEXLab/PySPOD Licensing provisions: MIT License Programming language: Python Nature of problem: Large spatio-temporal datasets may contain coherent patterns that can be leveraged to better understand, model, and possibly predict the behavior of complex dynamical systems. To this end, modal decomposition methods, such as the proper orthogonal decomposition (POD) and its spectral counterpart (SPOD), constitute powerful tools. The SPOD algorithm allows the systematic identification of space-time coherent patterns. This can be used to understand better the physics of the process of interest, and provide a path for mathematical modeling, including reduced order modeling. The SPOD algorithm has been successfully applied to fluid dynamics, geophysics and other domains. However, the existing open-source implementations are serial, and they prevent running on the increasingly large datasets that are becoming available, especially in computational physics. The inability to analyze via SPOD large dataset in turn prevents unlocking novel mechanisms and dynamical behaviors in complex systems. Solution method: We provide an open-source parallel (MPI distributed) code, namely PySPOD, that is able to run on large datasets (the ones considered in the present paper reach about 200 Terabytes). The code is built on the previous serial open-source code PySPOD that was published in https://joss.theoj.org/papers/10.21105/joss.02862.pdf. The new parallel implementation is able to scale on several nodes (we show both weak and strong scalability) and solve some of the bottlenecks that are commonly found at the I/O stage. The current parallel code allows running on datasets that was not easy or possible to analyze with serial SPOD algorithms, hence providing a path towards unlocking novel findings in computational physics. Additional comments including restrictions and unusual features: The code comes with a set of built-in postprocessing tools, for visualizing the results. It also comes with extensive continuous integration, documentation, and tutorials, as well as a dedicated website in addition to the associated GiHub repository. Within the package we also provide a parallel implementation of the proper orthogonal decomposition (POD), that leverages the I/O parallel capabilities of the SPOD algorithm.}
 }
+
+@phdthesis{tu2013dynamic,
+  title={Dynamic mode decomposition: Theory and applications},
+  author={Tu, Jonathan H},
+  year={2013},
+  school={Princeton University}
+}
+
+@article{mendez2022statistical,
+  title={Statistical Treatment, Fourier and Modal Decomposition},
+  author={Mendez, Miguel Alfonso},
+  journal={arXiv preprint arXiv:2201.03847},
+  year={2022}
+}

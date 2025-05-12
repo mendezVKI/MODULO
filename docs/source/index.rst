@@ -12,8 +12,6 @@ Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it h
    intro
    installation
 
-Data pre-processing routines
----------------------------------
 
 .. toctree::
    :maxdepth: 1
