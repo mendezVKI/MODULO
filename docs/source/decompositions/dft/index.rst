@@ -7,8 +7,7 @@ This document offers a brief reference guide to the use of the Discrete Fourier 
    :caption: DFT User Guide
    :maxdepth: 2
    :numbered:
-   :keywords: DFT, Fourier transform
-   :glob:
+
 
    theory.rst
    modules_reference.rst

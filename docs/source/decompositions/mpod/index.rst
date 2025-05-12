@@ -7,8 +7,7 @@ This document offers a brief reference guide to the use of the Multiscale Proper
    :caption: Multiscale POD User Guide
    :maxdepth: 2
    :numbered:
-   :keywords: mPOD, POD, decomposition, multiscale
-   :glob:
+
 
    theory.rst
    modules_reference.rst
