@@ -83,3 +83,10 @@ The function ``SPOD`` of MODULO wraps both approaches, yet the arguments require
                                             L_B=200, # Length of the chunks for time average
                                             O_B=150, # Overlap between chunks
                                             n_Modes=3) # number of modes PER FREQUENCY
+
+.. note::
+    `MODULO v. 2.1.0` includes some parallelization capabilities for the CSD SPOD. These take effect in two 
+    steps: (1) when segmenting and computing the FFT on each block of :math:`\hat{D}(f)`; and (2) when 
+    computing the POD `n_modes` for each frequency. This enables the user for a direct control over the threads
+    leveraged in the computation, that otherwise are left up to the numpy vectorization routines.
+    

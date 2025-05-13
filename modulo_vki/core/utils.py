@@ -4,6 +4,7 @@ from scipy.sparse.linalg import svds, eigsh
 from sklearn.decomposition import TruncatedSVD
 from scipy.linalg import eigh
 from sklearn.utils.extmath import randomized_svd
+import warnings
 
 
 def Bound_EXT(S, Ex, boundaries):
@@ -163,66 +164,6 @@ def overlap(array, len_chunk, len_sep=1):
     return array_matrix[rows, columns]
 
 
-# def switch_svds_K(A, n_modes, svd_solver):
-#     """
-#     Utility function to switch between different svd solvers
-#     for the diagonalization of K. Being K symmetric and positive definite,
-#     Its eigenvalue decomposition is equivalent to an SVD.
-#     Thus we are using SVD solvers as eig solvers here.
-#     The options are the same used for switch_svds (which goes for the SVD of D)
-
-#     --------------------------------------------------------------------------------------------------------------------
-#     Parameters:
-#     -----------
-#     :param A: np.array,
-#         Array of which compute the SVD
-#     :param n_modes: int,
-#         Number of modes to be computed. Note that if the `svd_numpy` method is chosen, the full matrix are
-#         computed, but then only the first n_modes are returned. Thus, it is not more computationally efficient.
-#     :param svd_solver: str,
-#         can be:
-#             'svd_numpy'.
-#              This uses np.linalg.svd.
-#              It is the most accurate but the slowest and most expensive.
-#              It computes all the modes.
-
-#             'svd_sklearn_truncated'
-#             This uses the TruncatedSVD from scikitlearn. This uses either
-#             svds from scipy or randomized from sklearn depending on the size
-#             of the matrix. These are the two remaining options.
-#             To the merit of chosing this is to let sklearn take the decision as to 
-#             what to use.
-
-#             'svd_scipy_sparse'
-#             This uses the svds from scipy.
-
-#             'svd_sklearn_randomized',
-#             This uses the randomized from sklearn.
-#     Returns
-#     --------
-#     :return Psi_P, np.array (N_S x n_modes)
-#     :return Sigma_P, np.array (n_modes)
-#     """
-#     if svd_solver.lower() == 'svd_sklearn_truncated':
-#         svd = TruncatedSVD(n_modes)
-#         svd.fit_transform(A)
-#         Psi_P = svd.components_.T
-#         Lambda_P = svd.singular_values_
-#         Sigma_P = np.sqrt(Lambda_P)
-#     elif svd_solver.lower() == 'svd_numpy':
-#         Psi_P, Lambda_P, _ = np.linalg.svd(A)
-#         Sigma_P = np.sqrt(Lambda_P)
-#         Psi_P = Psi_P[:, :n_modes]
-#         Sigma_P = Sigma_P[:n_modes]
-#     elif svd_solver.lower() == 'svd_sklearn_randomized':
-#         Psi_P, Lambda_P = randomized_svd(A, n_modes)
-#         Sigma_P = np.sqrt(Lambda_P)
-#     elif svd_solver.lower() == 'svd_scipy_sparse':
-#         Psi_P, Lambda_P, _ = svds(A, k=n_modes)
-#         Sigma_P = np.sqrt(Lambda_P)
-
-#     return Psi_P, Sigma_P
-
 
 def switch_svds(A, n_modes, svd_solver='svd_sklearn_truncated'):
     """
@@ -340,3 +281,153 @@ def switch_eigs(A, n_modes, eig_solver):
     Sigma_P = np.sqrt(Lambda_P)
 
     return Psi_P, Sigma_P
+
+def segment_and_fft(D: np.ndarray,
+                    F_S: float, 
+                    L_B: int,
+                    O_B: int,
+                    n_processes: int = 1) -> tuple:
+    """
+    Partition the snapshot matrix D into overlapping time windows and compute
+    the FFT of each block (optionally in parallel). Auxiliary function for the
+    SPOD (Towne approach).
+
+    Parameters
+    ----------
+    D : ndarray, shape (n_space, n_time)
+        Snapshot matrix, where each column is the state at a time instant.
+    F_S : float
+        Sampling frequency in Hz.
+    L_B : int
+        Length of each FFT block (window size).
+    O_B : int
+        Number of samples to overlap between consecutive blocks.
+    n_processes : int, optional
+        Number of parallel processes for block FFT. If 1, uses vectorized np.fft.
+        
+    Returns
+    -------
+    D_hat : ndarray, shape (n_space, n_freq_bins, n_blocks)
+        FFT of each block along the time axis, only non-negative frequencies.
+    freqs_pos : ndarray, shape (n_freq_bins,)
+        Non-negative frequency vector corresponding to the second axis of D_hat.
+    """
+    
+    n_s, n_t = D.shape 
+    
+    '''
+    For this SPOD, we assemble a tensor of overlapping chunks (similar to Welch method).
+    This tensor has size
+    
+    D_t \in \mathbb{R}^{n_s \times n_B \times n_P}
+    
+    where:
+        - n_s is space grid (unchanged)
+        - n_B defines the blocks length
+        - n_P defines the number of partitions (blocks)
+    '''
+    ind = np.arange(n_t)
+    indices = overlap(ind, len_chunk=L_B, len_sep=O_B)
+    
+    n_p, n_b = indices.shape
+    
+    # D_t = np.zeros((n_s, n_b, n_p), dtype=D.dtype) # we enforce same data type with the main D (memory saving)
+    D_t = D[:, indices].transpose(0, 2, 1)
+     
+    if n_processes > 1:
+        print('-------------------------------------------------- \n')
+        print('|\t Performing FFT of D_t in parallel on {} processors \t|'.format(n_processes))
+        print('-------------------------------------------------- \n')
+        
+        try:
+            from joblib import Parallel, delayed
+            
+            def _fft_block(block):
+                # block is D_t[:, :, k]
+                return np.fft.fft(block, n=n_b, axis=1)
+
+            fft_blocks = Parallel(n_jobs=n_processes, backend='threading')(
+                delayed(_fft_block)(D_t[:, :, k]) for k in range(n_p)
+            )
+            # stack back into (n_s, n_b, n_p)
+            D_hat_full = np.stack(fft_blocks, axis=2)
+        except:
+            n_processes = 1
+            raise ImportWarning("Parallel library joblib is not installed. Reverting to single process.")
+    else:
+        D_hat_full = np.fft.fft(D_t, n=n_b, axis=1)
+        
+    freqs = np.fft.freq(n_b) * F_S 
+    pos = freqs >= 0
+    
+    # only returning positive frequencies and discarding complex conjugates
+    freqs_pos = freqs[pos]
+    
+    return D_hat_full, freqs_pos, n_processes
+    
+def pod_from_dhat(D_hat: np.ndarray, 
+                  n_modes: int, 
+                  n_freqs: int,
+                  svd_solver: str,
+                  n_processes: int=1):
+    """
+    Compute SPOD modes & energies from the FFT tensor.
+
+    Parameters
+    ----------
+    D_hat : ndarray, shape (n_s, n_freqs, n_blocks)
+        FFT of each block, only nonnegative frequencies.
+    n_Modes : int
+        Number of modes to extract per frequency.
+    n_processes : int
+        If >1, parallelize the SVDs over frequencies.
+
+    Returns
+    -------
+    Phi : ndarray, shape (n_s, n_Modes, n_freqs)
+        Spatial SPOD modes.
+    Sigma : ndarray, shape (n_Modes, n_freqs)
+        Modal energies.
+    """
+    # n_freqs is n_b but considering only positive freqs.
+    
+    n_s, n_b, n_p = D_hat.shape
+
+    Phi = np.zeros((n_s, n_modes, n_freqs), dtype=complex)
+    Sigma = np.zeros((n_modes, n_freqs))
+
+    if n_processes > 1:
+        try:
+            from joblib import Parallel, delayed
+        except ImportError:
+            warnings.warn(
+                'joblib not installed: falling back to serial POD'
+            )
+            n_processes = 1
+
+    if n_processes > 1:
+        def _svd_slice(j):
+            U,V,Sigma=switch_svds(D_hat[:, j, :], n_modes,
+                                  svd_solver=svd_solver)
+
+            return U[:, :n_modes], Sigma[:n_modes] / (n_s * n_b) 
+
+        results = Parallel(
+            n_jobs=n_processes,
+            backend='threading'
+        )(
+            delayed(_svd_slice)(j) for j in range(n_freqs)
+        )
+        # joblib keeps same order of outputs
+        for j, (Uj, sj) in enumerate(results):
+            Phi[:, :, j] = Uj
+            Sigma[:, j] = sj
+    else:
+        for j in range(n_freqs):
+            U, s, _ = np.linalg.svd(
+                D_hat[:, j, :], full_matrices=False
+            )
+            Phi[:, :, j] = U[:, :n_modes]
+            Sigma[:, j] = s[:n_modes] / (n_s * n_b)
+
+    return Phi, Sigma

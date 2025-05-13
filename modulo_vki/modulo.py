@@ -20,6 +20,7 @@ from modulo_vki.core._spod_t import compute_SPOD_t
 from modulo_vki.utils._utils import switch_svds
 
 from modulo_vki.utils.read_db import ReadData
+from modulo_vki.core.utils import segment_and_fft, pod_from_dhat
 
 class ModuloVKI:
     """
@@ -1111,98 +1112,132 @@ class ModuloVKI:
         n_Modes: int = 10,
         SAVE_SPOD: bool = True,
         **kwargs
-        ):
+    ):
         """
         Unified Spectral POD interface.
 
         Parameters
         ----------
-        mode : {"sieber", "towne"}
-                Which SPOD algorithm to run.
+        mode : {'sieber', 'towne'}
+            Which SPOD algorithm to run.
         F_S : float
-                Sampling frequency [Hz].
+            Sampling frequency [Hz].
         n_Modes : int, optional
-                Number of modes to compute, by default 10.
+            Number of modes to compute, by default 10.
         SAVE_SPOD : bool, optional
-                Whether to save outputs, by default True.
+            Whether to save outputs, by default True.
         **kwargs
-                For mode="sieber", accepts:
-                - N_O (int): semi‐order of the diagonal filter
-                - f_c (float): cutoff frequency
-                For mode="towne", accepts:
-                - L_B (int): block length
-                - O_B (int): block overlap
+            For mode='sieber', accepts:
+              - N_O (int): semi-order of the diagonal filter
+              - f_c (float): cutoff frequency
+            For mode='towne', accepts:
+              - L_B (int): block length
+              - O_B (int): block overlap
+              - n_processes (int): number of parallel workers
+
         Returns
         -------
         Phi : ndarray
-                Spatial modes.
+            Spatial modes.
         Sigma : ndarray
-                Modal amplitudes.
-        Aux : ndarray or tuple
-                Temporal modes & frequencies:
-                - for sieber: (Psi, )
-                - for towne: (Psi, freqs)
+            Modal amplitudes.
+        Aux : tuple
+            Additional outputs.
         """
         mode = mode.lower()
-        if mode == "sieber":
-                # pull out sieber‐specific args (with defaults)
-                N_O = kwargs.pop("N_O", 100)
-                f_c = kwargs.pop("f_c", 0.3)
-                return self.compute_SPOD_s(F_S=F_S, N_O=N_O, f_c=f_c,
-                                        n_Modes=n_Modes, SAVE_SPOD=SAVE_SPOD)
-        elif mode == "towne":
-                L_B = kwargs.pop("L_B", 500)
-                O_B = kwargs.pop("O_B", 250)
-                return self.compute_SPOD_t(L_B=L_B, O_B=O_B,
-                                        n_Modes=n_Modes, SAVE_SPOD=SAVE_SPOD)
+        if mode == 'sieber':
+            N_O = kwargs.pop('N_O', 100)
+            f_c = kwargs.pop('f_c', 0.3)
+            
+            return self.compute_SPOD_s(
+                F_S=F_S,
+                N_O=N_O,
+                f_c=f_c,
+                n_Modes=n_Modes,
+                SAVE_SPOD=SAVE_SPOD
+            )
+
+        elif mode == 'towne':
+            L_B = kwargs.pop('L_B', 500)
+            O_B = kwargs.pop('O_B', 250)
+            n_processes = kwargs.pop('n_processes', 1)
+
+            # Load or reuse data matrix
+            
+            if self.D is None:
+                D = np.load(f"{self.FOLDER_OUT}/MODULO_tmp/data_matrix/database.npz")['D']
+            else:
+                D = self.D
+
+            # Segment and FFT
+            D_hat, freqs_pos = segment_and_fft(
+                D=D,
+                F_S=F_S,
+                L_B=L_B,
+                O_B=O_B,
+                n_processes=n_processes
+                )
+
+            return self.compute_SPOD_t(D_hat=D_hat, 
+                                       freq_pos=freqs_pos,
+                                        n_modes=n_Modes, 
+                                        SAVE_SPOD=SAVE_SPOD, 
+                                        svd_solver=self.svd_solver,
+                                        n_processes=n_processes)
+            
         else:
                 raise ValueError("mode must be 'sieber' or 'towne'")
 
 
-    def compute_SPOD_t(self, F_S, L_B=500, O_B=250, n_Modes=10, SAVE_SPOD=True):
+    def compute_SPOD_t(self, D_hat, freq_pos, n_Modes=10, SAVE_SPOD=True, svd_solver=None, 
+                       n_processes=1):
         """
-        Compute the CSD-based Spectral POD (Towne _et al._) of your data.
-
-        This implementation follows Towne et al. (2018), which estimates the
-        cross-spectral density via Welch’s method and then performs a POD
-        at each frequency bin.
+        Compute the CSD-based Spectral POD (Towne et al.) from a precomputed FFT tensor.
 
         Parameters
         ----------
-        F_S : float
-                Sampling frequency in Hz.
-        L_B : int, optional
-                Length of each FFT block in samples (nperseg), by default 500.
-        O_B : int, optional
-                Number of samples to overlap between consecutive FFT blocks (noverlap),
-                by default 250.
+        D_hat : ndarray, shape (n_s, n_freqs, n_blocks)
+                FFT of each block, only nonnegative frequencies retained.
+        freq_pos : ndarray, shape (n_freqs,)
+                Positive frequency values (Hz) corresponding to D_hat’s second axis.
         n_Modes : int, optional
-                Number of SPOD modes to compute at each frequency bin, by default 10.
+                Number of SPOD modes per frequency bin. Default is 10.
         SAVE_SPOD : bool, optional
-                If True, save output under `self.FOLDER_OUT/MODULO_tmp`, by default True.
+                If True, save outputs under `self.FOLDER_OUT/MODULO_tmp`. Default is True.
+        svd_solver : str or None, optional
+                Which SVD solver to use (passed to `switch_svds`), by default None.
+        n_processes : int, optional
+                Number of parallel workers for the POD step. Default is 1 (serial).
 
         Returns
         -------
-        Psi_P_hat : numpy.ndarray, shape (n_S, n_bins, n_Modes)
-                Complex SPOD modes in the frequency domain (one set per bin).
-        Sigma_P : numpy.ndarray, shape (n_bins, n_Modes)
-                Modal energies at each frequency bin.
-        Phi_P : numpy.ndarray, shape (n_S, n_bins, n_Modes)
-                Spatial SPOD modes corresponding to each frequency bin.
-        freqs : numpy.ndarray, shape (n_bins,)
-                Frequency values (Hz) corresponding to each spectral bin.
+        Phi_SP : ndarray, shape (n_s, n_Modes, n_freqs)
+                Spatial SPOD modes at each positive frequency.
+        Sigma_SP : ndarray, shape (n_Modes, n_freqs)
+                Modal energies per frequency bin.
+        freq_pos : ndarray, shape (n_freqs,)
+                The positive frequency vector (Hz), returned unchanged.
         """
-        if self.D is None:
-            D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
-            Phi_SP, Sigma_SP, Freqs_Pos = compute_SPOD_t(D, F_S, L_B=L_B, O_B=O_B,
-                                                         n_Modes=n_Modes, SAVE_SPOD=SAVE_SPOD,
-                                                         FOLDER_OUT=self.FOLDER_OUT, possible_svds=self.svd_solver)
-        else:
-            Phi_SP, Sigma_SP, Freqs_Pos = compute_SPOD_t(self.D, F_S, L_B=L_B, O_B=O_B,
-                                                         n_Modes=n_Modes, SAVE_SPOD=SAVE_SPOD,
-                                                         FOLDER_OUT=self.FOLDER_OUT, possible_svds=self.svd_solver)
+        # Perform the POD (parallel if requested)
+                # received D_hat_f, this is now just a POD on the transversal direction of the tensor,
+        # e.g. the frequency domain. 
+        n_freqs = len(freq_pos)
+        
+        # also here we can parallelize
+        Phi_SP, Sigma_SP = pod_from_dhat(D_hat=D_hat, n_modes=n_Modes, n_freqs=n_freqs, 
+                                         svd_solver=self.svd_solver, n_processes=n_processes)
+        
+        # Optionally save the results
+        if SAVE_SPOD:
+                np.savez(
+                f"{self.FOLDER_OUT}/MODULO_tmp/spod_towne.npz",
+                Phi=Phi_SP,
+                Sigma=Sigma_SP,
+                freqs=freq_pos
+                )
 
-        return Phi_SP, Sigma_SP, Freqs_Pos
+        return Phi_SP, Sigma_SP, freq_pos
+
 
 
     def compute_SPOD_s(self, N_O=100, f_c=0.3, n_Modes=10, SAVE_SPOD=True):
