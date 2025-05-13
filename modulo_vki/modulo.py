@@ -10,7 +10,7 @@ from tqdm import tqdm
 from modulo_vki.core._dft import dft_fit
 from modulo_vki.core.temporal_structures import dft, temporal_basis_mPOD
 from modulo_vki.core._dmd_s import dmd_s
-from modulo_vki.core._k_matrix import CorrelationMatrix, spectral_filter
+from modulo_vki.core._k_matrix import CorrelationMatrix, spectral_filter, kernelized_K
 from modulo_vki.core._mpod_space import spatial_basis_mPOD
 # from modulo_vki.core._mpod_time import temporal_basis_mPOD
 from modulo_vki.core._pod_space import Spatial_basis_POD
@@ -1298,7 +1298,7 @@ class ModuloVKI:
                 n_Modes=10, 
                 alpha=1e-6, 
                 metric='rbf', 
-                K_out=False):
+                K_out=False, SAVE_KPOD=False):
         """
         This function implements the kernel PCA as described in the VKI course https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023
 
@@ -1340,32 +1340,13 @@ class ModuloVKI:
 
         # Compute Eucledean distances
         i, j = M_DIST
-        n_s, n_t = np.shape(D)
+        
         M_ij = np.linalg.norm(D[:, i] - D[:, j]) ** 2
 
-        gamma = -np.log(k_m) / M_ij
+        K_r = kernelized_K(D=D, M_ij=M_ij, k_m=k_m, metric=metric, cent=cent, alpha=alpha)
 
-        K_zeta = pairwise_kernels(D.T, metric=metric, gamma=gamma) # kernel substitute of the inner product 
+        Psi_xi, Sigma_xi = Temporal_basis_POD(K=K_r, n_Modes=n_Modes, eig_solver='eigh')
 
-        # Center the Kernel Matrix (if cent is True):
-        if cent:
-            H = np.eye(n_t) - 1 / n_t * np.ones_like(K_zeta)
-            K_zeta = H @ K_zeta @ H.T
-        #     print('K_zeta centered')
-            
-        # add `Ridge term` to enforce strictly pos. def. eigs and well-conditioning
-        K_r = K_zeta + alpha * np.eye(n_t)
-        
-        # out of the n_t eigs, we only retain the ones whose *sorted* values are in the top n_t - n_modes to n_t - 1
-        subset = [n_t - n_Modes, n_t - 1]
-                
-        # Diagonalize and Sort
-        lambdas, Psi_xi = linalg.eigh(K_r, subset_by_index=subset)
-        lambdas, Psi_xi = lambdas[::-1], Psi_xi[:, ::-1]
-        
-        Sigma_xi = np.sqrt(lambdas)
-        
-        # compute the modes, standard procedure
         PHI_xi_SIGMA_xi = D @ Psi_xi
         
         Sigma_xi = np.linalg.norm(PHI_xi_SIGMA_xi, axis=0) # (R,)
@@ -1378,7 +1359,7 @@ class ModuloVKI:
         Sigma_xi = Sigma_xi[sorted_idx]
 
         if K_out:
-            return Phi_xi, Psi_xi, Sigma_xi, K_zeta
+            return Phi_xi, Psi_xi, Sigma_xi, K_r
         else:
             return Phi_xi, Psi_xi, Sigma_xi
 

@@ -4,6 +4,7 @@ import numpy as np
 import math
 from scipy.signal import firwin
 from scipy import signal
+from sklearn.metrics.pairwise import pairwise_kernels
 
 def CorrelationMatrix(N_T,
                       N_PARTITIONS=1,
@@ -160,3 +161,23 @@ def spectral_filter(K: np.ndarray, N_o:int, f_c: float) -> np.ndarray:
     K_F = K_ext_filt[N_o : N_o + n_t, N_o : N_o + n_t]
     
     return K_F
+
+def kernelized_K(D, M_ij, k_m, metric, cent, alpha):
+    
+    n_s, n_t = D.shape 
+    
+    gamma = - np.log(k_m) / M_ij
+    K_zeta = pairwise_kernels(D.T, metric=metric, gamma=gamma) # kernel substitute of the inner product 
+
+    # Center the Kernel Matrix (if cent is True):
+    if cent:
+        H = np.eye(n_t) - 1 / n_t * np.ones_like(K_zeta)
+        K_zeta = H @ K_zeta @ H.T
+        
+    # add `Ridge term` to enforce strictly pos. def. eigs and well-conditioning
+    K_r = K_zeta + alpha * np.eye(n_t)
+    
+    return K_r 
+        
+    
+    
