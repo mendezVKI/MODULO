@@ -1292,4 +1292,95 @@ class ModuloVKI:
 
         return Phi_P, Psi_P, Sigma_P
 
+    
+    def kPOD(self, M_DIST=[1, 10], 
+             k_m=0.1, cent=True,
+                n_Modes=10, 
+                alpha=1e-6, 
+                metric='rbf', 
+                K_out=False):
+        """
+        This function implements the kernel PCA as described in the VKI course https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023
+
+        The computation of the kernel function is carried out as in https://arxiv.org/pdf/2208.07746.pdf.
+
+
+        :param M_DIST: array,
+                position of the two snapshots that will be considered to
+                estimate the minimal k. They should be the most different ones.
+        :param k_m: float,
+                minimum value for the kernelized correlation
+        :param alpha: float
+                regularization for K_zeta
+        :param cent: bool,
+                if True, the matrix K is centered. Else it is not
+        :param n_Modes: float,
+               number of modes to be computed
+        :param metric: string,
+               This identifies the metric for the kernel matrix. It is a wrapper to 'pairwise_kernels' from sklearn.metrics.pairwise
+               Note that different metrics would need different set of parameters. For the moment, only rbf was tested; use any other option at your peril !
+        :param K_out: bool,
+               If true, the matrix K is also exported as a fourth output.
+        :return Psi_xi: np.array
+               kPOD's Psis
+        :return Sigma_xi: np.array
+               kPOD's Sigmas.
+        :return Phi_xi: np.array
+               kPOD's Phis
+        :return K_zeta: np.array
+               Kernel Function from which the decomposition is computed.
+               (exported only if K_out=True)
+
+
+        """
+        if self.D is None:
+            D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
+        else:
+            D = self.D
+
+        # Compute Eucledean distances
+        i, j = M_DIST
+        n_s, n_t = np.shape(D)
+        M_ij = np.linalg.norm(D[:, i] - D[:, j]) ** 2
+
+        gamma = -np.log(k_m) / M_ij
+
+        K_zeta = pairwise_kernels(D.T, metric=metric, gamma=gamma) # kernel substitute of the inner product 
+
+        # Center the Kernel Matrix (if cent is True):
+        if cent:
+            H = np.eye(n_t) - 1 / n_t * np.ones_like(K_zeta)
+            K_zeta = H @ K_zeta @ H.T
+        #     print('K_zeta centered')
+            
+        # add `Ridge term` to enforce strictly pos. def. eigs and well-conditioning
+        K_r = K_zeta + alpha * np.eye(n_t)
+        
+        # out of the n_t eigs, we only retain the ones whose *sorted* values are in the top n_t - n_modes to n_t - 1
+        subset = [n_t - n_Modes, n_t - 1]
+                
+        # Diagonalize and Sort
+        lambdas, Psi_xi = linalg.eigh(K_r, subset_by_index=subset)
+        lambdas, Psi_xi = lambdas[::-1], Psi_xi[:, ::-1]
+        
+        Sigma_xi = np.sqrt(lambdas)
+        
+        # compute the modes, standard procedure
+        PHI_xi_SIGMA_xi = D @ Psi_xi
+        
+        Sigma_xi = np.linalg.norm(PHI_xi_SIGMA_xi, axis=0) # (R,)
+        Phi_xi   = PHI_xi_SIGMA_xi / Sigma_xi[None, :] # (n_s, R)
+        
+        sorted_idx = np.argsort(-Sigma_xi)
+
+        Phi_xi = Phi_xi[:, sorted_idx]  # Sorted Spatial Structures Matrix
+        Psi_xi = Psi_xi[:, sorted_idx]  # Sorted Temporal Structures Matrix
+        Sigma_xi = Sigma_xi[sorted_idx]
+
+        if K_out:
+            return Phi_xi, Psi_xi, Sigma_xi, K_zeta
+        else:
+            return Phi_xi, Psi_xi, Sigma_xi
+
+
         

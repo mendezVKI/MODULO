@@ -1,4 +1,4 @@
-Spectral Proper Orthogonal Decomposition
+Spectral Proper Orthogonal Decomposition (SPOD)
 =================================================
 
 This document offers a brief reference guide to the use of the Spectral Proper Orthogonal Decomposition (SPOD).

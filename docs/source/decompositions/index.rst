@@ -32,5 +32,5 @@ implementation in MODULO. The following decompositions are available:
    pod/index
    dmd/index
    mpod/index
-   kpod/index
    spod/index
+   kpod/index
