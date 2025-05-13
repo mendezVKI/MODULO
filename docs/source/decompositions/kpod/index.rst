@@ -19,13 +19,13 @@ In the following, we use Radial Basis Function (RBFs) as kernel function. We com
 of the RBF as: 
 
 .. math::
-    \gamma = - \frac{\log{k_m}}{M_{ij}
+    \gamma = - \frac{\log{k_m}}{M_{ij}}
 
 where :math:`k_m` is a minimum value for the kernelized correlation. This leads to the kernelized expression of
 the correlation matrix as:
 
 .. math::
-    \mathbf{K}_\xi = \exp{(-\gamma \| \mathbf{d}_i - \mathbf{d}_j \|^2) \;.
+    \mathbf{K}_\xi = \exp{(-\gamma \| \mathbf{d}_i - \mathbf{d}_j \|^2)} \;.
 
 From this point onward, the procedure is the one of a standard POD: the temporal modes :math:`\psi^\xi_r` are 
 eigenvectors of :math:`\mathbf{K}^\xi` (that now is a nonlinear manifold), the amplitudes are 

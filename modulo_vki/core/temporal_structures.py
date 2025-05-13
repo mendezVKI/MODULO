@@ -125,6 +125,10 @@ def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep,
     Psi_M = Psi_M[:, order]
     print("\nQR polishing...")
     PSI_M, _ = np.linalg.qr(Psi_M, mode=MODE)
+    
+    if MEMORY_SAVING:
+        os.makedirs(FOLDER_OUT + '/mPOD', exist_ok=True)
+        np.savez(FOLDER_OUT + '/mPOD/Psis', Psis=PSI_M)
 
     return PSI_M[:, :n_Modes]
 
@@ -187,4 +191,30 @@ def dft(N_T, F_S, D, FOLDER_OUT, SAVE_DFT=False):
         os.makedirs(FOLDER_OUT + 'DFT', exist_ok=True)
         np.savez(FOLDER_OUT + 'DFT/dft_fitted', Freqs=Sorted_Freqs, Phis=Phi_F, Sigmas=SIGMA_F)
         
-    return Phi_F, Sorted_Freqs, SIGMA_F 
+    return Phi_F, Sorted_Freqs, SIGMA_F
+
+
+def Temporal_basis_POD(K, SAVE_T_POD=False, FOLDER_OUT='./', 
+                       n_Modes=10,eig_solver: str = 'eigh'):
+    """
+    This method computes the POD basis. For some theoretical insights, you can find the theoretical background of the proper orthogonal decomposition in a nutshell here: https://youtu.be/8fhupzhAR_M
+
+    :param FOLDER_OUT: str. Folder in which the results will be saved (if SAVE_T_POD=True)
+    :param K: np.array. Temporal correlation matrix
+    :param SAVE_T_POD: bool. A flag deciding whether the results are saved on disk or not. If the MEMORY_SAVING feature is active, it is switched True by default.
+    :param n_Modes: int. Number of modes that will be computed
+    :param svd_solver: str. Svd solver to be used throughout the computation
+    :return: Psi_P: np.array. POD's Psis
+    :return: Sigma_P: np.array. POD's Sigmas
+    """
+    
+    print("diagonalizing K....")
+    Psi_P, Sigma_P = switch_eigs(K, n_Modes, eig_solver)
+    
+
+    if SAVE_T_POD:
+        os.makedirs(FOLDER_OUT + "/POD/", exist_ok=True)
+        print("Saving POD temporal basis")
+        np.savez(FOLDER_OUT + '/POD/temporal_basis', Psis=Psi_P, Sigmas=Sigma_P)
+
+    return Psi_P, Sigma_P 

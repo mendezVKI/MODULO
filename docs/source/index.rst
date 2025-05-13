@@ -71,7 +71,9 @@ implementation in MODULO. The following decompositions are available:
    api/dft 
    api/pod 
    api/mpod
-   api/dmd 
+   api/dmd
+   api/spod 
+   api/kpod  
 
 
 .. toctree::

@@ -17,7 +17,7 @@ The DFT is the only not strictly data-driven decomposition present in MODULO. In
 This reads:
 
 .. math:: 
-    \mathbf{\psi}_F = \frac{1}{\sqrt{n_t}} \exp{(2 \pi f_r t) 
+    \mathbf{\psi}_F = \frac{1}{\sqrt{n_t}} \exp{(2 \pi f_r t)} 
 
 in which :math:`f_r=r\Delta f` is the frequency of the :math:`r`-th Fourier mode, :math:`\Delta f=f_s/n_t` is the frequency resolution, and :math:`n_t` is the number of time samples. 
 The term :math:`\frac{1}{\sqrt{n_t}}` is a normalization factor, which ensures that the Fourier basis is orthonormal, e.g. :math:`\|\mathbf{\psi}_F\|^2=1`.

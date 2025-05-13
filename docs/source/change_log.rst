@@ -33,7 +33,7 @@ and
 7. Implementation of a formulation for non-uniform meshes, using a weighted matrix for all the relevant inner products. This is currently available only for POD and mPOD which allows for handling data produced from CFD simulation without resampling on a uniform grid (see exercise 5). It can be used both with and without the memory-saving option.
 
 
-Before MODULO 2.0: previous versions
+MODULO < 2.0
 -------------------------------------
 
 The first version was developed in Matlab and was equipped with a GUI by D. Ninni.
