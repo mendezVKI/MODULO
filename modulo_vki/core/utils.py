@@ -406,11 +406,14 @@ def pod_from_dhat(D_hat: np.ndarray,
             n_processes = 1
 
     if n_processes > 1:
-        def _svd_slice(j):
-            U,V,Sigma=switch_svds(D_hat[:, j, :], n_modes,
-                                  svd_solver=svd_solver)
+        # def _svd_slice(j):
+        #     U,V,Sigma=switch_svds(D_hat[:, j, :], n_modes,
+        #                           svd_solver=svd_solver)
 
-            return U[:, :n_modes], Sigma[:n_modes] / (n_s * n_b) 
+        #     return U[:, :n_modes], Sigma[:n_modes] / (n_s * n_b)
+        def _svd_slice(j):
+            U, s, _ = np.linalg.svd(D_hat[:, j, :], full_matrices=False)
+            return U[:, :n_modes], s[:n_modes] / (n_s * n_b) 
 
         results = Parallel(
             n_jobs=n_processes,
