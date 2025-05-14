@@ -266,7 +266,7 @@ def Animation_2D_CFD_Cyl(Giff_NAME,D,Xg,Yg,In,Fin,Step):
 
 
 
-def Plot_Field_TEXT_Cylinder(File,Name_Mesh,Name_FIG):  
+def Plot_Field_TEXT_Cylinder(File,Name_Mesh,Name_FIG, show=False):  
    """
    This function plots the vector field from the TR-PIV in Exercise 4.
       
@@ -314,8 +314,12 @@ def Plot_Field_TEXT_Cylinder(File,Name_Mesh,Name_FIG):
    circle = plt.Circle((0,0),2.5,fill=True,color='r',edgecolor='k',alpha=0.5)
    plt.gcf().gca().add_artist(circle)
    plt.tight_layout()   
-   plt.savefig(Name_FIG, dpi=200) 
-   plt.show()
+   plt.savefig(Name_FIG, dpi=200)
+   
+   if show: 
+    plt.show()
+   
+   plt.close()
    print(Name_FIG+' printed')
    return n_s, Xg, Yg, Vxg, Vyg, X_S, Y_S
 

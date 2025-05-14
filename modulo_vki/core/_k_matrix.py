@@ -137,7 +137,12 @@ def spectral_filter(K: np.ndarray, N_o:int, f_c: float) -> np.ndarray:
     n_t = K.shape[0]
     
     # extend K for edge-padding
-    K_ext = np.pad(K, (N_o, N_o), (N_o, N_o)) 
+    K_ext = np.pad(
+            K,
+            pad_width=((N_o, N_o), (N_o, N_o)),
+            mode='constant',           # or 'edge', 'reflect', etc.
+            constant_values=0
+    )
     
     # K_e = np.zeros((n_t + 2 * N_o, n_t + 2 * N_o))
     # From which we clearly know that:

@@ -1,5 +1,6 @@
 import os
 import numpy as np
+from numpy import linalg as LA
 from tqdm import tqdm
 
 from modulo_vki.core._k_matrix import CorrelationMatrix, spectral_filter, kernelized_K
@@ -8,6 +9,7 @@ from modulo_vki.core.spatial_structures import Spatial_basis_POD, spatial_basis_
 from modulo_vki.core._dmd_s import dmd_s
 
 from modulo_vki.core.utils import segment_and_fft, pod_from_dhat, apply_weights, switch_svds
+from sklearn.metrics.pairwise import pairwise_kernels
 
 
 class ModuloVKI:
@@ -205,7 +207,8 @@ class ModuloVKI:
             Phi_F, Psi_F, Sigma_F = dft(self.N_T, F_S, D, self.FOLDER_OUT, SAVE_DFT=SAVE_DFT)
 
         else:
-            Phi_F, Psi_F, Sigma_F = dft(self.N_T, F_S, self.D, self.FOLDER_OUT, SAVE_DFT=SAVE_DFT)
+            Phi_F, Psi_F, Sigma_F = dft(self.N_T, F_S, self.D, 
+                                        self.FOLDER_OUT, SAVE_DFT=SAVE_DFT)
 
         return Phi_F, Psi_F, Sigma_F
     
@@ -513,7 +516,6 @@ class ModuloVKI:
             f_c = kwargs.pop('f_c', 0.3)
             
             return self.compute_SPOD_s(
-                F_S=F_S,
                 N_O=N_O,
                 f_c=f_c,
                 n_Modes=n_Modes,
@@ -532,8 +534,8 @@ class ModuloVKI:
             else:
                 D = self.D
 
-            # Segment and FFT
-            D_hat, freqs_pos = segment_and_fft(
+            # Segment and FFT - fallback n_processes in case of misassignment
+            D_hat, freqs_pos, n_processes = segment_and_fft(
                 D=D,
                 F_S=F_S,
                 L_B=L_B,
@@ -543,7 +545,7 @@ class ModuloVKI:
 
             return self.compute_SPOD_t(D_hat=D_hat, 
                                        freq_pos=freqs_pos,
-                                        n_modes=n_Modes, 
+                                        n_Modes=n_Modes, 
                                         SAVE_SPOD=SAVE_SPOD, 
                                         svd_solver=self.svd_solver,
                                         n_processes=n_processes)
@@ -634,10 +636,12 @@ class ModuloVKI:
                 Modal energies (eigenvalues of the filtered covariance).
         """
         if self.D is None:
-                
                 D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
-
-        self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, self.MEMORY_SAVING, self.FOLDER_OUT, self.SAVE_K, D=D)
+        else:
+                D = self.D 
+                
+        self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, self.MEMORY_SAVING, 
+                                   self.FOLDER_OUT, self.SAVE_K, D=D)
                 
         # additional step: diagonal spectral filter of K 
         K_F = spectral_filter(self.K, N_o=N_O, f_c=f_c)
@@ -663,39 +667,50 @@ class ModuloVKI:
                 metric='rbf', 
                 K_out=False, SAVE_KPOD=False):
         """
-        This function implements the kernel PCA as described in the VKI course https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023
+        Perform kernel PCA (kPOD) for snapshot data as in VKI Machine Learning for Fluid Dynamics course.
 
-        The computation of the kernel function is carried out as in https://arxiv.org/pdf/2208.07746.pdf.
+        Parameters
+        ----------
+        M_DIST : array-like of shape (2,), optional
+                Indices of two snapshots used to estimate the minimal kernel value.
+                These should be the most “distant” snapshots in your dataset. Default is [1, 10].
+        k_m : float, optional
+                Minimum value for the kernelized correlation. Default is 0.1.
+        cent : bool, optional
+                If True, center the kernel matrix before decomposition. Default is True.
+        n_Modes : int, optional
+                Number of principal modes to compute. Default is 10.
+        alpha : float, optional
+                Regularization parameter for the modified kernel matrix \(K_{\zeta}\). Default is 1e-6.
+        metric : str, optional
+                Kernel function identifier (passed to `sklearn.metrics.pairwise.pairwise_kernels`).
+                Only 'rbf' has been tested; other metrics may require different parameters. Default is 'rbf'.
+        K_out : bool, optional
+                If True, also return the full kernel matrix \(K\). Default is False.
+        SAVE_KPOD : bool, optional
+                If True, save the computed kPOD results to disk. Default is False.
 
+        Returns
+        -------
+        Psi_xi : ndarray of shape (n_samples, n_Modes)
+                The kPOD principal component time coefficients.
+        Sigma_xi : ndarray of shape (n_Modes,)
+                The kPOD singular values (eigenvalues of the centered kernel).
+        Phi_xi : ndarray of shape (n_samples, n_Modes)
+                The mapped eigenvectors (principal modes) in feature space.
+        K_zeta : ndarray of shape (n_samples, n_samples)
+                The (regularized and centered) kernel matrix used for decomposition.
+                Only returned if `K_out` is True.
 
-        :param M_DIST: array,
-                position of the two snapshots that will be considered to
-                estimate the minimal k. They should be the most different ones.
-        :param k_m: float,
-                minimum value for the kernelized correlation
-        :param alpha: float
-                regularization for K_zeta
-        :param cent: bool,
-                if True, the matrix K is centered. Else it is not
-        :param n_Modes: float,
-               number of modes to be computed
-        :param metric: string,
-               This identifies the metric for the kernel matrix. It is a wrapper to 'pairwise_kernels' from sklearn.metrics.pairwise
-               Note that different metrics would need different set of parameters. For the moment, only rbf was tested; use any other option at your peril !
-        :param K_out: bool,
-               If true, the matrix K is also exported as a fourth output.
-        :return Psi_xi: np.array
-               kPOD's Psis
-        :return Sigma_xi: np.array
-               kPOD's Sigmas.
-        :return Phi_xi: np.array
-               kPOD's Phis
-        :return K_zeta: np.array
-               Kernel Function from which the decomposition is computed.
-               (exported only if K_out=True)
-
+        Notes
+        -----
+        - Follows the hands-on ML for Fluid Dynamics tutorial by VKI  
+        (https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552).  
+        - Kernel computed as described in  
+        Horenko et al., *Machine learning for dynamics and model reduction*, arXiv:2208.07746.
 
         """
+        
         if self.D is None:
             D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
         else:
@@ -724,8 +739,136 @@ class ModuloVKI:
         if K_out:
             return Phi_xi, Psi_xi, Sigma_xi, K_r
         else:
-            return Phi_xi, Psi_xi, Sigma_xi
+            return Phi_xi, Psi_xi, Sigma_xi, None
+    
+    
+    def kDMD(self, 
+             F_S=1.0, 
+             M_DIST=[1, 10], 
+             k_m=0.1, cent=True, 
+             n_Modes=10, 
+             n_modes_latent=None,
+             alpha=1e-6, 
+             metric='rbf', K_out=False):
+        """
+        Perform kernel DMD (kDMD) for snapshot data as in VKI’s ML for Fluid Dynamics course.
+
+        Parameters
+        ----------
+        M_DIST : array-like of shape (2,), optional
+                Indices of two snapshots used to estimate the minimal kernel value.
+                These should be the most “distant” snapshots in your dataset. Default is [1, 10].
+        F_S: float, sampling frequency.
+        k_m : float, optional
+                Minimum value for the kernelized correlation. Default is 0.1.
+        cent : bool, optional
+                If True, center the kernel matrix before decomposition. Default is True.
+        n_Modes : int, optional
+                Number of principal modes to compute. Default is 10.
+        alpha : float, optional
+                Regularization parameter for the modified kernel matrix \(K_{\zeta}\). Default is 1e-6.
+        metric : str, optional
+                Kernel function identifier (passed to `sklearn.metrics.pairwise.pairwise_kernels`).
+                Only 'rbf' has been tested; other metrics may require different parameters. Default is 'rbf'.
+        K_out : bool, optional
+                If True, also return the full kernel matrix \(K\). Default is False.
+        SAVE_KPOD : bool, optional
+                If True, save the computed kPOD results to disk. Default is False.
+
+        Returns
+        -------
+        Psi_xi : ndarray of shape (n_samples, n_Modes)
+                The kPOD principal component time coefficients.
+        Sigma_xi : ndarray of shape (n_Modes,)
+                The kPOD singular values (eigenvalues of the centered kernel).
+        Phi_xi : ndarray of shape (n_samples, n_Modes)
+                The mapped eigenvectors (principal modes) in feature space.
+        K_zeta : ndarray of shape (n_samples, n_samples)
+                The (regularized and centered) kernel matrix used for decomposition.
+                Only returned if `K_out` is True.
+
+        Notes
+        -----
+        - Follows the hands-on ML for Fluid Dynamics tutorial by VKI  
+        (https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552).  
+        - Kernel computed as described in  
+        Horenko et al., *Machine learning for dynamics and model reduction*, arXiv:2208.07746.
+        """
+        # we need the snapshot matrix in memory for this decomposition 
         
+        if self.MEMORY_SAVING:
+                if self.N_T % self.N_PARTITIONS != 0:
+                        tot_blocks_col = self.N_PARTITIONS + 1
+                else:
+                        tot_blocks_col = self.N_PARTITIONS
+
+                # Prepare the D matrix again
+                D = np.zeros((self.N_S, self.N_T))
+                R1 = 0
+
+                # print(' \n Reloading D from tmp...')
+                for k in tqdm(range(tot_blocks_col)):
+                        di = np.load(self.FOLDER_OUT + f"/data_partitions/di_{k + 1}.npz")['di']
+                        R2 = R1 + np.shape(di)[1]
+                        D[:, R1:R2] = di
+                        R1 = R2
+        else:
+                D = self.D 
+        
+        n_s, n_t = D.shape 
+        # as done with the classic dmd, we assume X = D_1 = D(0:n_t - 1) and 
+        # Y = D_2 = D(1:n_t)
+        
+        X = D[:, :-1]
+        Y = D[:, 1:]
+        
+        # we seek A = argmin_A ||Y - AX|| = YX^+ = Y(Psi_r Sigma_r^+ Phi^*)
+        n_modes_latent = n_Modes if n_modes_latent is None else n_modes_latent
+        
+        # leverage MODULO kPOD routine to compress the system instead of standard POD 
+        # we are now in the kernel (feature) space, thus:
+        i, j = M_DIST
+        
+        # gamma needs to be the same for the feature spaces otherwise 
+        # leads to inconsistent galerkin proj.! 
+         
+        M_ij = np.linalg.norm(X[:, i] - X[:, j]) ** 2
+
+        gamma = - np.log(k_m) / M_ij
+
+        K_XX = pairwise_kernels(X.T, X.T, metric=metric, gamma=gamma)
+        K_YX = pairwise_kernels(Y.T, X.T, metric=metric, gamma=gamma)
+
+        # (optional) center feature‐space mean by centering K_XX only
+        if cent:
+                n = K_XX.shape[0]
+                H = np.eye(n) - np.ones((n, n)) / n
+                K_XX = H @ K_XX @ H
+
+        # add ridge to K_XX
+        K_XX += alpha * np.eye(K_XX.shape[0])
+
+        # kernel‐POD on the regularized, centered K_XX
+        Psi_xi, sigma_xi = Temporal_basis_POD(K=K_XX, n_Modes=n_modes_latent, eig_solver='eigh')
+        Sigma_inv = np.diag(1.0 / sigma_xi)
+
+        # Galerkin projection using the **unmodified** K_YX
+        A_r = Sigma_inv @ Psi_xi.T @ K_YX @ Psi_xi @ Sigma_inv
+        
+        # eigendecomposition of A gives DMD modes
+        dt = 1/F_S
+        Lambda, Phi_Ar = LA.eig(A_r) 
+        freqs = np.imag(np.log(Lambda)) / (2 * np.pi * dt)
+        
+        # we can trace back the eigenvalues of the not-truncated A (Tu et al.)
+        Phi_D = Y @ Psi_xi @ Sigma_inv @ Phi_Ar
+        a0s = LA.pinv(Phi_D).dot(X[:, 0])
+        
+        return Phi_D, Lambda, freqs, a0s, None
+        
+                
+
+                
     
 
 

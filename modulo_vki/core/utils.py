@@ -357,7 +357,7 @@ def segment_and_fft(D: np.ndarray,
     else:
         D_hat_full = np.fft.fft(D_t, n=n_b, axis=1)
         
-    freqs = np.fft.freq(n_b) * F_S 
+    freqs = np.fft.fftfreq(n_b) * F_S 
     pos = freqs >= 0
     
     # only returning positive frequencies and discarding complex conjugates

@@ -107,9 +107,14 @@ def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep,
 
         # rank estimate
         mask_idxs = mask_fn(freqs)
+
         R_K = min(np.count_nonzero(mask_idxs), SAT, n_Modes)
         print(f" → estimating {R_K} modes from {mask_idxs.sum()} freq bins")
-
+        
+        if R_K == 0:
+            print(f"skipping")
+            continue
+        
         # apply filter to correlation matrix
         Kf = conv_m(K, h, Ex, boundaries)
 
@@ -181,8 +186,8 @@ def dft(N_T, F_S, D, FOLDER_OUT, SAVE_DFT=False):
     Phi_F = PHI_SIGMA / sigma_F
     
     # Sort  
-    Indices = np.flipud(np.argsort(SIGMA_F))  # find indices for sorting in decreasing order
-    Sorted_Sigmas = SIGMA_F[Indices]  # Sort all the sigmas
+    Indices = np.flipud(np.argsort(sigma_F))  # find indices for sorting in decreasing order
+    Sorted_Sigmas = sigma_F[Indices]  # Sort all the sigmas
     Sorted_Freqs = Freqs[Indices]  # Sort all the frequencies accordingly.
     Phi_F = Phi_F[:, Indices]  # Sorted Spatial Structures Matrix
     SIGMA_F = Sorted_Sigmas  # Sorted Amplitude Matrix (vector)

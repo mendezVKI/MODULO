@@ -119,14 +119,14 @@ def dft(N_T, F_S, D, FOLDER_OUT, SAVE_DFT=False):
     Phi_F = PHI_SIGMA / sigma_F
     
     # Sort  
-    Indices = np.flipud(np.argsort(SIGMA_F))  # find indices for sorting in decreasing order
-    Sorted_Sigmas = SIGMA_F[Indices]  # Sort all the sigmas
+    Indices = np.flipud(np.argsort(sigma_F))  # find indices for sorting in decreasing order
+    Sorted_Sigmas = sigma_F[Indices]  # Sort all the sigmas
     Sorted_Freqs = Freqs[Indices]  # Sort all the frequencies accordingly.
     Phi_F = Phi_F[:, Indices]  # Sorted Spatial Structures Matrix
-    SIGMA_F = Sorted_Sigmas  # Sorted Amplitude Matrix (vector)
+    sigma_F = Sorted_Sigmas  # Sorted Amplitude Matrix (vector)
     
     if SAVE_DFT:
         os.makedirs(FOLDER_OUT + 'DFT', exist_ok=True)
         np.savez(FOLDER_OUT + 'DFT/dft_fitted', Freqs=Sorted_Freqs, Phis=Phi_F, Sigmas=SIGMA_F)
         
-    return Phi_F, Sorted_Freqs, SIGMA_F
+    return Phi_F, Sorted_Freqs, sigma_F
