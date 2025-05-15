@@ -186,7 +186,7 @@ def dft(N_T, F_S, D, FOLDER_OUT, SAVE_DFT=False):
     Phi_F = PHI_SIGMA / sigma_F
     
     # Sort  
-    Indices = np.flipud(np.argsort(sigma_F))  # find indices for sorting in decreasing order
+    Indices = np.argsort(-sigma_F)  # find indices for sorting in decreasing order
     Sorted_Sigmas = sigma_F[Indices]  # Sort all the sigmas
     Sorted_Freqs = Freqs[Indices]  # Sort all the frequencies accordingly.
     Phi_F = Phi_F[:, Indices]  # Sorted Spatial Structures Matrix
