@@ -1,8 +1,39 @@
-Introduction to MODULO 
-==========================
+MODULO (MODal mULtiscale pOd): Data-Driven Modal Analysis
+==========================================================
 
-MODULO (MODal mULtiscale pOd) is a Python package developed at the von Karman Institute for Fluid Dynamics to perform a variety of **data-driven modal decompositions**.  
-These decompositions seek to approximate a high-dimensional dataset as a linear combination of a small number of coherent building blocks—often called **modes**—which capture the most salient spatio-temporal patterns.
+MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute for Fluid Dynamics to perform data-driven modal decompositions.
+Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it has recently been extended to perform also other decompositions that include POD, SPODs, DFT, DMD, mPOD. 
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Getting Started  
+
+   intro
+   installation
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Data pre-processing 
+
+   importing_data
+   weights_inner
+
+
+Data-Driven Modal Decompositions
+---------------------------------
+
+All modal decompositions are implemented in MODULO as matrix factorization of the snapshot matrix :math:`D(\mathbf{x}, t) \in \mathbb{R}^{n_S \times n_t}`.
+Each entry of the snapshot matrix is a flattened realization of the data, regardless of the data dimensionality (2D, 3D). Thus, this decomposition
+reads 
+
+.. math:: 
+
+   D(\mathbf{x}, t) = \mathbf{\Phi}\mathbf{\Sigma}\mathbf{\Psi}^T
+
+where :math:`\mathbf{\Phi} \in \mathbb{R}^{n_S \times r}` and :math:`\mathbf{\Psi} \in \mathbb{R}^{n_t \times r}` are the spatial and temporal modes, 
+respectively, and :math:`\mathbf{\Sigma} \in \mathbb{R}^{r \times r}` is a diagonal matrix containing the modal energy associated with each mode.
 
 Each mode :math:`r`` is characterized by:
 
@@ -10,8 +41,26 @@ Each mode :math:`r`` is characterized by:
 - **Temporal structure** :math:`\mathbf{\psi}_r`, which describes how that pattern evolves in time,  
 - **Amplitude** :math:`\sigma_r`, which quantifies the modal amplitude, e.g. energy or variance captured by the mode.  
 
+The reminder of this section overviews the salient theoretical aspects of the implement modal decompositions, and the corresponding 
+implementation in MODULO. The following decompositions are available:
+
 The field of applications ranges from **reduced-order modeling** (ROM) and **flow control** to **filtering**, and **feature extraction**. 
 For a comprehensive review of modal methods in fluid dynamics, see Mendez et al. (2023) :cite:`mendez_2023`.
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Data-Driven Modal Decompositions
+   :glob:
+   
+   decompositions/dft/index
+   decompositions/pod/index
+   decompositions/dmd/index
+   decompositions/mpod/index
+   decompositions/kpod/index
+   decompositions/spod/index
+
+   .. decompositions/index
+
 
 Key features of MODULO
 ----------------------
@@ -24,12 +73,24 @@ Key features of MODULO
   - **DMD** (Dynamic Mode Decomposition)  
   - **KPOD** (Kernel POD)  
 
-- **Memory‐efficient implementations**:
+- **Memory‐saving implementations** :cite:`ninni_modulo_2020`:
 
   - Partition‐based loading for very large datasets  
   - On‐disk correlation matrices (Ninni et al., 2020) :cite:`ninni_modulo_2020`  
   
-  
+
+.. toctree::
+   :maxdepth: 1
+   :caption: API Reference
+
+   api/readdata
+   api/dft 
+   api/pod 
+   api/mpod
+   api/dmd
+   api/spod 
+   api/kpod  
+
 
 Quick Start 
 ------------
@@ -59,35 +120,25 @@ Collaborate on GitHub
 
 We welcome contributions to MODULO. 
 
-It is recommended to perform a shallow clone of the repository to avoid downloading the entire history of the project:
 
-.. code-block:: bash
+.. toctree::
+   :maxdepth: 1
+   :caption: Contributing
 
-    $ git clone --depth 1 https://github.com/mendezVKI/MODULO.git
-
-This will download only the latest version of the repository, which is sufficient for contributing to the project, and will save 
-you time and disk space.
-
-To create a new feature, please submit a pull request, specifying the proposed changes and 
-providing an example of how to use the new feature (that will be included in the `examples/` folder).
-
-The pull request will be reviewed by the MODULO team before being merged into the main branch, and your contribution duly acknowledged.
-
-Report bugs 
-^^^^^^^^^^^^
-If you find a bug, or you encounter unexpected behaviour, please open an issue on the MODULO GitHub repository.
-
-Ask for help
-^^^^^^^^^^^^
-If you have troubles using MODULO, or you need help with a specific decomposition, please open an issue on the MODULO GitHub repository.
+   contributing/get_code
+   contributing/testing 
 
 
 References 
 -----------
 
-.. bibliography:: references.bib
-   :style: unsrt
-   :cited:
+.. toctree::
+   :maxdepth: 1
+   :caption: References & Acknowledgements
+
+   refs_and_ack/refs
+   refs_and_ack/ack 
+
 
 .. ++++++++++++++++++++++++++++++++++++++++++++++++++++
 .. What are data-driven decompositions? Some literature

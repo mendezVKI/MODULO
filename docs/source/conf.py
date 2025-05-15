@@ -32,7 +32,7 @@ extensions = [
 templates_path = ['_templates']
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = 'intro'
 
 # Files and patterns to ignore when looking for source files.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
