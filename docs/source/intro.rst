@@ -114,12 +114,6 @@ In this case, the decomposition can be carried out as:
 This output is consistent regardless of the decomposition, e.g. MODULO will always yield the spatial structures first,
 then the temporal ones and lastly the amplitudes of the modes.
 
-
-Collaborate on GitHub
-----------------------
-
-We welcome contributions to MODULO. 
-
 .. toctree::
    :maxdepth: 1
    :caption: Contributing
@@ -134,10 +128,6 @@ The version changes are available here:
    :caption: Changelog
 
    change_log 
-
-
-References 
------------
 
 .. toctree::
    :maxdepth: 1

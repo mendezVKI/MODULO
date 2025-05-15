@@ -72,6 +72,13 @@ intersphinx_mapping = {
     'sklearn':  ('https://scikit-learn.org/stable', None),
 }
 
+rst_epilog = """
+.. bibliography:: refs.bib
+   :filter: docname == env.docname
+   :style: unsrt
+   :heading: References
+"""
+
 # -- Options for autodoc -----------------------------------------------------
 autodoc_member_order = 'bysource'
 autosummary_generate = True
