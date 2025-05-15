@@ -120,13 +120,20 @@ Collaborate on GitHub
 
 We welcome contributions to MODULO. 
 
-
 .. toctree::
    :maxdepth: 1
    :caption: Contributing
 
    contributing/get_code
    contributing/testing 
+
+The version changes are available here: 
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Changelog
+
+   change_log 
 
 
 References 
