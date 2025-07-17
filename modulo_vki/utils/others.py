@@ -201,7 +201,7 @@ def Plot_2D_CFD_Cyl(Xg,Yg,U,V,k=10,CL=16,Name='', verbose=False):
     V_g=V[:,k].reshape(n_y,n_x).T
     # Prepare the plot        
     fig, ax = plt.subplots(figsize=(6, 3)) # This creates the figure
-    plt.contourf(Xg,Yg,np.sqrt(U_g**2+V_g**2),30)
+    contour = plt.contourf(Xg,Yg,np.sqrt(U_g**2+V_g**2),30)
     # plt.quiver(Xg,Yg,U_g,V_g,scale=10000)
     ax.set_aspect('equal') # Set equal aspect ratio
     ax.set_xlabel('$x[mm]$',fontsize=13)
@@ -229,7 +229,7 @@ def Plot_2D_CFD_Cyl(Xg,Yg,U,V,k=10,CL=16,Name='', verbose=False):
     return 
 
 
-def Animation_2D_CFD_Cyl(Giff_NAME,D,Xg,Yg,In,Fin,Step):
+def Animation_2D_CFD_Cyl(Giff_NAME,D,Xg,Yg,In,Fin,Step,verbose=False):
     """
     The gif file is created from the provided data snapshot
     """
@@ -243,17 +243,22 @@ def Animation_2D_CFD_Cyl(Giff_NAME,D,Xg,Yg,In,Fin,Step):
     Fol_Out = 'Gif_Images_temporary'
     if not os.path.exists(Fol_Out):
         os.mkdir(Fol_Out)
-    # Loop to produce the Gifs    
+    # Loop to produce the Gifs
+    if not verbose:
+        print('Exporting images...')
     for k in range(1,n_t,Step):
      NameOUT = Fol_Out + os.sep + 'Im%03d' % (k) + '.png'
-     Plot_2D_CFD_Cyl(Xg,Yg,U,V,k=k+In,CL=16,Name=NameOUT)
+     Plot_2D_CFD_Cyl(Xg,Yg,U,V,k=k+In,CL=16,Name=NameOUT,verbose=verbose)
 
     import imageio  # This used for the animation
     images = []
 
+    if not verbose:
+        print('Preparing images...')
     for k in range(1,n_t,Step):
-        MEX = 'Preparing Im ' + str(k)
-        print(MEX)
+        if verbose:
+            MEX = 'Preparing Im ' + str(k)
+            print(MEX)
         NameOUT = Fol_Out + os.sep + 'Im%03d' % (k) + '.png'
         images.append(imageio.imread(NameOUT))
 

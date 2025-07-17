@@ -212,7 +212,7 @@ class ModuloVKI:
 
         return Phi_F, Psi_F, Sigma_F
     
-    def POD(self, SAVE_T_POD: bool = False, mode: str = 'K'):
+    def POD(self, SAVE_T_POD: bool = False, mode: str = 'K',verbose=True):
         """
         Compute the Proper Orthogonal Decomposition (POD) of a dataset.
 
@@ -232,13 +232,12 @@ class ModuloVKI:
 
         Returns
         -------
+        Phi_P : numpy.ndarray
+                POD temporal modes.
         Psi_P : numpy.ndarray
                 POD spatial modes.
         Sigma_P : numpy.ndarray
                 POD singular values (eigenvalues are Sigma_P**2).
-        Phi_P : numpy.ndarray
-                POD temporal modes.
-
         Raises
         ------
         ValueError
@@ -254,40 +253,48 @@ class ModuloVKI:
         assert mode in ('k', 'svd'), "POD mode must be either 'K', temporal correlation matrix, or 'svd'." 
 
         if mode == 'k':
-                
-                print('Computing correlation matrix...')
+                if verbose:
+                    print('Computing correlation matrix...')
                 self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS,
                                         self.MEMORY_SAVING,
-                                        self.FOLDER_OUT, self.SAVE_K, 
-                                        D=self.Dstar, weights=self.weights)
+                                        self.FOLDER_OUT, self.SAVE_K,
+                                        D=self.Dstar, weights=self.weights,
+                                        verbose=verbose)
 
                 if self.MEMORY_SAVING:
                         self.K = np.load(self.FOLDER_OUT + '/correlation_matrix/k_matrix.npz')['K']
-
-                print("Computing Temporal Basis...")
+                if verbose:
+                    print("Computing Temporal Basis...")
                 Psi_P, Sigma_P = Temporal_basis_POD(self.K, SAVE_T_POD,
-                                                self.FOLDER_OUT, self.n_Modes, eig_solver=self.eig_solver)
-                print("Done.")
-                print("Computing Spatial Basis...")
+                                                self.FOLDER_OUT, self.n_Modes, eig_solver=self.eig_solver,verbose=verbose)
+
+                if verbose:
+                    print("Done.")
+                    print("Computing Spatial Basis...")
 
                 if self.MEMORY_SAVING:  # if self.D is available:
-                        print('Computing Phi from partitions...')
+                        if verbose:
+                            print('Computing Phi from partitions...')
                         Phi_P = Spatial_basis_POD(np.array([1]), N_T=self.N_T,
                                         PSI_P=Psi_P,
                                         Sigma_P=Sigma_P,
                                         MEMORY_SAVING=self.MEMORY_SAVING,
                                         FOLDER_OUT=self.FOLDER_OUT,
-                                        N_PARTITIONS=self.N_PARTITIONS)
+                                        N_PARTITIONS=self.N_PARTITIONS,
+                                        verbose=verbose)
 
                 else:  # if not, the memory saving is on and D will not be used. We pass a dummy D
-                        print('Computing Phi from D...')
+                        if verbose:
+                            print('Computing Phi from D...')
                         Phi_P = Spatial_basis_POD(self.D, N_T=self.N_T,
                                                 PSI_P=Psi_P,
                                                 Sigma_P=Sigma_P,
                                                 MEMORY_SAVING=self.MEMORY_SAVING,
                                                 FOLDER_OUT=self.FOLDER_OUT,
-                                                N_PARTITIONS=self.N_PARTITIONS)
-                        print("Done.")
+                                                N_PARTITIONS=self.N_PARTITIONS,
+                                                verbose=verbose)
+                        if verbose:
+                            print("Done.")
         
         else:  
                 if self.MEMORY_SAVING:
@@ -317,14 +324,14 @@ class ModuloVKI:
         return Phi_P, Psi_P, Sigma_P
 
     
-    def mPOD(self, Nf, Ex, F_V, Keep, SAT, boundaries, MODE, dt, SAVE=False, K_in=None):
+    def mPOD(self, Nf, Ex, F_V, Keep, SAT, boundaries, MODE, dt, SAVE=False, K_in=None, Sigma_type='accurate', conv_type: str = '1d', verbose=True):
         """
         Multi-Scale Proper Orthogonal Decomposition (mPOD) of a signal.
 
         Parameters
         ----------
         Nf : np.array
-                Orders of the FIR filters used to isolate each scale.
+                Orders of the FIR filters used to isolate each scale. Must be of size len(F_V) + 1.
         
         Ex : int
                 Extension length at the boundaries to impose boundary conditions (must be at least as large as Nf).
@@ -333,7 +340,7 @@ class ModuloVKI:
                 Frequency splitting vector, containing the cutoff frequencies for each scale. Units depend on the temporal step `dt`.
         
         Keep : np.array
-                Boolean array indicating scales to retain.
+                Boolean array indicating scales to retain. Must be of size len(F_V) + 1.
         
         SAT : int
                 Maximum number of modes per scale.
@@ -351,9 +358,16 @@ class ModuloVKI:
         SAVE : bool, default=False
                 Whether to save intermediate results to disk.
 
-        load_existing_K : bool, default=True
-                If True and MEMORY_SAVING is active, attempts to load an existing correlation matrix K from disk,
-                skipping recomputation if possible.
+        K_in : np.array, default = none
+                K matrix. If none, compute it with D.
+
+        Sigma_type : {'accurate', 'fast'}
+                If accurate, recompute the Sigmas after QR polishing. Slightly slower than the fast option in which the Sigmas are not recomputed.
+
+        conv_type : {'1d', '2d'}
+            If 1d, compute Kf applying 1d FIR filters to the columns and then rows of the extended K.
+            More robust against windowing effects but more expensive (useful for modes that are slow compared to the observation time).
+            If 2d, compute Kf applying a 2d FIR filter on the extended K.
 
         Returns
         -------
@@ -368,48 +382,54 @@ class ModuloVKI:
         """
         
         if K_in is None:
-                print('Computing correlation matrix D matrix...')
+                if verbose:
+                    print('Computing correlation matrix D matrix...')
                 self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS,
                                         self.MEMORY_SAVING,
-                                        self.FOLDER_OUT, self.SAVE_K, D=self.Dstar)
+                                        self.FOLDER_OUT, self.SAVE_K, D=self.Dstar,
+                                        verbose=verbose)
 
                 if self.MEMORY_SAVING:
                         self.K = np.load(self.FOLDER_OUT + '/correlation_matrix/k_matrix.npz')['K']
         else:
-                print('Using K matrix provided by the user...')
+                if verbose:
+                    print('Using K matrix provided by the user...')
                 self.K = K_in
 
-
-        print("Computing Temporal Basis...")
-        PSI_M = temporal_basis_mPOD(
+        if verbose:
+            print("Computing Temporal Basis...")
+        PSI_M,SIGMA_M = temporal_basis_mPOD(
                 K=self.K, Nf=Nf, Ex=Ex, F_V=F_V, Keep=Keep, boundaries=boundaries,
                 MODE=MODE, dt=dt, FOLDER_OUT=self.FOLDER_OUT,
                 n_Modes=self.n_Modes, MEMORY_SAVING=self.MEMORY_SAVING, SAT=SAT,
-                eig_solver=self.eig_solver
+                eig_solver=self.eig_solver, conv_type=conv_type, verbose=verbose
         )
-        print("Temporal Basis computed.")
+        if verbose:
+            print("Temporal Basis computed.")
 
         if hasattr(self, 'D'):
-                print('Computing spatial modes Phi from D...')
+                if verbose:
+                    print('Computing spatial modes Phi from D...')
                 Phi_M, Psi_M, Sigma_M = spatial_basis_mPOD(
                 self.D, PSI_M, N_T=self.N_T, N_PARTITIONS=self.N_PARTITIONS,
                 N_S=self.N_S, MEMORY_SAVING=self.MEMORY_SAVING,
-                FOLDER_OUT=self.FOLDER_OUT, SAVE=SAVE
+                FOLDER_OUT=self.FOLDER_OUT, SAVE=SAVE, SIGMA_TYPE=Sigma_type, SIGMA_M=SIGMA_M
                 )
         else:
-                print('Computing spatial modes Phi from partitions...')
+                if verbose:
+                    print('Computing spatial modes Phi from partitions...')
                 Phi_M, Psi_M, Sigma_M = spatial_basis_mPOD(
                 np.array([1]), PSI_M, N_T=self.N_T,
                 N_PARTITIONS=self.N_PARTITIONS, N_S=self.N_S,
                 MEMORY_SAVING=self.MEMORY_SAVING,
-                FOLDER_OUT=self.FOLDER_OUT, SAVE=SAVE
+                FOLDER_OUT=self.FOLDER_OUT, SAVE=SAVE,SIGMA_TYPE=Sigma_type, SIGMA_M=SIGMA_M
                 )
-
-        print("Spatial modes computed.")
+        if verbose:
+            print("Spatial modes computed.")
 
         return Phi_M, Psi_M, Sigma_M
 
-    def DMD(self, SAVE_T_DMD: bool = True, F_S: float = 1.0):
+    def DMD(self, SAVE_T_DMD: bool = True, F_S: float = 1.0, verbose:  bool = True):
         """
         Compute the Dynamic Mode Decomposition (DMD) of the dataset.
 
@@ -462,12 +482,12 @@ class ModuloVKI:
 
             # Compute the DMD
             Phi_D, Lambda, freqs, a0s = dmd_s(D[:, 0:self.N_T - 1],
-                                              D[:, 1:self.N_T], self.n_Modes, F_S, svd_solver=self.svd_solver)
+                                              D[:, 1:self.N_T], self.n_Modes, F_S, svd_solver=self.svd_solver,verbose=verbose)
 
         else:
             Phi_D, Lambda, freqs, a0s = dmd_s(self.D[:, 0:self.N_T - 1],
                                               self.D[:, 1:self.N_T], self.n_Modes, F_S, SAVE_T_DMD=SAVE_T_DMD,
-                                              svd_solver=self.svd_solver, FOLDER_OUT=self.FOLDER_OUT)
+                                              svd_solver=self.svd_solver, FOLDER_OUT=self.FOLDER_OUT,verbose=verbose)
 
         return Phi_D, Lambda, freqs, a0s
 
@@ -594,8 +614,10 @@ class ModuloVKI:
         
         # Optionally save the results
         if SAVE_SPOD:
+                folder_out = self.FOLDER_OUT + "MODULO_tmp/"
+                os.makedirs(folder_out, exist_ok=True)
                 np.savez(
-                f"{self.FOLDER_OUT}/MODULO_tmp/spod_towne.npz",
+                folder_out + "spod_towne.npz",
                 Phi=Phi_SP,
                 Sigma=Sigma_SP,
                 freqs=freq_pos

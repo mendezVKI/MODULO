@@ -133,7 +133,7 @@ D_MEAN_mat=np.array([D_MEAN, ] * n_t).transpose()
 # --- Initialize MODULO object
 m = ModuloVKI(data=D,svd_solver='svd_scipy_sparse')
 
-Phi_POD, Psi_POD, Sigma_POD = m.compute_POD_svd()
+Phi_POD, Psi_POD, Sigma_POD = m.POD(mode='svd')
 # We here plot the POD modes and their structures
 U_D=Phi_POD[0:nxny,:]
 V_D=Phi_POD[nxny::,:]
@@ -208,9 +208,9 @@ When k is approximately 0, the values of K are as diverse as possible.
 FOLDER_kPOD_RESULTS=FOLDER+os.sep+'kPOD_Results_Cylinder_CFD'
 # -- Now we proceed with the new kernel POD. We try three values of k_m
 M_DIST=[1,19]
-Phi_kPOD_0, Psi_kPOD_0, Sigma_kPOD_0,K_zeta_0 = m.compute_kPOD(M_DIST=M_DIST,k_m=0.5,cent=True, K_out=True)
-Phi_kPOD_1, Psi_kPOD_1, Sigma_kPOD_1,K_zeta_1 = m.compute_kPOD(M_DIST=M_DIST,k_m=1e-3,cent=True, K_out=True)
-Phi_kPOD_2, Psi_kPOD_2, Sigma_kPOD_2,K_zeta_2 = m.compute_kPOD(M_DIST=M_DIST,k_m=1e-12,cent=True, K_out=True)
+Phi_kPOD_0, Psi_kPOD_0, Sigma_kPOD_0,K_zeta_0 = m.kPOD(M_DIST=M_DIST,k_m=0.5,cent=True, K_out=True)
+Phi_kPOD_1, Psi_kPOD_1, Sigma_kPOD_1,K_zeta_1 = m.kPOD(M_DIST=M_DIST,k_m=1e-3,cent=True, K_out=True)
+Phi_kPOD_2, Psi_kPOD_2, Sigma_kPOD_2,K_zeta_2 = m.kPOD(M_DIST=M_DIST,k_m=1e-12,cent=True, K_out=True)
 K_POD=D.T.dot(D)
 
 fig, ax = plt.subplots(2,4,figsize=(20, 10)) # This creates the figure

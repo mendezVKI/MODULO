@@ -2,14 +2,14 @@ import os
 import numpy as np
 from scipy.signal import firwin  # To create FIR kernels
 from tqdm import tqdm
-from modulo_vki.utils import conv_m, switch_eigs
+from modulo_vki.utils import conv_m, conv_m_2D, switch_eigs
 
 
 def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep, 
                         boundaries, MODE='reduced', 
                         dt=1,FOLDER_OUT: str = "./", 
                         MEMORY_SAVING: bool = False,SAT: int = 100,
-                        n_Modes=10, eig_solver: str = 'svd_sklearn_randomized'):
+                        n_Modes=10, eig_solver: str = 'svd_sklearn_randomized', conv_type: str = '1d', verbose: bool = True):
     '''
     This function computes the PSIs for the mPOD. In this implementation, a "dft-trick" is proposed, in order to avoid
     expansive SVDs. Randomized SVD is used by default for the diagonalization.
@@ -46,7 +46,11 @@ def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep,
     :param n_Modes: int. 
         Total number of modes that will be finally exported   
     :param eig_solver: str. 
-        This is the eigenvalue solver that will be used. Refer to eigs_swith for the options.      
+        This is the eigenvalue solver that will be used. Refer to eigs_swith for the options.
+    :param conv_type: {'1d', '2d'}
+        If 1d, compute K_hat applying 1d FIR filters to the columns and then rows of the extended K.
+        More robust against windowing effects but more expensive (useful for modes that are slow compared to the observation time).
+        If 2d, compute K_hat applying a 2d FIR filter on the extended K.
     :return PSI_M: np.array. 
         The mPOD PSIs. Yet to be sorted ! 
     '''
@@ -73,7 +77,7 @@ def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep,
     
     # init modes accumulators
     Psi_M = np.empty((n_t, 0))
-    Lambda_M = np.empty((0,))
+    Sigma_M = np.empty((0,))
     
     def _design_filter_and_mask(m):
         # use normalized firwin in agreement to normalized freqs above
@@ -82,60 +86,72 @@ def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep,
             # low-pass
             h = firwin(numtaps=Nf[m], cutoff=high, #fs=Fs,
                        window='hamming', pass_zero=True)
-            mask = lambda f: np.abs(f) <= high
+            mask = lambda f: np.abs(f) <= high/2
         elif m == M - 1:
             # high-pass
             h = firwin(numtaps=Nf[m], cutoff=low, #fs=Fs,
                        window='hamming', pass_zero=False)
-            mask = lambda f: np.abs(f) >= low
+            mask = lambda f: np.abs(f) >= low/2
         else:
             # band-pass
             h = firwin(numtaps=Nf[m], cutoff=[low, high], #fs=Fs,
                        window='hamming', pass_zero=False)
-            mask = lambda f: (np.abs(f) >= low) & (np.abs(f) <= high)
+            mask = lambda f: (np.abs(f) >= low/2) & (np.abs(f) <= high/2)
         return h, mask
     
     for m in range(M):
         if not Keep[m]:
-            print(f"Skipping band {m+1}/{M}")
+            if verbose:
+                print(f"Skipping band {m+1}/{M}")
             continue
 
         # design filter & mask
         h, mask_fn = _design_filter_and_mask(m)
-        band_label = f"{edges[m]:.2f}–{edges[m+1]:.2f} Hz"
-        print(f"\nFiltering band {m+1}/{M}: {band_label}")
+        band_label = f"{edges[m]*nyq:.2f}–{edges[m+1]*nyq:.2f} Hz"
+        if verbose:
+            print(f"\nFiltering band {m+1}/{M}: {band_label}")
 
         # rank estimate
         mask_idxs = mask_fn(freqs)
 
         R_K = min(np.count_nonzero(mask_idxs), SAT, n_Modes)
-        print(f" → estimating {R_K} modes from {mask_idxs.sum()} freq bins")
+        if verbose:
+            print(f" → estimating {R_K} modes from {mask_idxs.sum()} freq bins")
         
         if R_K == 0:
             print(f"skipping")
             continue
-        
+
         # apply filter to correlation matrix
-        Kf = conv_m(K, h, Ex, boundaries)
+        conv_type = conv_type.lower()
+        if conv_type == '2d':
+            Kf = conv_m_2D(K, h, Ex, boundaries)
+        else:
+            Kf = conv_m(K, h, Ex, boundaries)
 
         # diagonalize
-        Psi_P, Lambda_P = switch_eigs(Kf, R_K, eig_solver)
+        Psi_P, Sigma_P = switch_eigs(Kf, R_K, eig_solver)
 
         # append
         Psi_M    = np.hstack((Psi_M,    Psi_P))
-        Lambda_M = np.concatenate((Lambda_M, Lambda_P))
+        Sigma_M = np.concatenate((Sigma_M, Sigma_P))
 
     # 5) Sort modes by energy and QR-polish
-    order = np.argsort(Lambda_M)[::-1]
+    order = np.argsort(Sigma_M)[::-1]
     Psi_M = Psi_M[:, order]
-    print("\nQR polishing...")
+    if verbose:
+        print("\nQR polishing...")
     PSI_M, _ = np.linalg.qr(Psi_M, mode=MODE)
+
+    Sigma_M = Sigma_M[order] # potentially used if effect of qr polishing is negligible on PSI_M
+
+
     
     if MEMORY_SAVING:
         os.makedirs(FOLDER_OUT + '/mPOD', exist_ok=True)
         np.savez(FOLDER_OUT + '/mPOD/Psis', Psis=PSI_M)
 
-    return PSI_M[:, :n_Modes]
+    return PSI_M[:, :n_Modes], Sigma_M[:n_Modes]
 
     
 
@@ -200,7 +216,7 @@ def dft(N_T, F_S, D, FOLDER_OUT, SAVE_DFT=False):
 
 
 def Temporal_basis_POD(K, SAVE_T_POD=False, FOLDER_OUT='./', 
-                       n_Modes=10,eig_solver: str = 'eigh'):
+                       n_Modes=10,eig_solver: str = 'eigh',verbose=True):
     """
     This method computes the POD basis. For some theoretical insights, you can find the theoretical background of the proper orthogonal decomposition in a nutshell here: https://youtu.be/8fhupzhAR_M
 
@@ -212,8 +228,8 @@ def Temporal_basis_POD(K, SAVE_T_POD=False, FOLDER_OUT='./',
     :return: Psi_P: np.array. POD's Psis
     :return: Sigma_P: np.array. POD's Sigmas
     """
-    
-    print("diagonalizing K....")
+    if verbose:
+        print("Diagonalizing K...")
     Psi_P, Sigma_P = switch_eigs(K, n_Modes, eig_solver)
     
 

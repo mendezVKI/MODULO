@@ -91,6 +91,22 @@ def conv_m(K, h, Ex, boundaries):
         # K_F=K_F1+K_F2
     return K_F2
 
+def conv_m_2D(K, h, Ex, boundaries):
+
+    # Extended K
+    K_ext = np.pad(K, Ex, mode=boundaries)
+
+    # Filtering matrix
+    h_mat = np.outer(np.atleast_2d(h).T, np.atleast_2d(h))
+
+    # Filtering
+    K_filt = signal.fftconvolve(K_ext, h_mat, mode='valid')
+
+    # Interior K
+    Ex1 = int((len(K_filt) - len(K)) / 2)
+    K_F2 = K_filt[Ex1:(len(K_filt) - Ex1), Ex1:(len(K_filt) - Ex1)]
+
+    return K_F2
 
 def _loop_gemm(a, b, c=None, chunksize=100):
     size_i = a.shape[0]

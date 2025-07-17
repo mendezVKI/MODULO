@@ -1,0 +1,212 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MODULO (MODal mULtiscale pOd): Data-Driven Modal Analysis &mdash; MODULO 2.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+
+  
+      <script src="_static/documentation_options.js?v=20623aea"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="intro.html">
+            
+              <img src="_static/modulo_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data pre-processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="importing_data.html">Importing data and D matrix preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weights_inner.html">Weighted inner product for non-cartesian meshes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data-Driven Modal Decompositions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="decompositions/dft/index.html">Discrete Fourier Transform (DFT)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decompositions/pod/index.html">Proper Orthogonal Decomposition (POD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decompositions/dmd/index.html">Dynamic Mode Decomposition (DMD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decompositions/mpod/index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decompositions/kpod/index.html">Kernel Proper Orthogonal Decomposition (KPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decompositions/spod/index.html">Spectral Proper Orthogonal Decomposition (SPOD)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/readdata.html">Read Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/dft.html">DFT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/pod.html">POD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/mpod.html">mPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/dmd.html">DMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/spod.html">SPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/kpod.html">kPOD</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contributing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing/get_code.html">Base contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing/testing.html">Development and Testing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="change_log.html">Versions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="refs_and_ack/refs.html">Useful References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="refs_and_ack/ack.html">Ackowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="intro.html">MODULO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="intro.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">MODULO (MODal mULtiscale pOd): Data-Driven Modal Analysis</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modulo-modal-multiscale-pod-data-driven-modal-analysis">
+<h1>MODULO (MODal mULtiscale pOd): Data-Driven Modal Analysis<a class="headerlink" href="#modulo-modal-multiscale-pod-data-driven-modal-analysis" title="Link to this heading">¶</a></h1>
+<p>MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute for Fluid Dynamics to perform data-driven modal decompositions.
+Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it has recently been extended to perform also other decompositions that include POD, SPODs, DFT, DMD, mPOD.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">MODULO (MODal mULtiscale pOd): Data-Driven Modal Analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="importing_data.html">Importing data and D matrix preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="weights_inner.html">Weighted inner product for non-cartesian meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#data-driven-modal-decompositions">Data-Driven Modal Decompositions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#key-features-of-modulo">Key features of MODULO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#quick-start">Quick Start</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Data pre-processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="importing_data.html">Importing data and D matrix preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weights_inner.html">Weighted inner product for non-cartesian meshes</a></li>
+</ul>
+</div>
+<section id="data-driven-modal-decompositions">
+<h2>Data-Driven Modal Decompositions<a class="headerlink" href="#data-driven-modal-decompositions" title="Link to this heading">¶</a></h2>
+<p>All modal decompositions are implemented in MODULO as matrix factorization of the snapshot matrix <span class="math notranslate nohighlight">\(D(\mathbf{x}, t) \in \mathbb{R}^{n_S \times n_t}\)</span>.
+Each entry of the snapshot matrix is a flattened realization of the data, regardless of the data dimensionality (2D, 3D). Thus, this decomposition
+reads</p>
+<div class="math notranslate nohighlight">
+\[D(\mathbf{x}, t) = \mathbf{\Phi}\mathbf{\Sigma}\mathbf{\Psi}^T\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{\Phi} \in \mathbb{R}^{n_S \times r}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{\Psi} \in \mathbb{R}^{n_t \times r}\)</span> are the spatial and temporal modes,
+respectively, and <span class="math notranslate nohighlight">\(\mathbf{\Sigma} \in \mathbb{R}^{r \times r}\)</span> is a diagonal matrix containing the modal energy associated with each mode.</p>
+<p>All decompositions available in MODULO have an orthonormal temporal basis (<span class="math notranslate nohighlight">\(\Psi^{-1}=\Psi^\dagger\)</span>,  where <span class="math notranslate nohighlight">\(\dagger\)</span> denotes Hermitian transpose).
+Then, the spatial structures are readily computed from:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{\Phi} = \mathbf{D} \bar{\mathbf{\Psi}} \mathbf{\Sigma}^{-1} \;,\]</div>
+<p>where the modal amplitude matrix <span class="math notranslate nohighlight">\(\mathbf{\Sigma}\)</span> is retreived by normalization of the spatial structures, that is:</p>
+<div class="math notranslate nohighlight">
+\[\sigma_r = \| \mathbf{D} \Psi_r \| \;.\]</div>
+<p>The reminder of this section overviews the salient theoretical aspects of the implement modal decompositions, and the corresponding
+implementation in MODULO. The following decompositions are available:</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Data-Driven Modal Decompositions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="decompositions/dft/index.html">Discrete Fourier Transform (DFT)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decompositions/pod/index.html">Proper Orthogonal Decomposition (POD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decompositions/dmd/index.html">Dynamic Mode Decomposition (DMD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decompositions/mpod/index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decompositions/kpod/index.html">Kernel Proper Orthogonal Decomposition (KPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decompositions/spod/index.html">Spectral Proper Orthogonal Decomposition (SPOD)</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/readdata.html">Read Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/dft.html">DFT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/pod.html">POD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/mpod.html">mPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/dmd.html">DMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/spod.html">SPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/kpod.html">kPOD</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="change_log.html">Versions</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025 von Karman Institute.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

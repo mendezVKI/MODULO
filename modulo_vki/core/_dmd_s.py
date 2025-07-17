@@ -7,7 +7,8 @@ from ..utils._utils import switch_svds
 def dmd_s(D_1, D_2, n_Modes, F_S,
           SAVE_T_DMD: bool = False,
           FOLDER_OUT: str = './',
-          svd_solver: str = 'svd_sklearn_truncated'):
+          svd_solver: str = 'svd_sklearn_truncated',
+          verbose=True):
     """
     Compute the Dynamic Mode Decomposition (DMD) using the PIP algorithm.
 
@@ -45,26 +46,31 @@ def dmd_s(D_1, D_2, n_Modes, F_S,
     """ 
     
     Phi_P, Psi_P, Sigma_P = switch_svds(D_1, n_Modes, svd_solver)
-#     print('SVD of D1 rdy')
+    if verbose:
+        print('SVD of D1 rdy')
     Sigma_inv = np.diag(1 / Sigma_P)
     dt = 1 / F_S
     # %% Step 3: Compute approximated propagator
     P_A = LA.multi_dot([np.transpose(Phi_P), D_2, Psi_P, Sigma_inv])
-#     print('reduced propagator rdy')
+    if verbose:
+        print('reduced propagator rdy')
 
     # %% Step 4: Compute eigenvalues of the system
     Lambda, Q = LA.eig(P_A) # not necessarily symmetric def pos! Avoid eigsh, eigh
     freqs = np.imag(np.log(Lambda)) / (2 * np.pi * dt)
-#     print(' lambdas and freqs rdy')
+    if verbose:
+        print(' lambdas and freqs rdy')
 
     # %% Step 5: Spatial structures of the DMD in the PIP style
     Phi_D = LA.multi_dot([D_2, Psi_P, Sigma_inv, Q])
-#     print('Phi_D rdy')
+    if verbose:
+        print('Phi_D rdy')
 
     # %% Step 6: Compute the initial coefficients
     # a0s=LA.lstsq(Phi_D, D_1[:,0],rcond=None)
     a0s = LA.pinv(Phi_D).dot(D_1[:, 0])
-#     print('Sigma_D rdy')
+    if verbose:
+        print('Sigma_D rdy')
 
     if SAVE_T_DMD:
         os.makedirs(FOLDER_OUT + "/DMD/", exist_ok=True)

@@ -73,10 +73,7 @@ intersphinx_mapping = {
 }
 
 rst_epilog = """
-.. bibliography:: refs.bib
-   :filter: docname == env.docname
-   :style: unsrt
-   :heading: References
+
 """
 
 # -- Options for autodoc -----------------------------------------------------

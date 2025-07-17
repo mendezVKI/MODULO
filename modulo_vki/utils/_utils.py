@@ -25,11 +25,11 @@ def Bound_EXT(S, Ex, boundaries):
     # Ex=int((Nf-1)/2) # Extension on each size
     size_Ext = 2 * Ex + len(S)  # Compute the size of the extended signal
     S_extend = np.zeros((int(size_Ext)))  # Initialize extended signal
-    S_extend[Ex:int((size_Ext - Ex))] = S;  # Assign the Signal on the zeroes
+    S_extend[Ex:int((size_Ext - Ex))] = S  # Assign the Signal on the zeroes
 
     if boundaries == "reflect":
         LEFT = np.flip(S[0:Ex])  # Prepare the reflection on the left
-        RIGHT = np.flip(S[len(S) - Ex:len(S)])  # Prepare the reflectino on the right
+        RIGHT = np.flip(S[len(S) - Ex:len(S)])  # Prepare the reflection on the right
         S_extend[0:Ex] = LEFT
         S_extend[len(S_extend) - Ex:len(S_extend)] = RIGHT
     elif boundaries == "nearest":
@@ -88,6 +88,23 @@ def conv_m(K, h, Ex, boundaries):
         # K_F2[:,k]=S_Filt[Ex:(len(S_Filt)-Ex)]
         K_F2[k, :] = S_Filt[Ex1:(len(S_Filt) - Ex1)]
         # K_F=K_F1+K_F2
+    return K_F2
+
+def conv_m_2D(K, h, Ex, boundaries):
+
+    # Extended K
+    K_ext = np.pad(K, Ex, mode=boundaries)
+
+    # Filtering matrix
+    h_mat = np.outer(np.atleast_2d(h).T, np.atleast_2d(h))
+
+    # Filtering
+    K_filt = signal.fftconvolve(K_ext, h_mat, mode='valid')
+
+    # Interior K
+    Ex1 = int((len(K_filt) - len(K)) / 2)
+    K_F2 = K_filt[Ex1:(len(K_filt) - Ex1), Ex1:(len(K_filt) - Ex1)]
+
     return K_F2
 
 

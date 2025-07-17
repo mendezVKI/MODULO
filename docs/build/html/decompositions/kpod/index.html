@@ -1,0 +1,195 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kernel Proper Orthogonal Decomposition (KPOD) &mdash; MODULO 2.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+      <script src="../../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Spectral Proper Orthogonal Decomposition (SPOD)" href="../spod/index.html" />
+    <link rel="prev" title="Multiscale Proper Orthogonal Decomposition (mPOD)" href="../mpod/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../intro.html">
+            
+              <img src="../../_static/modulo_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data pre-processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../importing_data.html">Importing data and D matrix preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../weights_inner.html">Weighted inner product for non-cartesian meshes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data-Driven Modal Decompositions</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../dft/index.html">Discrete Fourier Transform (DFT)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pod/index.html">Proper Orthogonal Decomposition (POD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dmd/index.html">Dynamic Mode Decomposition (DMD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpod/index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Kernel Proper Orthogonal Decomposition (KPOD)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#theory">Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-with-modulo">Example with MODULO</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../spod/index.html">Spectral Proper Orthogonal Decomposition (SPOD)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/readdata.html">Read Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/dft.html">DFT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/pod.html">POD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/mpod.html">mPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/dmd.html">DMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/spod.html">SPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/kpod.html">kPOD</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contributing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/get_code.html">Base contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/testing.html">Development and Testing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../change_log.html">Versions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/refs.html">Useful References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/ack.html">Ackowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../intro.html">MODULO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../intro.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Kernel Proper Orthogonal Decomposition (KPOD)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/decompositions/kpod/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="kernel-proper-orthogonal-decomposition-kpod">
+<h1>Kernel Proper Orthogonal Decomposition (KPOD)<a class="headerlink" href="#kernel-proper-orthogonal-decomposition-kpod" title="Link to this heading">¶</a></h1>
+<p>This document offers a brief reference guide to the use of the Kernel Proper Orthogonal Decomposition (KPOD).</p>
+<section id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Link to this heading">¶</a></h2>
+<p>The Kernel POD is a nonlinear variant of the POD. It seeks to capture nonlinear correlations between snapshots
+via their embedding into a higher dimensional feature space (that we shall denote as <span class="math notranslate nohighlight">\(xi\)</span>), defined by a
+kernel function, and performs the POD there <span id="id1">[<a class="reference internal" href="../../refs_and_ack/refs.html#id10" title="Miguel A. Mendez. Linear and nonlinear dimensionality reduction from fluid mechanics to machine learning. Measurement Science and Technology, 34:042001, January 2023. doi:10.1088/1361-6501/acaffe.">2</a>]</span>.</p>
+<p>Thus, the main step is the computation of this kernel function. To this end, we compute the euclidean distance
+between snapshots <span class="math notranslate nohighlight">\(\mathbf{d}_i \in \mathbb{R}^{n_S}\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[M_{ij} = \| \mathbf{d}_i - \mathbf{d}_j \|^2 \;.\]</div>
+<p>In the following, we use Radial Basis Function (RBFs) as kernel function. We compute the inverse length-scale
+of the RBF as:</p>
+<div class="math notranslate nohighlight">
+\[\gamma = - \frac{\log{k_m}}{M_{ij}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(k_m\)</span> is a minimum value for the kernelized correlation. This leads to the kernelized expression of
+the correlation matrix as:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{K}_\xi = \exp{(-\gamma \| \mathbf{d}_i - \mathbf{d}_j \|^2)} \;.\]</div>
+<p>From this point onward, the procedure is the one of a standard POD: the temporal modes <span class="math notranslate nohighlight">\(\psi^\xi_r\)</span> are
+eigenvectors of <span class="math notranslate nohighlight">\(\mathbf{K}^\xi\)</span> (that now is a nonlinear manifold), the amplitudes are
+<span class="math notranslate nohighlight">\(\sigma_r^\xi = \sqrt{\lambda^xi}\)</span>, and the spatial modes <span class="math notranslate nohighlight">\(\phi^\xi_r\)</span> are obtained via projection.</p>
+</section>
+<section id="example-with-modulo">
+<h2>Example with MODULO<a class="headerlink" href="#example-with-modulo" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">kPOD</span></code> is called in MODULO as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">modulo_vki</span> <span class="kn">import</span> <span class="n">ModuloVKI</span>
+
+<span class="c1"># --- Initialize MODULO object</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">ModuloVKI</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">D</span><span class="p">,</span><span class="n">svd_solver</span><span class="o">=</span><span class="s1">&#39;svd_scipy_sparse&#39;</span><span class="p">)</span>
+<span class="n">M_DIST</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">19</span><span class="p">]</span>
+<span class="n">Phi_kPOD</span><span class="p">,</span> <span class="n">Psi_kPOD</span><span class="p">,</span> <span class="n">Sigma_kPOD</span><span class="p">,</span><span class="n">K_zeta</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">kPOD</span><span class="p">(</span><span class="n">M_DIST</span><span class="o">=</span><span class="n">M_DIST</span><span class="p">,</span><span class="n">k_m</span><span class="o">=</span><span class="n">k_m</span><span class="p">,</span>
+<span class="n">cent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">K_out</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">M_DIST</span></code> defines the snapshot indexes of which to compute the distance, <code class="docutils literal notranslate"><span class="pre">k_m</span></code> is the minimum kernelized
+correlation threshold described above, <code class="docutils literal notranslate"><span class="pre">cent=True</span></code> performs centering of <span class="math notranslate nohighlight">\(\mathbf{K}^\xi\)</span> and <code class="docutils literal notranslate"><span class="pre">K_out=True</span></code>
+returns the kernelized correlation matrix.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The hyper parameter <span class="math notranslate nohighlight">\(k_m\)</span> heavily influences the outcomes of the kPOD. For large <span class="math notranslate nohighlight">\(k_m\)</span>
+then <span class="math notranslate nohighlight">\(\mathbf{K}^\xi \rightarrow \mathbf{K}\)</span>, whilst smaller <span class="math notranslate nohighlight">\(k_m\)</span> will identify
+correlation happening at a specific frequency. The matrix is Toeplitz, and its eigenvectors
+tends naturally towards the Fourier basis. Outcome of this step would remind the filtering as
+in the diagonally filtered SPOD (Sieber et al.), but with more pronounced focus on a specific frequency range.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../mpod/index.html" class="btn btn-neutral float-left" title="Multiscale Proper Orthogonal Decomposition (mPOD)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../spod/index.html" class="btn btn-neutral float-right" title="Spectral Proper Orthogonal Decomposition (SPOD)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025 von Karman Institute.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

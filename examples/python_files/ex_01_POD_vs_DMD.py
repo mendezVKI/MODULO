@@ -15,7 +15,6 @@ The dataset was produced by Denis Dumoulin in his STP at VKI (report available u
 
 The inlet velocity is 10m/s, with a TI of 5%. The sampling frequency in the data is Fs=100 Hz. It is important to note that the dataset contains NANs in the location of the cylinder. These can be safely ignored using numpy's nan_to_num, which replaces the Nans with zeros.'''
 
-
 import numpy as np # we use this to manipulate data 
 import matplotlib.pyplot as plt # this is for plotting
 import os  # this is to create/rename/delete folders
@@ -48,14 +47,14 @@ print('Downloading Data for Tutorial 1...')
 url = 'https://osf.io/emgv2/download'
 urllib.request.urlretrieve(url, 'Ex_7_2D_CFD.zip')
 print('Download Completed! I prepare data Folder')
-# Unzip the file 
+# Unzip the file
 from zipfile import ZipFile
 String='Ex_7_2D_CFD.zip'
 zf = ZipFile(String,'r')
 zf.extractall('./')
-zf.close() 
+zf.close()
 os.rename('Ex_7_2D_Cylinder_CFD', FOLDER) # rename the data flolder to FOLDER
-os.remove(String) # Delete the zip file with the data 
+os.remove(String) # Delete the zip file with the data
 print('Data set unzipped and ready ! ')
 
 # Read one snapshot and plot it 
@@ -86,7 +85,7 @@ Plot_2D_CFD_Cyl(Xg,Yg,U,V,k=11,
 
 # And we can make an animation from snapshot 1 to 100 in steps of 1:
 Name_GIF=FOLDER+os.sep+'Animation_TEST.gif'
-Animation_2D_CFD_Cyl(Name_GIF,D,Xg,Yg,1,100,1)
+Animation_2D_CFD_Cyl(Name_GIF,D,Xg,Yg,1,100,1,True)
 
 
 ## Step 1 : Proper Orthogonal Decomposition
@@ -102,8 +101,9 @@ if not os.path.exists(FOLDER_POD_RESULTS):
 
 # --- Initialize MODULO object
 m = ModuloVKI(data=np.nan_to_num(D))
+print('POD computation...')
 # Compute the POD using Sirovinch's method
-Phi_POD, Psi_POD, Sigma_POD = m.compute_POD_K()
+Phi_POD, Psi_POD, Sigma_POD = m.POD()
 
 # We here plot the POD modes and their structures
 U_D=Phi_POD[0:nxny,:]
@@ -143,9 +143,7 @@ Error=np.linalg.norm(m.D-D_P)/np.linalg.norm(m.D)
 
 
 Name_GIF=FOLDER+os.sep+'Animation_Approximation.gif'   
-Animation_2D_CFD_Cyl(Name_GIF,D_P,Xg,Yg,1,100,1)
-
-
+Animation_2D_CFD_Cyl(Name_GIF,D_P,Xg,Yg,1,100,1,True)
 
 
 #%% Step 2: Compute DMD
@@ -158,12 +156,12 @@ The second is a reasonable compromise. The last lets skitlearn select which
 solver to use 
 (see https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html) '''
 
-
 FOLDER_DMD_RESULTS=FOLDER+os.sep+'DMD_Results_Cylinder_CFD'
 if not os.path.exists(FOLDER_DMD_RESULTS):
     os.makedirs(FOLDER_DMD_RESULTS)
 
-Phi_D, Lambda, freqs, a0s = m.compute_DMD_PIP(False, F_S=1000)
+print('DMD computation...')
+Phi_D, Lambda, freqs, a0s = m.DMD(False, F_S=1000)
 
 #%% Plot DMD Spectra in the Circle
 fig, ax = plt.subplots(figsize=(4, 4)) 

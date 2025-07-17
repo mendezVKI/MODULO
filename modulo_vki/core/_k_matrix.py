@@ -12,7 +12,8 @@ def CorrelationMatrix(N_T,
                       FOLDER_OUT='./',
                       SAVE_K=False,
                       D=None,
-                      weights=np.array([])):
+                      weights=np.array([]),
+                      verbose=True):
     """
     Computes the temporal correlation matrix from the provided data matrix.
 
@@ -55,13 +56,16 @@ def CorrelationMatrix(N_T,
     """
 
     if not MEMORY_SAVING:
-        print("\n Computing Temporal correlation matrix K ...")
+        if verbose:
+            print("Computing Temporal correlation matrix K ...")
         K = np.dot(D.T, D)
-        print("\n Done.")
+        if verbose:
+            print("Done.")
 
     else:
         SAVE_K = True
-        print("\n Using Memory Saving feature...")
+        if verbose:
+            print("\n Using Memory Saving feature...")
         K = np.zeros((N_T, N_T))
         dim_col = math.floor(N_T / N_PARTITIONS)
 
@@ -143,7 +147,24 @@ def spectral_filter(K: np.ndarray, N_o:int, f_c: float) -> np.ndarray:
             mode='constant',           # or 'edge', 'reflect', etc.
             constant_values=0
     )
-    
+
+    # Fill the edges ( a bit of repetition but ok.. )
+    # Row-wise, Upper part
+    for i in range(0, N_o):
+        K_ext[i, i:i + n_t] = K[0, :]
+
+    # Row-wise, bottom part
+    for i in range(N_o + n_t, n_t + 2 * N_o):
+        K_ext[i, i - n_t + 1:i + 1] = K[-1, :]
+
+        # Column-wise, left part
+    for j in range(0, N_o):
+        K_ext[j:j + n_t, j] = K[:, 0]
+
+        # Column-wise, right part
+    for j in range(N_o + n_t, 2 * N_o + n_t):
+        K_ext[j - n_t + 1:j + 1, j] = K[:, -1]
+
     # K_e = np.zeros((n_t + 2 * N_o, n_t + 2 * N_o))
     # From which we clearly know that:
     # K_e[N_o:n_t + N_o, N_o:n_t + N_o] = K

@@ -27,7 +27,3 @@ modulo_vki/utils/_plots.py
 modulo_vki/utils/_utils.py
 modulo_vki/utils/others.py
 modulo_vki/utils/read_db.py
-modulo_vki_2/__init__.py
-modulo_vki_2/modulo.py
-modulo_vki_2/utils.py
-tests/test_all_modal.py

@@ -50,14 +50,14 @@ print('Downloading Data for Tutorial 2...')
 url = 'https://osf.io/c28de/download'
 urllib.request.urlretrieve(url, 'Ex_4_TR_PIV.zip')
 print('Download Completed! I prepare data Folder')
-# Unzip the file 
+# Unzip the file
 from zipfile import ZipFile
 String='Ex_4_TR_PIV.zip'
 zf = ZipFile(String,'r')
 zf.extractall(FOLDER+'/')
-zf.close() 
+zf.close()
 os.rename(FOLDER+'/Ex_4_TR_PIV_Jet', FOLDER+'/data') # rename the data flolder to FOLDER
-os.remove(String) # Delete the zip file with the data 
+os.remove(String) # Delete the zip file with the data
 print('Data set unzipped and ready ! ')
 
     
@@ -154,7 +154,7 @@ D_MEAN_mat=np.array([D_MEAN, ] * n_t).transpose()
 # --- Initialize MODULO object
 m = ModuloVKI(data=D)
 # Compute the DFT
-Sorted_Freqs, Phi_F, Sorted_Sigmas = m.compute_DFT(Fs)
+Phi_F, Sorted_Freqs, Sorted_Sigmas = m.DFT(Fs)
 
 # Shape of the grid
 nxny=m.D.shape[0]//2; 
@@ -273,7 +273,7 @@ Mex=Animation_JET(Name_GIF,D_F+D_MEAN_mat,X_S,Y_S,500,600,1)
 # --- Initialize MODULO object
 m2 = ModuloVKI(data=m.D,n_Modes=50)
 # --- Check for D
-Phi_P, Psi_P, Sigma_P = m2.compute_POD_svd() # POD via svd
+Phi_P, Psi_P, Sigma_P = m2.POD(mode='svd') # POD via svd
 
 FOLDER_POD_RESULTS=FOLDER+os.sep+'POD_Results_Jet'
 if not os.path.exists(FOLDER_POD_RESULTS):
@@ -359,7 +359,7 @@ if not os.path.exists(FOLDER_sPOD_RESULTS):
     os.mkdir(FOLDER_sPOD_RESULTS)
 
 # Compute the SPOD_t
-Phi_SP, Sigma_SP, Freqs_Pos = m.compute_SPOD_t(F_S=2000, # sampling frequency
+Phi_SP, Sigma_SP, Freqs_Pos = m.SPOD(mode='towne',F_S=2000, # sampling frequency
                                                 L_B=200, # Length of the chunks for time average
                                                 O_B=150, # Overlap between chunks
                                                 n_Modes=3) # number of modes PER FREQUENCY
@@ -465,7 +465,7 @@ if not os.path.exists(FOLDER_SPOD_RESULTS):
 m = ModuloVKI(data=m.D)
 # Prepare (partition) the dataset
 # Compute the POD
-Phi_S, Psi_S, Sigma_S = m.compute_SPOD_s(Fs,N_O=100,
+Phi_S, Psi_S, Sigma_S = m.SPOD(mode='sieber',F_S=Fs,N_O=100,
                                                f_c=0.01,
                                                n_Modes=25,
                                                SAVE_SPOD=True)
@@ -552,9 +552,9 @@ if not os.path.exists(FOLDER_MPOD_RESULTS):
     os.mkdir(FOLDER_MPOD_RESULTS)
 
 # We here perform the mPOD as done in the previous tutorials.
-# This is mostly a copy paste from those, but we include it for completenetss
-Keep = np.array([1, 1, 1, 1])
-Nf = np.array([201, 201, 201, 201])
+# This is mostly a copy paste from those, but we include it for completeness
+Keep = np.array([1, 1, 1, 1, 1]) # its length must be one greater than that of the splitting frequency vector
+Nf = np.array([201, 201, 201, 201, 201]) # its length must one greater than that of the splitting frequency vector
 # --- Test Case Data:
 # + Stand off distance nozzle to plate
 H = 4 / 1000  
@@ -566,9 +566,9 @@ ST_V = np.array([0.1, 0.2, 0.25, 0.4])
 F_V = ST_V * U0 / H
 # + Size of the extension for the BC (Check Docs)
 Ex = 203  # This must be at least as Nf.
-dt = 1/2000; boundaries = 'reflective'; MODE = 'reduced'
+dt = 1/2000; boundaries = 'reflect'; MODE = 'reduced'
 #K = np.load("./MODULO_tmp/correlation_matrix/k_matrix.npz")['K']
-Phi_M, Psi_M, Sigmas_M = m.compute_mPOD(Nf, Ex, F_V, Keep, 20 ,boundaries, MODE, dt, False)
+Phi_M, Psi_M, Sigmas_M = m.mPOD(Nf, Ex, F_V, Keep, 20 ,boundaries, MODE, dt, False)
 
 
 # The rest of the plotting is IDENTICAL to the POD part

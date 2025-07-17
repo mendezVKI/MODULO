@@ -6,7 +6,7 @@ import os
 
 def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING, 
                       N_T, FOLDER_OUT='./', N_PARTITIONS=1, SAVE_SPATIAL_POD=False,
-                      rescale=False):
+                      rescale=False, verbose=True):
     """
     This function computs the POD spatial basis from the temporal basis,
 
@@ -48,7 +48,8 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,
             Phi_P = np.zeros((N_S, R))
             # N_S = D.shape[0] unused variable
             PHI_P_SIGMA_P = np.dot(D, PSI_P)
-            print("Completing Spatial Structures Modes: \n")
+            if verbose:
+                print("Completing Spatial Structures Modes: \n")
 
             for i in tqdm(range(0, R)):
                 # Normalize the columns of C to get spatial modes
@@ -185,7 +186,7 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,
         return Phi_P_M
 
 
-def spatial_basis_mPOD(D, PSI_M, N_T, N_PARTITIONS, N_S, MEMORY_SAVING, FOLDER_OUT, SAVE: bool = False,weights: np.array = np.array([])):
+def spatial_basis_mPOD(D, PSI_M, N_T, N_PARTITIONS, N_S, MEMORY_SAVING, FOLDER_OUT, SAVE: bool = False,weights: np.array = np.array([]), SIGMA_TYPE: str = "accurate", SIGMA_M: np.array = np.array([])):
     """
     Given the temporal basis of the mPOD now the spatial ones are computed
     
@@ -207,6 +208,10 @@ def spatial_basis_mPOD(D, PSI_M, N_T, N_PARTITIONS, N_S, MEMORY_SAVING, FOLDER_O
         If True, results are saved on disk and released from memory
     :param weights:  np.array
         weight vector [w_i,....,w_{N_s}] where w_i = area_cell_i/area_grid. Only needed if grid is non-uniform & MEMORY_SAVING== True
+    :param Sigma_type : {'accurate', 'fast'}
+        If accurate, recompute the Sigmas after QR polishing. Slightly slower than the fast option in which the Sigmas are not recomputed.
+    :param SIGMA_M: np.array.:
+        The mPOD Sigmas before the QR polishing, tentatively assembled from all scales
     :return: Phi_M, Psi_M, Sigma_M: np.arrays. The final (sorted) mPOD decomposition
     """
     
@@ -331,19 +336,20 @@ def spatial_basis_mPOD(D, PSI_M, N_T, N_PARTITIONS, N_S, MEMORY_SAVING, FOLDER_O
     else:
         R = PSI_M.shape[1]
         PHI_M_SIGMA_M = np.dot(D, (PSI_M))
-        # Initialize the output
-        PHI_M = np.zeros((N_S, R))
-        SIGMA_M = np.zeros((R))
 
-        for i in tqdm(range(0, R)):
-            # print('Completing mPOD Mode ' + str(i))
-            # Assign the norm as amplitude
+        # Re-compute the sigma after the qr polishing
+        SIGMA_TYPE = SIGMA_TYPE.lower()
+        if SIGMA_TYPE != 'fast':
+            if SIGMA_TYPE != 'accurate':
+                print('Warning: MODULO continues to run although SIGMA_TYPE was wrongly defined. Please set it to \'accurate\' or \'fast\' ')
             if weights.size == 0:
-                SIGMA_M[i] = np.linalg.norm(PHI_M_SIGMA_M[:, i])
+                SIGMA_M = np.linalg.norm(PHI_M_SIGMA_M, axis=0)
             else:
-                SIGMA_M[i] = np.linalg.norm(PHI_M_SIGMA_M[:, i]*np.sqrt(weights))
-            # Normalize the columns of C to get spatial modes
-            PHI_M[:, i] = PHI_M_SIGMA_M[:, i] / SIGMA_M[i]
+                SIGMA_M = np.linalg.norm(PHI_M_SIGMA_M*np.sqrt(weights), axis=0)
+
+
+        # Normalize the columns of C to get spatial modes
+        PHI_M = PHI_M_SIGMA_M / SIGMA_M
 
         Indices = np.flipud(np.argsort(SIGMA_M))  # find indices for sorting in decreasing order
         Sorted_Sigmas = SIGMA_M[Indices]  # Sort all the sigmas
