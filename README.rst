@@ -250,12 +250,12 @@ For example, for a dataset with n_s=1 000 000 and n_t = 5000  the following tabl
      - Phase 4: $\\Phi$
    * - No Memory Saving
      - 18.6 GB
-     - 0.093 GB
+     - 1.86 GB
      - ≈0.112 GB
      - ≈22.39 GB
    * - Memory Saving
      - /
-     - ≈1.86 GB
+     - ≈ 0.093 GB
      - ≈ 0.0026 GB
      - ≈ 4.20 GB
 
@@ -326,11 +326,6 @@ and
         year={2020},
         publisher={Elsevier}
     }
-
-
-
-
-We are currently working on a Journal of Open Source article that will be available soon.
 
 References
 ----------

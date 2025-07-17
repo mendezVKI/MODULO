@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Tutorial Exercises &mdash; MODULO 2.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/documentation_options.js?v=f5cff4aa"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Minimum Version of Python and NumPy" href="min_versions.html" />
+    <link rel="prev" title="Computing decompositions" href="black_box.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            MODULO
+          </a>
+              <div class="version">
+                2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">MODULO: Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="what_is_new.html">What is new in this V 2.0?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="importing_data.html">Importing data and D matrix preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="black_box.html">Computing decompositions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">New Tutorial Exercises</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tutorials">Tutorials</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="min_versions.html">Minimum Version of Python and NumPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MODULO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">New Tutorial Exercises</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/exercises.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="new-tutorial-exercises">
+<h1>New Tutorial Exercises<a class="headerlink" href="#new-tutorial-exercises" title="Link to this heading">¶</a></h1>
+<p>The installation provides five exercises to explore MODULO’s features while familiarizing with data-driven decompositions. These are available in the examples folder in plain Python format and jupyter notebooks.
+Some of these are adapted from the previous exercises  <a class="reference external" href="https://www.youtube.com/channel/UC-RoU7LisZSLy6o-EO4BUDA/featured">in our YouTube channel</a>, while others are new.</p>
+<section id="tutorials">
+<h2>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Exercise 1</strong>. In this exercise, we consider the flow past a cylinder. The dataset was created via Large Eddy Simulations (LES) by Denis Dumoulin during his STP at VKI in 2016 (Report available on request). For convenience, the data was first mapped to a Cartesian grid. This test case is by far the most popular because it’s well-known to have a simple low-order representation with modes that have nearly harmonic temporal structures. We compute the POD and the DMD and compare the results… the difference between DMD and POD modes is hardly distinguishable!</p></li>
+<li><p><strong>Exercise 2</strong>. We consider the flow of an impinging gas jet, taken from <a class="reference external" href="https://arxiv.org/abs/1804.09646">https://arxiv.org/abs/1804.09646</a>. This dataset was collected via Time-Resolved Particle Image Velocimetry (TR-PIV). Only the first 200 POD modes were stored. This dataset has much richer dynamics than the previous one and cannot be easily approximated using a few modes. We use it to explore the differences between the DFT, the SPODs and the mPOD. These have different purposes and look for different features.</p></li>
+<li><p><strong>Exercise 3</strong>. We take back the cylinder test case to explore the differences between the POD and the generalized Karhunen–Loève (KL) expansion in which a kernel matrix replaces the correlation matrix. The POD is a particular case of KL where the kernel function generating the kernel matrix is the plain inner product. Here, we also consider a Gaussian kernel. Different kernel functions define similarity in different ways and thus produce widely different modes. Different modal structures tell different stories about the dataset, but… what can you say about efficiency in data compression?</p></li>
+<li><p><strong>Exercise 4</strong>. We consider the flow past a cylinder again, but this time in transient conditions and on an experimental test case taken from <a class="reference external" href="https://arxiv.org/abs/2001.01971">https://arxiv.org/abs/2001.01971</a>. In this exercise, you can reproduce the same results from the article to see how the mPOD allows to achieve both time and frequency localization without compromising much of the convergence of the POD. The dataset is quite large, so you might have difficulties handling it if you have less than 32 GB of RAM. But fear not: the memory saving feature allows to compute POD and mPOD without loading the data into memory!</p></li>
+<li><p><strong>Exercise 5</strong>. We consider the flow of an impinging gas jet again, but this time on a numerical test case. This dataset was produced by Yannic Lowenstein during his STP at VKI at the end of 2023, with the help of Dr. Maria Faruoli. The Reynolds number is two orders of magnitude higher than in exercise 2, yet the flow features you will observe are pretty similar, at least qualitatively. From a learning perspective, the key feature of this test case is that the data are not available on a uniform grid. But fear not: with the new features, it is possible to compute the decompositions using appropriate weights!</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="black_box.html" class="btn btn-neutral float-left" title="Computing decompositions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="min_versions.html" class="btn btn-neutral float-right" title="Minimum Version of Python and NumPy" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 von Karman Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

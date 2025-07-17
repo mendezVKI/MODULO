@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
-Name: modulo_vki
-Version: 2.0.5
+Name: modulo-vki
+Version: 2.0.7
 Summary: MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform Multiscale Modal Analysis of numerical and experimental data.
 Home-page: https://github.com/mendezVKI/MODULO/tree/master/modulo_python_package/
 Author: ['R. Poletti', 'L. Schena', 'D. Ninni', 'M. A. Mendez']
@@ -31,24 +31,28 @@ MODULO: a python toolbox for data-driven modal decomposition
     :target: https://modulo.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+|DOI| |PyPI| 
+
+.. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.13939519.svg
+   :target: https://doi.org/10.5281/zenodo.13939519
+
+.. |PyPI| image:: https://img.shields.io/pypi/v/modulo_vki
+    :target: https://pypi.org/project/modulo_vki/
+
 .. raw:: html
 
    <div style="text-align: center;">
        <img src="https://modulo.readthedocs.io/en/latest/_images/modulo_logo.png" alt="Modulo Logo" width="500"/>
    </div>
 
-**MODULO** is a modal decomposition package developed at the von Karman Institute for Fluid Dynamics (VKI). 
-It offers a wide range of decomposition techniques, enabling users to select the most suitable method based 
-on the specific physics of their problem and their desired outcomes. MODULO can natively handle large
-datasets efficiently, featuring a memory-saving option that partitions the data and computes the decomposition in 
-chunks (ninni2020modulo). Additionally, it supports non-uniform meshes through its weighted inner product formulation.
+
+**MODULO** is a modal decomposition package developed at the von Karman Institute for Fluid Dynamics (VKI). It offers a wide range of decomposition techniques, allowing users to choose the most appropriate method for their specific problem. MODULO can efficiently handle large datasets natively, thanks to a memory-saving feature that partitions the data and processes the decomposition in chunks (ninni2020modulo). Moreover, it supports non-uniform meshes through a weighted inner product formulation. Currently, MODULO heavily relies on NumPy routines and does not offer additional parallel computing capabilities beyond those naturally provided by NumPy.
 
 While the discontinued MATLAB version of MODULO (ninni2020modulo) is accessible in the “Old_Matlab_Implementation” branch, 
 it is no longer maintained. The latest decomposition techniques are exclusively available in the current Python version.
 
 As a part of the MODULO project, we provide a series of lectures on data-driven modal decomposition, and its applications.
 These are available at the `MODULO YouTube channel <https://www.youtube.com/@modulompod5682>`_.
-
 
 .. contents:: Table of contents
 
@@ -61,19 +65,20 @@ coordinates, respectively, the modal decomposition can be written as:
 $D(x_i, t_k) = \\phi(x_i) \\Sigma \\psi(t_k)^T$
 
 where $\\phi(x_i)$ is the spatial basis, $\\psi(t_k)$ is the temporal basis, and $\\Sigma$ is the modal coefficients. 
-Different decompositions employ different basis, such as prescribed Fourier basis ($\\psi_\\mathcal{F}$) for 
+Different decompositions employ different bases, such as prescribed Fourier basis ($\\psi_\\mathcal{F}$) for 
 the Discrete Fourier Transform (DFT), or data-driven basis, i.e. tailored on the dataset at hand, 
 for the Proper Orthogonal Decomposition (POD). 
 
 We refer to (mendez2022statistical, mendez2022generalizedmultiscalemodalanalysis, Mendez_2023) for an introduction to the topic.
 
 MODULO currently features the following decompositions: 
+
 - Discrete Fourier Transform (DFT) (briggs1995dft)
 - Proper Orthogonal Decomposition (POD) (sirovich1987turbulence, berkooz1993proper)
 - Multi-Scale Proper Orthogonal Decomposition (mPOD) (mendez2019multi)
 - Dynamic Mode Decomposition (DMD) (schmid2010dynamic)
-- Spectral Proper Orthogonal Decomposition (SPOD) (csieber2016spectral, towne2018spectral), note that the two are 
-different formulations, and both are available in MODULO.
+- Spectral Proper Orthogonal Decomposition (SPOD) (csieber2016spectral, towne2018spectral), 
+  note that the two are different formulations, and both are available in MODULO.
 - Kernel Proper Orthogonal Decomposition (KPOD) (mika1998kernel)
 
 We remind the curious reader to the respective references for a detailed description of each decomposition, and to the
@@ -85,7 +90,7 @@ Release Notes
 The latest version of MODULO (v2.0) includes the following updates:
 
 1. **Faster EIG/SVD algorithms**, using powerful randomized svd solvers from scikit_learn 
-    (see `here<https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html>`_ 
+    (see `here <https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html>`_ 
     and `here <https://scikit-learn.org/stable/modules/generated/sklearn.utils.extmath.randomized_svd.html>`_.) 
     It is now possible to select various options as "eig_solver" and "svd_solver", 
     offering different trade-offs in terms of accuracy vs computational time.
@@ -93,29 +98,24 @@ The latest version of MODULO (v2.0) includes the following updates:
 2. **Computation the POD directly via SVD**, using any of the four "svd_solver" options.
 This is generally faster but requires more memory.
 
-1. **Faster subscale estimators for the mPOD:** the previous version used the rank of the correlation matrix in each scale to define 
-the number of modes to be computed in each portion of the splitting vector before assembling the full basis. 
-This is computationally very demanding. This estimation has been replaced by a 
+3. **Faster subscale estimators for the mPOD:** the previous version used the rank of the correlation matrix in each scale to define the number of modes to be computed in each portion of the splitting vector before assembling the full basis. This is computationally very demanding. This estimation has been replaced by a 
 frequency-based threshold (i.e. based on the frequency bins within each portion) since one can show that the 
 frequency-based estimator is always more "conservative" than the rank-based estimator.
 
-1. **Major improvement on the memory saving option**: the previous version of modulo always required in input the matrix D. 
+4. **Major improvement on the memory saving option** : the previous version of modulo always required in input the matrix D. 
 Then, if the memory saving option was active, the matrix was partitioned and stored locally to free the RAM before computing the 
-correlation matrix (see [this tutorial by D. Ninni](https://www.youtube.com/watch?v=LclxO1WTuao)). 
+correlation matrix (see `this tutorial by D. Ninni <https://www.youtube.com/watch?v=LclxO1WTuao>`_). 
 In the new version, it is possible to initialize a modulo object *without* the matrix D (see exercise 5 in the examples). 
 Instead, one can create the partitions without loading the matrix D.
 
-1. **Implementation of Dynamic Mode Decomposition (DMD)** from (Schmid, P.J 2010)
+5. **Implementation of Dynamic Mode Decomposition (DMD)** from (Schmid, P.J 2010)
 
-2. **Implementation of the two Spectral POD formulations**, namely the one from (Sieber et al 2016), 
+6. **Implementation of the two Spectral POD formulations**, namely the one from (Sieber et al 2016), 
    and the one from (Towne et al 2018).
 
-3. **Implementation of a kernel version of the POD**, in which the correlation matrix is replaced by a kernel matrix. 
-This is described in Lecture 15 of the course `Hands on Machine Learning for Fluid dynamics 2023 <https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023>`_. 
-We refer also to: `https://arxiv.org/abs/2208.07746`. 
+7. **Implementation of a kernel version of the POD**, in which the correlation matrix is replaced by a kernel matrix. This is described in Lecture 15 of the course `Hands on Machine Learning for Fluid dynamics 2023 <https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552/-/online-on-site-hands-on-machine-learning-for-fluid-dynamics-2023>`_. We refer also to: `Mendez, 2022 <https://arxiv.org/abs/2208.07746>`_. 
 
-1. **Implementation of a formulation for non-uniform meshes**, using a weighted matrix for all the relevant inner products. 
-This is currently available only for POD and mPOD but allows for handling data produced from CFD simulation without resampling on a uniform grid (see exercise 4). 
+8. **Implementation of a formulation for non-uniform meshes**, using a weighted matrix for all the relevant inner products. This is currently available only for POD and mPOD but allows for handling data produced from CFD simulation without resampling on a uniform grid (see exercise 4). 
 It can be used both with and without the memory-saving option.
 
 
@@ -156,7 +156,7 @@ Documentation
 
 The documentation of MODULO is available `here <https://modulo.readthedocs.io/en/latest/intro.html>`_. It 
 contains a comprehensive guide on how to install and use the package, as well as a detailed description of the
-decompositions required inputs and outputs. A `list of YouTube videos<https://www.youtube.com/@modulompod5682>`_ 
+decompositions required inputs and outputs. A `list of YouTube videos <https://www.youtube.com/@modulompod5682>`_ 
 is also available to guide the introduce the user to modal decomposition and MODULO.
 
 Example 
@@ -232,6 +232,57 @@ you can use the weighted inner product formulation (refer to `examples/ex_05_non
     # Compute the POD decomposition
     phi_POD, Sigma_POD, psi_POD = m.Compute_POD_K()
 
+Computational Cost Estimates
+----------------------------
+We here provide a rough estimate of the amoung of RAM required to decompose a test case with and without the memory saving option. 
+This option reduces the memory usage at the cost of increasing the computational time (see https://www.youtube.com/watch?v=LclxO1WTuao)
+
+Given a dataset $D \\in \\mathbb{R}^{n_s \\times n_t}$, we consider the computation of $n_r$ modes. When using the memory saving option, we refer to 
+$n_t' = n_t / n_p$ as the number of time steps in each partition, and to $n_s' = n_s / n_p$ as the number of spatial points in each partition.
+
+.. list-table::
+   :header-rows: 1
+
+   * - 
+     - Phase 1: $D$
+     - Phase 2: $K$
+     - Phase 3: $\\Psi$
+     - Phase 4: $\\Phi$
+   * - No Memory Saving
+     - $n_s \\times n_t$
+     - $n_t^2$
+     - $n_t^2 + n_t \\times n_r$
+     - $n_s \\times n_t + n_t \\times n_r + n_s \\times n_r$
+   * - Memory Saving
+     - /
+     - $n_s \\times n_t' + n_t' \\times n_t'$
+     - $n_t^2 + n_t \\times n_r$
+     - $n_s \\times n_t' + n_s' \\times n_t + n_s \\times n_r$
+
+If the memory saving option is active, the memory requirements are mostly linked to the storage of the correlation matrix $K$ in Phase 2. 
+This table can be used to estimate if a dataset is too large for the available RAM, recalling that data in single precision requires 4 bytes (or 32 bits).
+
+For example, for a dataset with n_s=1 000 000 and n_t = 5000  the following table estimates the RAM required in the two cases, considering n_b=10 partitions in the case of memory saving:
+
+.. list-table::
+   :header-rows: 1
+
+   * - 
+     - Phase 1: $D$
+     - Phase 2: $K$
+     - Phase 3: $\\Psi$
+     - Phase 4: $\\Phi$
+   * - No Memory Saving
+     - 18.6 GB
+     - 1.86 GB
+     - ≈0.112 GB
+     - ≈22.39 GB
+   * - Memory Saving
+     - /
+     - ≈ 0.093 GB
+     - ≈ 0.0026 GB
+     - ≈ 4.20 GB
+
 
 
 Community guidelines
@@ -239,7 +290,18 @@ Community guidelines
 
 Contributing to MODULO
 ^^^^^^^^^^^^^^^^^^^^^^^
-We welcome contributions to MODULO. To create a new feature, please submit a pull request, specifying the proposed changes and 
+We welcome contributions to MODULO. 
+
+It is recommended to perform a shallow clone of the repository to avoid downloading the entire history of the project:
+
+.. code-block:: bash
+
+    $ git clone --depth 1 https://github.com/mendezVKI/MODULO.git
+
+This will download only the latest version of the repository, which is sufficient for contributing to the project, and will save 
+you time and disk space.
+
+To create a new feature, please submit a pull request, specifying the proposed changes and 
 providing an example of how to use the new feature (that will be included in the `examples/` folder).
 
 The pull request will be reviewed by the MODULO team before being merged into the main branch, and your contribution duly acknowledged.
@@ -250,10 +312,30 @@ If you find a bug, or you encounter unexpected behaviour, please open an issue o
 
 Ask for help
 ^^^^^^^^^^^^
+If you have troubles using MODULO, or you need help with a specific decomposition, please open an issue on the MODULO GitHub repository.
 
 Citation
 ---------
 If you use MODULO in your research, please cite it as follows:
+
+``Poletti, R., Schena, L., Ninni, D. Mendez, M. A. (2024). MODULO: A Python toolbox for data-driven modal decomposition. Journal of Open Source Software, 9(102), 6753, https://doi.org/10.21105/joss.06753
+
+
+.. code-block:: text 
+
+  @article{Poletti2024, 
+    doi = {10.21105/joss.06753}, 
+    url = {https://doi.org/10.21105/joss.06753}, 
+    year = {2024},
+    publisher = {The Open Journal}, 
+    volume = {9}, 
+    number = {102}, 
+    pages = {6753},
+    author = {R. Poletti and L. Schena and D. Ninni and M. A. Mendez}, 
+    title = {MODULO: A Python toolbox for data-driven modal decomposition},
+    journal = {Journal of Open Source Software} }
+
+and 
 
 ``Ninni, D., & Mendez, M. A. (2020). MODULO: A software for Multiscale Proper Orthogonal Decomposition of data. SoftwareX, 12, 100622.``
 
@@ -268,8 +350,6 @@ If you use MODULO in your research, please cite it as follows:
         year={2020},
         publisher={Elsevier}
     }
-
-We are currently working on a Journal of Open Source article that will be available soon.
 
 References
 ----------

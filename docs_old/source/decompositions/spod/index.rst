@@ -1,0 +1,2 @@
+Spectral Proper Orthogonal Decomposition
+=================================================

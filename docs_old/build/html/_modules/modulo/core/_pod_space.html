@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>modulo.core._pod_space &mdash; MODULO 2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            MODULO
+          </a>
+              <div class="version">
+                Version 2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">MODULO: Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../what_is_new.html">What is new in this V 2.0?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../importing_data.html">Importing data and D matrix preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../black_box.html">Computing decompositions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../exercises.html">New Tutorial Exercises</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../min_versions.html">Minimum Version of Python and NumPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MODULO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">modulo.core._pod_space</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for modulo.core._pod_space</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="Spatial_basis_POD"><a class="viewcode-back" href="../../../single_modules.html#modulo.core._pod_space.Spatial_basis_POD">[docs]</a><span class="k">def</span> <span class="nf">Spatial_basis_POD</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">PSI_P</span><span class="p">,</span> <span class="n">Sigma_P</span><span class="p">,</span> <span class="n">MEMORY_SAVING</span><span class="p">,</span> <span class="n">N_T</span><span class="p">,</span> <span class="n">FOLDER_OUT</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">N_PARTITIONS</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">SAVE_SPATIAL_POD</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                      <span class="n">rescale</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function computs the POD spatial basis from the temporal basis,</span>
+
+<span class="sd">    :param D: np.array. </span>
+<span class="sd">         matrix on which to project the temporal basis</span>
+<span class="sd">    :param PSI_P: np.array. </span>
+<span class="sd">          POD&#39;s Psis</span>
+<span class="sd">    :param Sigma_P: np.array. </span>
+<span class="sd">          POD&#39;s Sigmas</span>
+<span class="sd">    :param MEMORY_SAVING: bool. </span>
+<span class="sd">         Inherited from main class, if True turns on the MEMORY_SAVING feature, loading the partitions and starting the proper algorithm          </span>
+<span class="sd">    :param N_T: int. </span>
+<span class="sd">         Number of temporal snapshots</span>
+<span class="sd">    :param FOLDER_OUT: str. </span>
+<span class="sd">         Folder in which the results are saved if SAVE_SPATIAL_POD = True</span>
+<span class="sd">    :param N_PARTITIONS: int. </span>
+<span class="sd">         Number of partitions to be loaded. If D has been partitioned using MODULO, this parameter is automatically inherited from the main class. To be specified otherwise.</span>
+
+<span class="sd">    :param SAVE_SPATIAL_POD: bool. </span>
+<span class="sd">         If True, results are saved on disk and released from memory</span>
+
+<span class="sd">    :param rescale: bool. </span>
+<span class="sd">          If False, the Sigmas are used for the normalization. If True, these are ignored and the normalization is carried out.</span>
+<span class="sd">          For the standard POD, False is the way to go. </span>
+<span class="sd">          However, for other decompositions (eg. the SPOD_s) you must use rescale=True                        </span>
+
+<span class="sd">    :return Phi_P: np.array. </span>
+<span class="sd">          POD&#39;s Phis</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">R</span> <span class="o">=</span> <span class="n">PSI_P</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">MEMORY_SAVING</span><span class="p">:</span>
+        <span class="n">N_S</span> <span class="o">=</span> <span class="n">D</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">rescale</span><span class="p">:</span>
+            <span class="c1"># The following is the general normalization approach.</span>
+            <span class="c1"># not needed for POD for required for SPOD</span>
+            <span class="n">Phi_P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_S</span><span class="p">,</span> <span class="n">R</span><span class="p">))</span>
+            <span class="c1"># N_S = D.shape[0] unused variable</span>
+            <span class="n">PHI_P_SIGMA_P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">PSI_P</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Completing Spatial Structures Modes: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">R</span><span class="p">)):</span>
+                <span class="c1"># Normalize the columns of C to get spatial modes</span>
+                <span class="n">Phi_P</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">PHI_P_SIGMA_P</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">Sigma_P</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># We take only the first R modes.</span>
+            <span class="n">Sigma_P_t</span> <span class="o">=</span> <span class="n">Sigma_P</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">R</span><span class="p">];</span>
+            <span class="n">Sigma_P_Inv_V</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">Sigma_P_t</span>
+            <span class="c1"># So we have the inverse</span>
+            <span class="n">Sigma_P_Inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">Sigma_P_Inv_V</span><span class="p">)</span>
+            <span class="c1"># Here is the one shot projection:</span>
+            <span class="n">Phi_P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">multi_dot</span><span class="p">([</span><span class="n">D</span><span class="p">,</span> <span class="n">PSI_P</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">R</span><span class="p">],</span> <span class="n">Sigma_P_Inv</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">SAVE_SPATIAL_POD</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s1">&#39;POD&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s1">&#39;/POD/pod_spatial_basis&#39;</span><span class="p">,</span> <span class="n">phis</span><span class="o">=</span><span class="n">Phi_P</span><span class="p">)</span>
+                <span class="c1"># removed PHI_P_SIGMA_P=PHI_P_SIGMA_P, not present if not rescale and not needed (?)</span>
+
+        <span class="k">return</span> <span class="n">Phi_P</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">N_S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s2">&quot;/data_partitions/di_1.npz&quot;</span><span class="p">)[</span><span class="s1">&#39;di&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dim_col</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">N_T</span> <span class="o">/</span> <span class="n">N_PARTITIONS</span><span class="p">)</span>
+        <span class="n">dim_row</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">N_S</span> <span class="o">/</span> <span class="n">N_PARTITIONS</span><span class="p">)</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim_row</span><span class="p">,</span> <span class="n">N_T</span><span class="p">))</span>
+
+        <span class="c1"># 1 -- Converting partitions dC to dR</span>
+        <span class="k">if</span> <span class="n">N_S</span> <span class="o">%</span> <span class="n">N_PARTITIONS</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">tot_blocks_row</span> <span class="o">=</span> <span class="n">N_PARTITIONS</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tot_blocks_row</span> <span class="o">=</span> <span class="n">N_PARTITIONS</span>
+
+        <span class="k">if</span> <span class="n">N_T</span> <span class="o">%</span> <span class="n">N_PARTITIONS</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">tot_blocks_col</span> <span class="o">=</span> <span class="n">N_PARTITIONS</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tot_blocks_col</span> <span class="o">=</span> <span class="n">N_PARTITIONS</span>
+
+        <span class="c1"># --- Loading Psi_P</span>
+        <span class="n">fixed</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">R1</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">R2</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">C1</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">C2</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">tot_blocks_row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">tot_blocks_row</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">N_S</span> <span class="o">-</span> <span class="n">dim_row</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">dim_row_fix</span> <span class="o">=</span> <span class="n">N_S</span> <span class="o">-</span> <span class="n">dim_row</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span>
+                <span class="n">dr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim_row_fix</span><span class="p">,</span> <span class="n">N_T</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">tot_blocks_col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">di</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/data_partitions/di_</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">.npz&quot;</span><span class="p">)[</span><span class="s1">&#39;di&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">tot_blocks_row</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">N_S</span> <span class="o">-</span> <span class="n">dim_row</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fixed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">R1</span> <span class="o">=</span> <span class="n">R2</span>
+                    <span class="n">R2</span> <span class="o">=</span> <span class="n">R1</span> <span class="o">+</span> <span class="p">(</span><span class="n">N_S</span> <span class="o">-</span> <span class="n">dim_row</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span><span class="p">)</span>
+                    <span class="n">fixed</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">fixed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">R1</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dim_row</span>
+                    <span class="n">R2</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">dim_row</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="n">tot_blocks_col</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">N_T</span> <span class="o">-</span> <span class="n">dim_col</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+                    <span class="n">C1</span> <span class="o">=</span> <span class="n">C2</span>
+                    <span class="n">C2</span> <span class="o">=</span> <span class="n">C1</span> <span class="o">+</span> <span class="p">(</span><span class="n">N_T</span> <span class="o">-</span> <span class="n">dim_col</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">C1</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dim_col</span>
+                    <span class="n">C2</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">dim_col</span>
+
+                <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">dr</span><span class="p">[:,</span> <span class="n">C1</span><span class="p">:</span><span class="n">C2</span><span class="p">],</span> <span class="n">di</span><span class="p">[</span><span class="n">R1</span><span class="p">:</span><span class="n">R2</span><span class="p">,</span> <span class="p">:])</span>
+
+            <span class="n">PHI_SIGMA_BLOCK</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dr</span><span class="p">,</span> <span class="n">PSI_P</span><span class="p">)</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/POD/PHI_SIGMA_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                     <span class="n">phi_sigma</span><span class="o">=</span><span class="n">PHI_SIGMA_BLOCK</span><span class="p">)</span>
+
+        <span class="c1"># 3 - Converting partitions R to partitions C and get Sigmas</span>
+        <span class="n">dim_col</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">R</span> <span class="o">/</span> <span class="n">N_PARTITIONS</span><span class="p">)</span>
+        <span class="n">dim_row</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">N_S</span> <span class="o">/</span> <span class="n">N_PARTITIONS</span><span class="p">)</span>
+        <span class="n">dps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_S</span><span class="p">,</span> <span class="n">dim_col</span><span class="p">))</span>
+        <span class="n">Phi_P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_S</span><span class="p">,</span> <span class="n">R</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">R</span> <span class="o">%</span> <span class="n">N_PARTITIONS</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">tot_blocks_col</span> <span class="o">=</span> <span class="n">N_PARTITIONS</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tot_blocks_col</span> <span class="o">=</span> <span class="n">N_PARTITIONS</span>
+
+        <span class="n">fixed</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">tot_blocks_col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">tot_blocks_col</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="n">dim_col</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">dim_col_fix</span> <span class="o">=</span> <span class="n">R</span> <span class="o">-</span> <span class="n">dim_col</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span>
+                <span class="n">dps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_S</span><span class="p">,</span> <span class="n">dim_col_fix</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">tot_blocks_row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+
+                <span class="n">PHI_SIGMA_BLOCK</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/POD/PHI_SIGMA_</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">.npz&quot;</span><span class="p">)[</span><span class="s1">&#39;phi_sigma&#39;</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">tot_blocks_col</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="n">dim_col</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fixed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">R1</span> <span class="o">=</span> <span class="n">R2</span>
+                    <span class="n">R2</span> <span class="o">=</span> <span class="n">R1</span> <span class="o">+</span> <span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="n">dim_col</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span><span class="p">)</span>
+                    <span class="n">fixed</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">fixed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">R1</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dim_col</span>
+                    <span class="n">R2</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">dim_col</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="n">tot_blocks_col</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">N_S</span> <span class="o">-</span> <span class="n">dim_row</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+                    <span class="n">C1</span> <span class="o">=</span> <span class="n">C2</span>
+                    <span class="n">C2</span> <span class="o">=</span> <span class="n">C1</span> <span class="o">+</span> <span class="p">(</span><span class="n">N_S</span> <span class="o">-</span> <span class="n">dim_row</span> <span class="o">*</span> <span class="n">N_PARTITIONS</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">C1</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dim_row</span>
+                    <span class="n">C2</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">dim_row</span>
+
+                <span class="n">dps</span><span class="p">[</span><span class="n">C1</span><span class="p">:</span><span class="n">C2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">PHI_SIGMA_BLOCK</span><span class="p">[:,</span> <span class="n">R1</span><span class="p">:</span><span class="n">R2</span><span class="p">]</span>
+
+            <span class="c1"># Computing Sigmas and Phis</span>
+            <span class="k">if</span> <span class="n">rescale</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">R1</span><span class="p">,</span> <span class="n">R2</span><span class="p">):</span>
+                    <span class="n">jj</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="n">R1</span>
+                    <span class="n">Sigma_P</span><span class="p">[</span><span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dps</span><span class="p">[:,</span> <span class="n">jj</span><span class="p">])</span>
+                    <span class="n">Phi_P</span> <span class="o">=</span> <span class="n">dps</span><span class="p">[:,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">/</span> <span class="n">Sigma_P</span><span class="p">[</span><span class="n">jj</span><span class="p">]</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/POD/phi_</span><span class="si">{</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">phi_p</span><span class="o">=</span><span class="n">Phi_P</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">R1</span><span class="p">,</span> <span class="n">R2</span><span class="p">):</span>
+                    <span class="n">jj</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="n">R1</span>
+                    <span class="n">Phi_P</span> <span class="o">=</span> <span class="n">dps</span><span class="p">[:,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">/</span> <span class="n">Sigma_P</span><span class="p">[</span><span class="n">jj</span><span class="p">]</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/POD/phi_</span><span class="si">{</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">phi_p</span><span class="o">=</span><span class="n">Phi_P</span><span class="p">)</span>
+
+        <span class="n">Phi_P_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_S</span><span class="p">,</span> <span class="n">R</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+            <span class="n">Phi_P_V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/POD/phi_</span><span class="si">{</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2">.npz&quot;</span><span class="p">)[</span><span class="s1">&#39;phi_p&#39;</span><span class="p">]</span>
+            <span class="n">Phi_P_M</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">Phi_P_V</span>
+
+        <span class="k">return</span> <span class="n">Phi_P_M</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, von Karman Institute.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

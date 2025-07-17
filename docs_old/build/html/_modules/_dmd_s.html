@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>_dmd_s &mdash; MODULO 1.1.6 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MODULO
+          </a>
+              <div class="version">
+                1.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">MODULO: Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../importing_data.html">Importing data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../black_box.html">Computing decompositions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../single_modules.html">Towards customization: accessing MODULO internal modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-history.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../min_versions.html">Minimum Version of Python and NumPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../material.html">MODULO: References and material</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MODULO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Module code</a> &raquo;</li>
+      <li>_dmd_s</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for _dmd_s</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="c1"># import jax.numpy as jnp</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">TruncatedSVD</span>
+<span class="c1"># For efficient linear algebra</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linalg</span> <span class="k">as</span> <span class="n">LA</span>
+<span class="c1"># For Timing</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+
+<div class="viewcode-block" id="dmd_s"><a class="viewcode-back" href="../single_modules.html#modulo.dmd_s">[docs]</a><span class="k">def</span> <span class="nf">dmd_s</span><span class="p">(</span><span class="n">D_1</span><span class="p">,</span><span class="n">D_2</span><span class="p">,</span><span class="n">n_Modes</span><span class="p">,</span> <span class="n">F_S</span><span class="p">,</span> <span class="n">SAVE_T_DMD</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">FOLDER_OUT</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method computes the Dynamic Mode Decomposition (DMD). </span>
+
+<span class="sd">    https://youtu.be/8fhupzhAR_M</span>
+<span class="sd">    --------------------------------------------------------------------------------------------------------------------</span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    :param D_2: np.array</span>
+<span class="sd">           Second portion of the data, i.e. D[:,1:n_t]</span>
+<span class="sd">    :param Phi_P, Psi_P, Sigma_P: np.arrays</span>
+<span class="sd">            POD decomposition of D1</span>
+<span class="sd">    :param F_S: float</span>
+<span class="sd">           Sampling frequency in Hz</span>
+<span class="sd">    :param FOLDER_OUT: str</span>
+<span class="sd">            Folder in which the results will be saved (if SAVE_T_DMD=True)</span>
+<span class="sd">    :param K: np.array</span>
+<span class="sd">            Temporal correlation matrix</span>
+<span class="sd">    :param SAVE_T_POD: bool</span>
+<span class="sd">            A flag deciding whether the results are saved on disk or not. If the MEMORY_SAVING feature is active, it is</span>
+<span class="sd">            switched True by default.</span>
+<span class="sd">    :param n_Modes: int</span>
+<span class="sd">           number of modes that will be computed</span>
+<span class="sd">    --------------------------------------------------------------------------------------------------------------------</span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">        :return Phi_D: np.array</span>
+<span class="sd">                DMD Psis</span>
+
+<span class="sd">        :return Lambda_D: np.array</span>
+<span class="sd">                DMD Eigenvalues (of the reduced propagator)</span>
+
+<span class="sd">        :return freqs: np.array</span>
+<span class="sd">                Frequencies (in Hz, associated to the DMD modes)</span>
+<span class="sd">                </span>
+<span class="sd">         :return a0s: np.array</span>
+<span class="sd">                Initial Coefficients of the Modes   </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+   
+    <span class="c1">#TODO This currently does a POD of D_1. The memory saving feature</span>
+    <span class="c1"># should be implemented in this step.</span>
+    <span class="n">svd</span> <span class="o">=</span> <span class="n">TruncatedSVD</span><span class="p">(</span><span class="n">n_Modes</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Computing the SVD of the D1&#39;</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">X_transformed</span> <span class="o">=</span> <span class="n">svd</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">D_1</span><span class="p">)</span>
+    <span class="c1">#%% Step 2: compute the SVD of D1 (randomized algorithm)</span>
+    <span class="n">Phi_P</span> <span class="o">=</span> <span class="n">X_transformed</span> <span class="o">/</span> <span class="n">svd</span><span class="o">.</span><span class="n">singular_values_</span>
+    <span class="n">Psi_P</span> <span class="o">=</span> <span class="n">svd</span><span class="o">.</span><span class="n">components_</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">Sigma_P</span><span class="o">=</span><span class="n">svd</span><span class="o">.</span><span class="n">singular_values_</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SVD computed in &#39;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;s&#39;</span><span class="p">)</span>
+   
+    
+    <span class="n">Sigma_inv</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">Sigma_P</span><span class="p">);</span> <span class="n">dt</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="n">F_S</span>
+    <span class="c1">#%% Step 3: Compute approximated propagator</span>
+    <span class="n">P_A</span><span class="o">=</span><span class="n">LA</span><span class="o">.</span><span class="n">multi_dot</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">Phi_P</span><span class="p">),</span><span class="n">D_2</span><span class="p">,</span>\
+                     <span class="n">Psi_P</span><span class="p">,</span><span class="n">Sigma_inv</span><span class="p">])</span>
+        
+    <span class="c1">#%% Step 4: Compute eigenvalues of the system</span>
+    <span class="n">Lambda</span><span class="p">,</span> <span class="n">Q</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">P_A</span><span class="p">)</span> 
+    <span class="n">freqs</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">Lambda</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span>
+    
+    <span class="c1">#%% Step 5: Spatial structures of the DMD </span>
+    <span class="n">Phi_D</span><span class="o">=</span><span class="n">LA</span><span class="o">.</span><span class="n">multi_dot</span><span class="p">([</span><span class="n">D_2</span><span class="p">,</span><span class="n">Psi_P</span><span class="p">,</span><span class="n">Sigma_inv</span><span class="p">,</span><span class="n">Q</span><span class="p">])</span> 
+    <span class="c1">#%% Step 6: Compute the initial coefficients </span>
+    <span class="c1">#a0s=LA.lstsq(Phi_D, D_1[:,0],rcond=None)</span>
+    <span class="n">a0s</span><span class="o">=</span><span class="n">LA</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">Phi_D</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">D_1</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>   
+    
+    <span class="k">if</span> <span class="n">SAVE_T_DMD</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s2">&quot;/DMD/&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saving DMD results&quot;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">FOLDER_OUT</span> <span class="o">+</span> <span class="s1">&#39;/DMD/dmd_decomposition&#39;</span><span class="p">,</span>
+                  <span class="n">Phi_D</span><span class="o">=</span><span class="n">Phi_D</span><span class="p">,</span> <span class="n">Lambda</span><span class="o">=</span><span class="n">Lambda</span><span class="p">,</span> <span class="n">freqs</span><span class="o">=</span><span class="n">freqs</span><span class="p">,</span><span class="n">a0s</span><span class="o">=</span><span class="n">a0s</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Phi_D</span><span class="p">,</span> <span class="n">Lambda</span><span class="p">,</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">a0s</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, L. Schena.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
