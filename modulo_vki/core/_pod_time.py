@@ -3,7 +3,8 @@ import numpy as np
 from ..utils._utils import switch_eigs
 
 
-def Temporal_basis_POD(K, SAVE_T_POD=False, FOLDER_OUT='./', n_Modes=10,eig_solver: str = 'eigh'):
+def Temporal_basis_POD(K, SAVE_T_POD=False, FOLDER_OUT='./', 
+                       n_Modes=10,eig_solver: str = 'eigh'):
     """
     This method computes the POD basis. For some theoretical insights, you can find the theoretical background of the proper orthogonal decomposition in a nutshell here: https://youtu.be/8fhupzhAR_M
 

@@ -33,11 +33,11 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as readme_file:
 
 setup(
     name='modulo_vki',
-    version='2.0.7',
+    version='2.1.2',
     description="MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform "
                 "Multiscale Modal Analysis of numerical and experimental data.",
     long_description=readme,
-    long_description_content_type='text/markdown',
+    long_description_content_type='text/x-rst',
     author=["R. Poletti","L. Schena", "D. Ninni", "M. A. Mendez"],
     author_email='mendez@vki.ac.be',
     url='https://github.com/mendezVKI/MODULO/tree/master/modulo_python_package/',

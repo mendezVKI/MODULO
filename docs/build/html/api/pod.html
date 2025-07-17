@@ -1,0 +1,181 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>POD &mdash; MODULO 2.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+
+  
+      <script src="../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="mPOD" href="mpod.html" />
+    <link rel="prev" title="DFT" href="dft.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../intro.html">
+            
+              <img src="../_static/modulo_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data pre-processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../importing_data.html">Importing data and D matrix preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../weights_inner.html">Weighted inner product for non-cartesian meshes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data-Driven Modal Decompositions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../decompositions/dft/index.html">Discrete Fourier Transform (DFT)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decompositions/pod/index.html">Proper Orthogonal Decomposition (POD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decompositions/dmd/index.html">Dynamic Mode Decomposition (DMD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decompositions/mpod/index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decompositions/kpod/index.html">Kernel Proper Orthogonal Decomposition (KPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decompositions/spod/index.html">Spectral Proper Orthogonal Decomposition (SPOD)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readdata.html">Read Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dft.html">DFT</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">POD</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#modulo_vki.modulo.ModuloVKI.POD"><code class="docutils literal notranslate"><span class="pre">POD()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mpod.html">mPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dmd.html">DMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spod.html">SPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kpod.html">kPOD</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contributing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/get_code.html">Base contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/testing.html">Development and Testing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../change_log.html">Versions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/refs.html">Useful References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/ack.html">Ackowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../intro.html">MODULO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../intro.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">POD</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/pod.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pod">
+<h1>POD<a class="headerlink" href="#pod" title="Link to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="modulo_vki.modulo.ModuloVKI.POD">
+<span class="sig-prename descclassname"><span class="pre">modulo_vki.modulo.ModuloVKI.</span></span><span class="sig-name descname"><span class="pre">POD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_T_POD</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'K'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo_vki.modulo.ModuloVKI.POD" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the Proper Orthogonal Decomposition (POD) of a dataset.</p>
+<p>The POD is computed using the snapshot approach, working on the
+temporal correlation matrix.  The eigenvalue solver for this
+matrix is defined in the <cite>eig_solver</cite> attribute of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>SAVE_T_POD</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to save time-dependent POD data. Default is False.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The mode of POD computation. Must be either ‘K’ or ‘svd’.
+‘K’ (default) uses the snapshot method on the temporal
+correlation matrix.
+‘svd’ uses the SVD decomposition (full dataset must fit in memory).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>Phi_P</strong> (<em>numpy.ndarray</em>) – POD temporal modes.</p></li>
+<li><p><strong>Psi_P</strong> (<em>numpy.ndarray</em>) – POD spatial modes.</p></li>
+<li><p><strong>Sigma_P</strong> (<em>numpy.ndarray</em>) – POD singular values (eigenvalues are Sigma_P**2).</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If <cite>mode</cite> is not ‘k’ or ‘svd’.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>A brief recall of the theoretical background of the POD is
+available at <a class="reference external" href="https://youtu.be/8fhupzhAR_M">https://youtu.be/8fhupzhAR_M</a></p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dft.html" class="btn btn-neutral float-left" title="DFT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mpod.html" class="btn btn-neutral float-right" title="mPOD" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025 von Karman Institute.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

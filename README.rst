@@ -63,7 +63,7 @@ documentation for a practical guide on how to use them in MODULO.
 
 Release Notes
 -------------
-The latest version of MODULO (v2.0) includes the following updates:
+Version 2.0 of MODULO includes the following updates:
 
 1. **Faster EIG/SVD algorithms**, using powerful randomized svd solvers from scikit_learn 
     (see `here <https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html>`_ 
@@ -93,6 +93,21 @@ Instead, one can create the partitions without loading the matrix D.
 
 8. **Implementation of a formulation for non-uniform meshes**, using a weighted matrix for all the relevant inner products. This is currently available only for POD and mPOD but allows for handling data produced from CFD simulation without resampling on a uniform grid (see exercise 4). 
 It can be used both with and without the memory-saving option.
+
+Version 2.1 of MODULO includes the following updates:
+
+1. **mPOD bug fix:** the previous version of mPOD was skipping the last scale of the frequency splitting vector. Fixed in this version.
+
+2. **SPOD parallelisation:** CSD - SPOD can now be parallelized, leveraging `joblib`. The user needs just to pass the argument `n_processes` for the computation to be
+   split between different workers.
+   
+3. **Simplified decomposition interface:** the interface of the decomposition methods has been simplified to improve user experience. 
+
+4. **Enhanced POD selection:** the POD function has been redesigned, allowing users to easily choose between different POD methods.  
+   
+5. **Improved computational efficiency:** the code of the decomposition functions has been optimised, resulting in reduced computation time. mPOD now includes two additional optional arguments to enable faster filtering and to avoid recomputing the Sigmas after QR polishing. 
+	
+6. **Extended documentation:** the documentation has been significantly enriched, now including theoretical foundations for all the supported modal decomposition techniques. 
 
 
 Installation
@@ -130,7 +145,7 @@ or, if you have pip installed in your environment,
 Documentation
 -------------
 
-The documentation of MODULO is available `here <https://modulo.readthedocs.io/en/latest/intro.html>`_. It 
+The documentation of MODULO is available `here <https://lorenzoschena.github.io/MODULO/intro.html>`_. It 
 contains a comprehensive guide on how to install and use the package, as well as a detailed description of the
 decompositions required inputs and outputs. A `list of YouTube videos <https://www.youtube.com/@modulompod5682>`_ 
 is also available to guide the introduce the user to modal decomposition and MODULO.
@@ -155,7 +170,7 @@ The following example illustrates how to decompose a data set (D) using the POD 
     m = ModuloVKI(D) 
 
     # Compute the POD decomposition
-    phi_POD, Sigma_POD, psi_POD = m.Compute_POD_K()
+    phi_POD, Sigma_POD, psi_POD = m.POD()
 
 which returns the spatial basis ($\phi$), the temporal basis ($\psi$), and the modal 
 amplitudes ($\Sigma$) of the POD decomposition. 
@@ -178,7 +193,7 @@ by the user (refer to `examples/ex_04_Memory_Saving.py`).
     m = ModuloVKI(D, N_PARTITIONS=10) 
 
     # Compute the POD decomposition
-    phi_POD, Sigma_POD, psi_POD = m.Compute_POD_K()
+    phi_POD, Sigma_POD, psi_POD = m.POD()
 
 Example 3: non-uniform grid
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -206,7 +221,7 @@ you can use the weighted inner product formulation (refer to `examples/ex_05_non
     m = ModuloVKI(D, weights=weights) 
 
     # Compute the POD decomposition
-    phi_POD, Sigma_POD, psi_POD = m.Compute_POD_K()
+    phi_POD, Sigma_POD, psi_POD = m.POD()
 
 Computational Cost Estimates
 ----------------------------
@@ -219,8 +234,7 @@ $n_t' = n_t / n_p$ as the number of time steps in each partition, and to $n_s' =
 .. list-table::
    :header-rows: 1
 
-   * - 
-     - Phase 1: $D$
+   * - Phase 1: $D$
      - Phase 2: $K$
      - Phase 3: $\\Psi$
      - Phase 4: $\\Phi$
@@ -294,7 +308,7 @@ Citation
 ---------
 If you use MODULO in your research, please cite it as follows:
 
-``Poletti, R., Schena, L., Ninni, D. Mendez, M. A. (2024). MODULO: A Python toolbox for data-driven modal decomposition. Journal of Open Source Software, 9(102), 6753, https://doi.org/10.21105/joss.06753
+``Poletti, R., Schena, L., Ninni, D. Mendez, M. A. (2024). MODULO: A Python toolbox for data-driven modal decomposition. Journal of Open Source Software, 9(102), 6753, https://doi.org/10.21105/joss.06753 ``
 
 
 .. code-block:: text 
@@ -328,9 +342,6 @@ and
     }
 
 
-
-
-We are currently working on a Journal of Open Source article that will be available soon.
 
 References
 ----------

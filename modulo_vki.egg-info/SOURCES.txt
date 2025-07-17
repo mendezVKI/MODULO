@@ -3,6 +3,7 @@ README.rst
 setup.py
 modulo_vki/__init__.py
 modulo_vki/modulo.py
+modulo_vki/modulo_old.py
 modulo_vki.egg-info/PKG-INFO
 modulo_vki.egg-info/SOURCES.txt
 modulo_vki.egg-info/dependency_links.txt
@@ -18,6 +19,9 @@ modulo_vki/core/_pod_space.py
 modulo_vki/core/_pod_time.py
 modulo_vki/core/_spod_s.py
 modulo_vki/core/_spod_t.py
+modulo_vki/core/spatial_structures.py
+modulo_vki/core/temporal_structures.py
+modulo_vki/core/utils.py
 modulo_vki/utils/__init__.py
 modulo_vki/utils/_plots.py
 modulo_vki/utils/_utils.py

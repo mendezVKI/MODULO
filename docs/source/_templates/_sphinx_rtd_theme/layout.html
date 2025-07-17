@@ -1,0 +1,10 @@
+{% extends "sphinx_rtd_theme/layout.html" %}
+
+{% block logo %}
+  <div class="wy-side-nav-search">
+    <a class="home-link" href="{{ pathto(master_doc) }}" title="{{ project|e }}">
+      <img class="logo" src="{{ pathto(html_logo, 1) }}"
+           alt="{{ project|e }}" />
+    </a>
+  </div>
+{% endblock %}

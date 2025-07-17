@@ -100,7 +100,7 @@ m = ModuloVKI(data=None,N_T=N_T,
            N_PARTITIONS=10,eig_solver='svd_sklearn_randomized')
 
 # compute the POD (without having loaded D! )
-Phi_POD, Psi_POD, Sigma_POD = m.compute_POD_K()
+Phi_POD, Psi_POD, Sigma_POD = m.POD()
 
 #%% Post Process the POD
 
@@ -164,8 +164,8 @@ for r in range(5):
 # Frequency splitting Vector
 F_V=np.array([10,290,320,430,470])
 # This vector collects the length of the filter kernels.
-Nf=np.array([1201,801,801,801,801]); 
-Keep=np.array([1,0,1,1,0])
+Nf=np.array([1201,801,801,801,801,801]);
+Keep=np.array([1,0,1,1,0,0])
 Ex=1203; boundaries = 'nearest'; MODE = 'reduced'
 # Compute the mPOD 
 m = ModuloVKI(None,
@@ -176,7 +176,7 @@ m = ModuloVKI(None,
            n_Modes = 500,           
            eig_solver='svd_sklearn_randomized')
 
-Phi_M,Psi_M,Sigmas_M = m.compute_mPOD(Nf=Nf,
+Phi_M,Psi_M,Sigmas_M = m.mPOD(Nf=Nf,
                                       Ex=Ex,
                                       F_V=F_V,
                                       Keep=Keep,

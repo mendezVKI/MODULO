@@ -20,4 +20,4 @@
 # from .core._spod_s import *
 # from .core._spod_t import *
 
-from modulo_vki.modulo import ModuloVKI
+from modulo_vki.modulo_old import ModuloVKI

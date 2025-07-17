@@ -1,0 +1,190 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proper Orthogonal Decomposition (POD) &mdash; MODULO 2.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+      <script src="../../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Dynamic Mode Decomposition (DMD)" href="../dmd/index.html" />
+    <link rel="prev" title="Discrete Fourier Transform (DFT)" href="../dft/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../intro.html">
+            
+              <img src="../../_static/modulo_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data pre-processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../importing_data.html">Importing data and D matrix preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../weights_inner.html">Weighted inner product for non-cartesian meshes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data-Driven Modal Decompositions</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../dft/index.html">Discrete Fourier Transform (DFT)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Proper Orthogonal Decomposition (POD)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#theory">Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-in-modulo">Example in MODULO</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../dmd/index.html">Dynamic Mode Decomposition (DMD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpod/index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kpod/index.html">Kernel Proper Orthogonal Decomposition (KPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spod/index.html">Spectral Proper Orthogonal Decomposition (SPOD)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/readdata.html">Read Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/dft.html">DFT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/pod.html">POD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/mpod.html">mPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/dmd.html">DMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/spod.html">SPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/kpod.html">kPOD</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contributing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/get_code.html">Base contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/testing.html">Development and Testing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../change_log.html">Versions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/refs.html">Useful References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/ack.html">Ackowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../intro.html">MODULO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../intro.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Proper Orthogonal Decomposition (POD)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/decompositions/pod/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="proper-orthogonal-decomposition-pod">
+<h1>Proper Orthogonal Decomposition (POD)<a class="headerlink" href="#proper-orthogonal-decomposition-pod" title="Link to this heading">¶</a></h1>
+<p>This document offers a brief reference guide to the use of the Proper Orthogonal Decomposition (POD).</p>
+<section id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Link to this heading">¶</a></h2>
+<p>The POD is an energy-based decomposition, which provides the modes capturing the largest amount of energy (variance) in the dataset,
+such that the convergence of an approximation with increasing number of modes is optimal.</p>
+<p>The temporal structures satisfying these properties are the eigenvectors of the temporal correlation matrix <span class="math notranslate nohighlight">\(\mathbf{K}=\langle \mathbf{u}(\mathbf{x}, t), \mathbf{u}(\mathbf{x}, t)\rangle\)</span>,
+where <span class="math notranslate nohighlight">\(\langle \cdot \rangle\)</span> defines a suitable inner product. Thus,</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{K} \psi_{r}(t_k) = \lambda_r \psi_{r}(t_k) \quad r \in [1, R]\]</div>
+<p>that yields to the factorization of <span class="math notranslate nohighlight">\(\mathbf{K}\)</span> as:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{K} = \sum_{r=1}^R \lambda_r \psi_r \psi_r^\top \;,\]</div>
+<p>recalling that the correlation matrix is symmetric and positive definite. Under this condition, the POD is ‘properly’ orthogonal, that is,
+also the spatial structures <span class="math notranslate nohighlight">\(\psi_r\)</span> are orthonormal by construction.</p>
+<p>Moreover, because of this proper orthogonality, the amplitudes of the modes are <span class="math notranslate nohighlight">\(\sigma_r = \sqrt{\lambda_r}\)</span> and lead to the
+direct computation of the spatial structures via correlation:</p>
+<div class="math notranslate nohighlight">
+\[\phi_r(\mathbf{x}) = \frac{1}{\sigma_r}\langle \mathbf{u}(\mathbf{x}, t), \psi_r(t) \rangle_T = \frac{1}{\sigma_r} \sum_{k=1}^{n_t} \mathbf{u}(\mathbf{x}, t) \psi_r(\mathbf{x})\;.\]</div>
+<p>We note also that because of this joint orthonormality, one might decide to work with the temporal correlation matrix <span class="math notranslate nohighlight">\(\mathbf{K}\)</span> or the spatial
+analogue <span class="math notranslate nohighlight">\(\mathbf{C}\)</span> depending on the shape of the dataset, and arrive to the same result.</p>
+<p>An alternative path is offered by computing the SVD of the dataset <span class="math notranslate nohighlight">\(\mathbf{D}\)</span>, yielding the same modes if the POD inner-product coincides with the
+standard Euclidean one used in the SVD procedure.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">POD</span></code> uses the temporal‐correlation approach; to switch to SVD, pass <code class="docutils literal notranslate"><span class="pre">method='svd'</span></code>.</p>
+</div>
+</section>
+<section id="example-in-modulo">
+<h2>Example in MODULO<a class="headerlink" href="#example-in-modulo" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">modulo_vki.modulo</span> <span class="kn">import</span> <span class="n">ModuloVKI</span>
+
+<span class="c1"># --- Initialize MODULO object</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">ModuloVKI</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">D</span><span class="p">))</span>
+<span class="c1"># Compute the POD using Sirovinch&#39;s method</span>
+<span class="n">Phi_POD</span><span class="p">,</span> <span class="n">Psi_POD</span><span class="p">,</span> <span class="n">Sigma_POD</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">POD</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;K&#39;</span><span class="p">)</span>
+<span class="c1"># compute the POD using SVD</span>
+<span class="n">Phi_SVD</span><span class="p">,</span> <span class="n">Psi_SVD</span><span class="p">,</span> <span class="n">Sigma_SVD</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">POD</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;SVD&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../dft/index.html" class="btn btn-neutral float-left" title="Discrete Fourier Transform (DFT)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../dmd/index.html" class="btn btn-neutral float-right" title="Dynamic Mode Decomposition (DMD)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025 von Karman Institute.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

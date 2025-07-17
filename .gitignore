@@ -2,7 +2,7 @@
 modulo/__pycache__/
 modulo/core/__pycache__
 modulo/utils/__pycache__
-
+/examples/_dev/
 # Exclude all undesired files
 *.pyc
 *.pyo
@@ -13,4 +13,5 @@ modulo/utils/__pycache__
 *.npz
 *.npy
 
-.DS_Store
+/modulo_vki_2/
+/tests/

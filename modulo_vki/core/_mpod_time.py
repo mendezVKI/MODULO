@@ -4,8 +4,11 @@ from scipy.signal import firwin  # To create FIR kernels
 from tqdm import tqdm
 from modulo_vki.utils._utils import conv_m, switch_eigs
 
+# TODO: instead of computing the min of modes between SAT and the number of frequencies, we should compute the number of modes between SAT and the number of requested modes by the user.
 
-def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep, boundaries, MODE='reduced', dt=1,FOLDER_OUT: str = "./", MEMORY_SAVING: bool = False,SAT: int = 100,n_Modes=10, eig_solver: str = 'svd_sklearn_randomized'):
+def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep, boundaries, MODE='reduced', 
+                        dt=1,FOLDER_OUT: str = "./", MEMORY_SAVING: bool = False,SAT: int = 100,
+                        n_Modes=10, eig_solver: str = 'svd_sklearn_randomized'):
     '''
     This function computes the PSIs for the mPOD. In this implementation, a "dft-trick" is proposed, in order to avoid
     expansive SVDs. Randomized SVD is used by default for the diagonalization.
@@ -15,9 +18,11 @@ def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep, boundaries, MODE='reduced', dt=1,F
     :param dt: float.   
         1/fs, the dt between snapshots. Units in seconds.
     :param Nf: 
-        np.array. Vector collecting the order of the FIR filters used in each scale.
+        np.array. Vector collecting the order of the FIR filters used in each scale. It must be of size len(F_V) + 1, where the first element defines 
+        the low pass filter, and the last one is the high pass filter. The rest are for the band-pass filters.
     :param Ex: int.
-        Extension at the boundaries of K to impose the boundary conditions (see boundaries). It must be at least as Nf.
+        Extension at the boundaries of K to impose the boundary conditions (see boundaries). It must be at least as Nf, and of size len(F_V) + 1, where the first
+        element is the low pass filter, and the last one is the high pass filter. The rest are band-pass filters.
     :param F_V: np.array. 
         Frequency splitting vector, containing the frequencies of each scale (see article). If the time axis is in seconds, these frequencies are in Hz.
     :param Keep: np.array. 
@@ -51,6 +56,16 @@ def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep, boundaries, MODE='reduced', dt=1,F
     #Converting F_V in radiants and initialise number of scales M
     Fs = 1 / dt
     F_Bank_r = F_V * 2 / Fs
+    
+    # repeat first entry to ensure all scales are covered
+    F_Bank_r = np.concatenate(([F_Bank_r[0]], F_Bank_r))
+    # TODO: update tutorials to reflect this change!
+
+    assert len(F_Bank_r) == len(Nf), "Frequencies and filter orders must have the same length. Remember that given M scales, Nf must have M+1 elements"
+    assert len(F_Bank_r) == len(Keep), "Frequencies and keep must have the same length. Remember that given M scales, keep must have M+1 elements"
+    # Nf = np.concatenate(([Nf[0]], Nf))
+    # Keep = np.concatenate(([Keep[0]], Keep))
+    
     M = len(F_Bank_r)
 
     # Loop over the scales to show the transfer functions
@@ -72,26 +87,29 @@ def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep, boundaries, MODE='reduced', dt=1,F
         # Generate the 1d filter for this
         if m < 1:
             if Keep[m] == 1:
-             # Low Pass Filter
-             h_A = firwin(Nf[m], F_Bank_r[m], window='hamming')
-             # Filter K_LP
-             print('\n Filtering Largest Scale')
-             K_L = conv_m(K=K, h=h_A, Ex=Ex, boundaries=boundaries)
-             # R_K = np.linalg.matrix_rank(K_L, tol=None, hermitian=True)
-             '''We replace it with an estimation based on the non-zero freqs the cut off frequency of the scale is '''
-             F_CUT = F_Bank_r[m] * Fs / 2
-             Indices = np.argwhere(np.abs(Freqs) < F_CUT)
-             R_K = np.min([len(Indices), SAT])
-             print(str(len(Indices)) + ' Modes Estimated')
-             print('\n Diagonalizing Largest Scale')
-             Psi_P, Lambda_P = switch_eigs(K_L, R_K, eig_solver) #svds_RND(K_L, R_K)
-             Psi_M=Psi_P; Lambda_M=Lambda_P
+                # Low Pass Filter
+                h_A = firwin(Nf[m], F_Bank_r[m], window='hamming')
+                # Filter K_LP
+                print('\n Filtering Largest Scale')
+                K_L = conv_m(K=K, h=h_A, Ex=Ex, boundaries=boundaries)
+                # R_K = np.linalg.matrix_rank(K_L, tol=None, hermitian=True)
+                '''We replace it with an estimation based on the non-zero freqs the cut off frequency of the scale is '''
+                F_CUT = F_Bank_r[m] * Fs / 2
+                Indices = np.argwhere(np.abs(Freqs) < F_CUT) 
+                
+                # R_K = np.min([len(Indices), SAT]) 
+                # R_K = np.min(R_K, n_Modes) # we take the min between the number of frequencies and the number of modes requested 
+                R_K = min(len(Indices), SAT, n_Modes) 
+                
+                print(str(len(Indices)) + ' Modes Estimated')
+                print('\n Diagonalizing Largest Scale')
+                
+                Psi_P, Lambda_P = switch_eigs(K_L, R_K, eig_solver) #svds_RND(K_L, R_K)
+                Psi_M=Psi_P
+                Lambda_M=Lambda_P
             else:
-             print('\n Scale '+str(m)+' jumped (keep['+str(m)+']=0)')  
-            # if K_S:
-            #     Ks[:, :, m] = K_L  # First large scale
-                         
-            # method = signal.choose_conv_method(K, h2d, mode='same')
+                print('\n Scale '+str(m)+' jumped (keep['+str(m)+']=0)')  
+
         elif m > 0 and m < M - 1:
             if Keep[m] == 1:
                 # print(m)
@@ -109,11 +127,14 @@ def temporal_basis_mPOD(K, Nf, Ex, F_V, Keep, boundaries, MODE='reduced', dt=1,F
                 print('Diagonalizing H Scale ' + str(m + 1) + '/' + str(M))
                 # R_K = np.linalg.matrix_rank(K_H, tol=None, hermitian=True)
                 Psi_P, Lambda_P = switch_eigs(K_H, R_K, eig_solver) #svds_RND(K_H, R_K)  # Diagonalize scale
+                
                 if np.shape(Psi_M)[0]==0: # if this is the first contribute to the basis
-                 Psi_M=Psi_P; Lambda_M=Lambda_P
+                    Psi_M=Psi_P
+                    Lambda_M=Lambda_P
                 else:                    
-                 Psi_M = np.concatenate((Psi_M, Psi_P), axis=1)  # append to the previous
-                 Lambda_M = np.concatenate((Lambda_M, Lambda_P), axis=0)
+                    Psi_M = np.concatenate((Psi_M, Psi_P), axis=1)  # append to the previous
+                    Lambda_M = np.concatenate((Lambda_M, Lambda_P), axis=0)
+                    
             else:
                 print('\n Scale '+str(m)+' jumped (keep['+str(m)+']=0)')  
       
