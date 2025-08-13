@@ -9,12 +9,17 @@ We use this feature in Example 1.
 **Option 2**: a folder containing the data is provided and MODULO must assemble the snapshot matrix.
 We use this feature in Example 2.
 
-When operating with MEMORY_SAVING=True, MODULO will refrain from working on the full matrix D:
+When operating with `MEMORY_SAVING=True`, MODULO will refrain from working on the full matrix D but relies on Option 2. The user must provide 
+the folder containing the data partitions. We provide the method `ReadData` to carry out this chunking step, and we illustrate
+the complete workflow in Tutorial 4. `ReadData` can handle ``.dat`` or ``.txt`` files. However, the partitions can also be created with any other method, 
+as long as the inputs to MODULO are consistent.
 
-- if this matrix was provided (Option 1), MODULO will break the data into partitions, store them in a local folder and delete D from memory.
-- if only the data folder was provided (Option 2), then MODULO will group the snapshots in different partitions and store them in a local folder.
+.. Please see Tutorial 4 to 
 
-The format expected for the data is ``.dat`` or ``.txt``.  Variants for ``.csv`` files are in preparation.
+.. - if this matrix was provided (Option 1), MODULO will break the data into partitions, store them in a local folder and delete D from memory.
+.. - if only the data folder was provided (Option 2), then MODULO will group the snapshots in different partitions and store them in a local folder.
 
-The codes to generate the matrix D are available in  ``ReadData``. The main function is 
-*_data_processing* in *read_db.py*.
+.. The format expected for the data is ``.dat`` or ``.txt``.  Variants for ``.csv`` files are in preparation.
+
+.. The codes to generate the matrix D are available in  ``ReadData``. The main function is 
+.. *_data_processing* in *read_db.py*.

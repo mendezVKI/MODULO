@@ -127,11 +127,27 @@ by the user (refer to `examples/ex_04_Memory_Saving.py`).
 
 .. code-block:: python
 
+    import numpy as np 
     from modulo_vki import ModuloVKI 
-    import numpy as np
+    from modulo_vki.utils.read_db import ReadData # to read the data
 
-    # Create a random dataset
-    D = np.random.rand(100, 1000)
+    # --- Header (H),  footer (F) and columns (C) to be skipped during acquisition
+    H = 1; F = 0; C=0
+    # --- Read one sample snapshot (to get N_S)
+    Name = FOLDER+os.sep+'data'+os.sep+"Res00001.dat"
+    Dat = np.genfromtxt(Name, skip_header=H, skip_footer=F)
+    # --- Component fields (N=2 for 2D velocity fields, N=1 for pressure fields)
+    N = Dat.shape[1]
+    # --- Number of mesh points and snapshots
+    nxny = Dat.shape[0]; N_T=n_t
+
+    D = ReadData._data_processing(D=None,FOLDER_IN=USER_FOLDER +os.sep+ 'data', 
+                              filename='USER_FILE_ROOT%05d',
+                              N=2, N_S=2*nxny,N_T=N_T,
+                              h = H, f = F, c=C,
+                              N_PARTITIONS=10, MR= False,
+                              FOLDER_OUT=FOLDER+os.sep+'MODULO_tmp')
+
  
     # Initialize the ModuloVKI object
     m = ModuloVKI(D, N_PARTITIONS=10) 

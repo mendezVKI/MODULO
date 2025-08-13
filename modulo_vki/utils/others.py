@@ -53,7 +53,7 @@ def Plot_Field_TEXT_JET(File):
     ax.set_xlim([0, 35])
     ax.set_ylim(10, 29)
     ax.invert_yaxis()  # Invert Axis for plotting purpose
-    plt.show()
+    # plt.show()
     Name[len(Name) - 12:len(Name)] + ' Plotted'
     return n_s, Xg, Yg, Vxg, -Vyg, X_S, Y_S
 
