@@ -1,7 +1,7 @@
 Versions
 ================================
 
-2.1.3
+2.1.4
 ------
 1. Introduced additional inputs consistency check when using `MEMORY SAVING`. If this option is set to True, MODULO verifies that `D=None`, and requires data partitions to be already computed. We provide a routine to carry out this step (see Tutorial 4), but other routines can be used as long inputs are consistent.
    
