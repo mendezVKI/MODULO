@@ -1,7 +1,7 @@
 
 
 MODULO: a python toolbox for data-driven modal decomposition
------------------------------------------------------------
+-------------------------------------------------------------
 
 .. image:: https://readthedocs.org/projects/modulo/badge/?version=latest
     :target: https://modulo.readthedocs.io/en/latest/?badge=latest

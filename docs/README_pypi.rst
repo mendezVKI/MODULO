@@ -1,5 +1,5 @@
 MODULO: a python toolbox for data-driven modal decomposition
-------------------------------------------------------------
+-------------------------------------------------------------
 
 .. image:: https://modulo.readthedocs.io/en/latest/_images/modulo_logo.png
    :alt: MODULO logo
