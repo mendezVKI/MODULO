@@ -22,18 +22,13 @@ pip install --upgrade pip
 
 here = path.abspath(path.dirname(__file__))
 
-with open(path.join(here, 'README.rst'), encoding='utf-8') as readme_file:
+with open(path.join(here, 'README_pypi.rst'), encoding='utf-8') as readme_file:
     readme = readme_file.read()
-
-# with open(path.join(here, 'requirements.txt')) as requirements_file:
-#     # Parse requirements.txt, ignoring any commented-out lines.
-#     requirements = [line for line in requirements_file.read().splitlines()
-#                     if not line.startswith('#')]
-
+    
 
 setup(
     name='modulo_vki',
-    version='2.1.3',
+    version='2.1.4',
     description="MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform "
                 "Multiscale Modal Analysis of numerical and experimental data.",
     long_description=readme,
