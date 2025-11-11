@@ -131,6 +131,9 @@ class ModuloVKI:
 
         if self.MEMORY_SAVING:
             os.makedirs(self.FOLDER_OUT, exist_ok=True)
+            
+            if data is not None: 
+                raise ValueError("The memory saving option is active, so MODULO cannot be initialized with the full snapshot matrix. Use 'ReadData' routines to process the data in chunks instead.")        
         
         # Load the data matrix
         if isinstance(data, np.ndarray):

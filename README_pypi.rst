@@ -1,5 +1,5 @@
 MODULO: a python toolbox for data-driven modal decomposition
-------------------------------------------------------------
+-------------------------------------------------------------
 
 .. image:: https://modulo.readthedocs.io/en/latest/_images/modulo_logo.png
    :alt: MODULO logo
@@ -127,17 +127,60 @@ by the user (refer to `examples/ex_04_Memory_Saving.py`).
 
 .. code-block:: python
 
-    from modulo_vki import ModuloVKI 
+    import os
     import numpy as np
+    from modulo_vki import ModuloVKI
+    from modulo_vki.utils.read_db import ReadData
 
-    # Create a random dataset
-    D = np.random.rand(100, 1000)
- 
-    # Initialize the ModuloVKI object
-    m = ModuloVKI(D, N_PARTITIONS=10) 
+    # --- 1. User-defined settings ---
+    # Define the path to your data and the file naming convention.
+    FOLDER = 'path/to/your/snapshot_data'
+    FILE_ROOT_NAME = 'Res'  # The base name, e.g., 'Res' for 'Res00001.dat'
+    n_t = 100               # The total number of snapshots (time steps) to process.
 
-    # Compute the POD decomposition
+    # --- 2. Data format parameters ---
+    # Specify how to read your text-based snapshot files.
+    H = 1  # H: Number of header lines to skip
+    F = 0  # F: Number of footer lines to skip
+    C = 0  # C: Number of initial columns to skip
+
+    # --- 3. Determine data dimensions from a sample file ---
+    # To understand the structure, we load the first snapshot.
+    first_snapshot_file = os.path.join(FOLDER, f"{FILE_ROOT_NAME}00001.dat")
+    Dat = np.genfromtxt(first_snapshot_file, skip_header=H, skip_footer=F)
+
+    # N: Number of components per point (e.g., 2 for 2D velocity u,v)
+    N = Dat.shape[1]
+    # nxny: Number of spatial points in the mesh
+    nxny = Dat.shape[0]
+    # N_T: Total number of snapshots (aliased from n_t for clarity)
+    N_T = n_t
+
+    # --- 4. Process the dataset into partitions on disk ---
+    # The ReadData utility reads all snapshots and chunks the snapshot matrix.
+
+    D = ReadData._data_processing(
+        D=None,                      # We start with no data in memory
+        FOLDER_IN=FOLDER,
+        filename=f'{FILE_ROOT_NAME}%05d', # File pattern for snapshot files
+        N=N,                         # Number of components per point
+        N_S=N * nxny,                # Total size of a single snapshot vector
+        N_T=N_T,                     # Total number of snapshots
+        h=H, f=F, c=C,               # Header, footer, and column skip parameters
+        N_PARTITIONS=10,             # The dataset will be split into 10 chunks
+        MR=False,                    # Mean-removal flag
+        FOLDER_OUT=os.path.join('.', 'MODULO_tmp') # Where to save temp files
+    )
+
+    # --- 5. Initialize ModuloVKI and compute the POD ---
+    # Initialize the object, passing the number of partitions. D must be set to None 
+    # MODULO will look for the partitions in FOLDER_OUT/MODULO_tmp
+    m = ModuloVKI(None, N_PARTITIONS=10, FOLDER_OUT=FOLDER_OUT)
+
+    # The POD method will now automatically read the data from the partitioned files.
     phi_POD, Sigma_POD, psi_POD = m.POD()
+
+    print("POD computation complete.")
 
 Example 3: non-uniform grid
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
