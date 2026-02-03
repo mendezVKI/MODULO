@@ -660,14 +660,13 @@ class ModuloVKI:
         Sigma_sP : numpy.ndarray, shape (n_Modes,)
                 Modal energies (eigenvalues of the filtered covariance).
         """
-        if self.D is None:
-                D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
-        else:
-                D = self.D 
-                
+
         self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, self.MEMORY_SAVING, 
-                                   self.FOLDER_OUT, self.SAVE_K, D=D)
-                
+                                   self.FOLDER_OUT, self.SAVE_K, D=self.Dstar)
+        
+        if self.MEMORY_SAVING:
+                self.K = np.load(self.FOLDER_OUT + '/correlation_matrix/k_matrix.npz')['K']
+        
         # additional step: diagonal spectral filter of K 
         K_F = spectral_filter(self.K, N_o=N_O, f_c=f_c)
         
@@ -675,7 +674,7 @@ class ModuloVKI:
         Psi_P, Sigma_P = Temporal_basis_POD(K_F, SAVE_SPOD, self.FOLDER_OUT, n_Modes)
         
         # but with a normalization aspect to handle the non-orthogonality of the SPOD modes
-        Phi_P = Spatial_basis_POD(D, N_T=self.K.shape[0], 
+        Phi_P = Spatial_basis_POD(self.D, N_T=self.K.shape[0], 
                                         PSI_P=Psi_P, Sigma_P=Sigma_P,
                                 MEMORY_SAVING=self.MEMORY_SAVING, 
                                 FOLDER_OUT=self.FOLDER_OUT,

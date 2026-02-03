@@ -29,7 +29,7 @@ it is no longer maintained. The latest decomposition techniques are exclusively 
 
 As a part of the MODULO project, we provide a series of lectures on data-driven modal decomposition, and its applications.
 These are available at the `MODULO YouTube channel <https://www.youtube.com/@modulompod5682>`_. 
-The extended documentation can be found at: `MODULO ReadTheDocs <https://lorenzoschena.github.io/MODULO/intro.html>`.
+The full package documentation can be found at: `MODULO ReadTheDocs <https://lorenzoschena.github.io/MODULO/intro.html>`_.
 
 .. contents:: Table of contents
 
