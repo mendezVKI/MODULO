@@ -1,0 +1,188 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DMD &mdash; MODULO 2.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+
+  
+      <script src="../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SPOD" href="spod.html" />
+    <link rel="prev" title="mPOD" href="mpod.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../intro.html">
+            
+              <img src="../_static/modulo_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data pre-processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../importing_data.html">Importing data and D matrix preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../weights_inner.html">Weighted inner product for non-cartesian meshes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data-Driven Modal Decompositions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../decompositions/dft/index.html">Discrete Fourier Transform (DFT)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decompositions/pod/index.html">Proper Orthogonal Decomposition (POD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decompositions/dmd/index.html">Dynamic Mode Decomposition (DMD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decompositions/mpod/index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decompositions/kpod/index.html">Kernel Proper Orthogonal Decomposition (KPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decompositions/spod/index.html">Spectral Proper Orthogonal Decomposition (SPOD)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readdata.html">Read Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dft.html">DFT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pod.html">POD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpod.html">mPOD</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DMD</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#modulo_vki.modulo.ModuloVKI.DMD"><code class="docutils literal notranslate"><span class="pre">DMD()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="spod.html">SPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kpod.html">kPOD</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contributing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/get_code.html">Base contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/testing.html">Development and Testing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../change_log.html">Versions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/refs.html">Useful References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/ack.html">Ackowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../intro.html">MODULO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../intro.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">DMD</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/dmd.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dmd">
+<h1>DMD<a class="headerlink" href="#dmd" title="Link to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="modulo_vki.modulo.ModuloVKI.DMD">
+<span class="sig-prename descclassname"><span class="pre">modulo_vki.modulo.ModuloVKI.</span></span><span class="sig-name descname"><span class="pre">DMD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_T_DMD</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo_vki.modulo.ModuloVKI.DMD" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the Dynamic Mode Decomposition (DMD) of the dataset.</p>
+<p>This implementation follows the algorithm in Tu et al. (2014) <a class="footnote-reference brackets" href="#id4" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, which is
+essentially the same as Penland (1996) <a class="footnote-reference brackets" href="#id5" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.  For
+additional low-level details see v1 of Mendez et al. (2020) <a class="footnote-reference brackets" href="#id6" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>SAVE_T_DMD</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, save time-dependent DMD results to disk. Default is True.</p></li>
+<li><p><strong>F_S</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling frequency in Hz. Default is 1.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>Phi_D</strong> (<em>numpy.ndarray</em>) – Complex DMD modes.</p></li>
+<li><p><strong>Lambda_D</strong> (<em>numpy.ndarray</em>) – Complex eigenvalues of the reduced-order propagator.</p></li>
+<li><p><strong>freqs</strong> (<em>numpy.ndarray</em>) – Frequencies (Hz) associated with each DMD mode.</p></li>
+<li><p><strong>a0s</strong> (<em>numpy.ndarray</em>) – Initial amplitudes (coefficients) of the DMD modes.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://arxiv.org/abs/1312.0041">https://arxiv.org/abs/1312.0041</a></p>
+</aside>
+<aside class="footnote brackets" id="id5" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.sciencedirect.com/science/article/pii/0167278996001248">https://www.sciencedirect.com/science/article/pii/0167278996001248</a></p>
+</aside>
+<aside class="footnote brackets" id="id6" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://arxiv.org/abs/2001.01971">https://arxiv.org/abs/2001.01971</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mpod.html" class="btn btn-neutral float-left" title="mPOD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="spod.html" class="btn btn-neutral float-right" title="SPOD" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025 von Karman Institute.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

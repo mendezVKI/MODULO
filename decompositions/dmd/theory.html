@@ -1,0 +1,173 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Theory &mdash; MODULO 2.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+      <script src="../../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../intro.html">
+            
+              <img src="../../_static/modulo_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data pre-processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../importing_data.html">Importing data and D matrix preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../weights_inner.html">Weighted inner product for non-cartesian meshes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data-Driven Modal Decompositions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dft/index.html">Discrete Fourier Transform (DFT)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pod/index.html">Proper Orthogonal Decomposition (POD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Dynamic Mode Decomposition (DMD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpod/index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kpod/index.html">Kernel Proper Orthogonal Decomposition (KPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spod/index.html">Spectral Proper Orthogonal Decomposition (SPOD)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/readdata.html">Read Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/dft.html">DFT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/pod.html">POD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/mpod.html">mPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/dmd.html">DMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/spod.html">SPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/kpod.html">kPOD</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contributing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/get_code.html">Base contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/testing.html">Development and Testing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../change_log.html">Versions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/refs.html">Useful References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/ack.html">Ackowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../intro.html">MODULO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../intro.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Theory</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/decompositions/dmd/theory.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="theory">
+<h1>Theory<a class="headerlink" href="#theory" title="Link to this heading">¶</a></h1>
+<p>The DMD seeks to overcome the <cite>spectral-mixing</cite> induced by the POD compression, while simultaneously avoid _windowing_ problems
+caused by the dependency of the DFT on the fundamental tone of the data to be decomposed. The main idea introduced by Schmid (2010) <span id="id1">[<a class="reference internal" href="../../refs_and_ack/refs.html#id8" title="Peter J. Schmid. Dynamic mode decomposition of numerical and experimental data. Journal of Fluid Mechanics, 656:5–28, 2010. doi:10.1017/S0022112010001217.">4</a>]</span>,
+is to fit a linear system onto a reduced POD projection of the dataset.</p>
+<p>The algorithm we implement in MODULO is the one proposed by Tu et al. (2013) <span id="id2">[<a class="reference internal" href="../../refs_and_ack/refs.html#id17" title="Jonathan H Tu. Dynamic mode decomposition: Theory and applications. PhD thesis, Princeton University, 2013.">5</a>]</span>, and a more robust theoretical formulation can also be found
+in Mendez (2021) <span id="id3">[<a class="reference internal" href="../../refs_and_ack/refs.html#id18" title="Miguel Alfonso Mendez. Statistical treatment, fourier and modal decomposition. arXiv preprint arXiv:2201.03847, 2022.">6</a>]</span>.</p>
+<p>This method creates two portions of the snapshot matrix <span class="math notranslate nohighlight">\(\mathbf{D}\)</span> that differ of one step in time, that is:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{D}_1 = [\mathbf{d}_1, \dots, \mathbf{d}_{n_t - 1}] \in \mathbb{R}^{n_S \times n_t - 1} \;,\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{D}_2 = [\mathbf{d}_2, \dots, \mathbf{d}_{n_t}] \in \mathbb{R}^{n_S \times n_t - 1} .\]</div>
+<p>Then, the linear system propagator <span class="math notranslate nohighlight">\(\mathbf{P}: \mathbf{d}_{t} \rightarrow \mathbf{d}_{t+\Delta t} \in \mathbb{R}^{n_S \times n_S}\)</span> can
+be solved by least square. This can be computed via POD:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{P} \approx \mathbf{D}_2 \mathbf{\Psi}_P \mathbf{\Sigma}_P^{-1} \mathbf{\Phi}_P^\top \;.\]</div>
+<p>Yet, this can be ill-conditioned and computationally prohibitive to compute and it is further projected onto a reduced POD space spanned
+by the basis <span class="math notranslate nohighlight">\(\tilde{\mathbf{\Phi}} = [\phi^\bullet, \dots, \phi^\bullet_{R}]\)</span>, where <span class="math notranslate nohighlight">\(n_r \ll n_t\)</span>. This leads to a system
+in <span class="math notranslate nohighlight">\(\mathbb{R}^{n_r \times n_r}\)</span> wich reads:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{D}_2 \approx \mathbf{P}{\mathbf{D}}_1 \rightarrow \tilde{\mathbf{\Phi}}_P^\top \mathbf{D}_2 \approx \tilde{\mathbf{\Phi}}_P^\top \mathbf{P} \tilde{\mathbf{\Phi}}_P \tilde{\mathbf{\Phi}}_P^\top \mathbf{D}_1 \;,\]</div>
+<p>that we can compact writing:</p>
+<div class="math notranslate nohighlight">
+\[\tilde{\mathbf{V}}_2 \approx \tilde{\mathbf{S}} \tilde{\mathbf{V}}_1 \;.\]</div>
+<p>The reduced-order propagator is then:</p>
+<div class="math notranslate nohighlight">
+\[\tilde{\mathbf{S}} = \tilde{\mathbf{\Phi}}_P^\top \mathbf{P} \tilde{\mathbf{\Phi}}_P = \tilde{\mathbf{\Phi}}_P^\top \mathbf{D}_2 \tilde{\mathbf{\Psi}} \tilde{\mathbf{\Sigma}}^{-1} \;.\]</div>
+<p>The eigenvalue decomposition of this propagator governs the evolution of the reduced system, and the eigenvalues dictate the stability of each mode:
+<span class="math notranslate nohighlight">\(\|\lambda_r\|&lt;1\)</span> implies vanishing modes, <span class="math notranslate nohighlight">\(\|\lambda_r\|&gt;1\)</span> exploding ones and <span class="math notranslate nohighlight">\(\|\lambda_r\|=1\)</span> are purely harmonic (like DFT). Note that,
+in this latter case, the frequency is not constrained to be a multiple of the fundamental tone <span class="math notranslate nohighlight">\(f_0 = 1/T = 1/n_t \Delta t\)</span>.</p>
+<p>At last, the complex spatial structures of the DMD can be computed by mapping to the original space using the POD basis:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{\Phi}_D = \tilde{\Phi}_P \mathbf{Q}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{Q}\)</span> are the eigenvectors of the propagator <span class="math notranslate nohighlight">\(\tilde{\mathbf{S}}\)</span>.</p>
+<span class="target" id="id4"></span></section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025 von Karman Institute.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

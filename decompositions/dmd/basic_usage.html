@@ -1,0 +1,149 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Example in MODULO &mdash; MODULO 2.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+      <script src="../../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../intro.html">
+            
+              <img src="../../_static/modulo_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data pre-processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../importing_data.html">Importing data and D matrix preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../weights_inner.html">Weighted inner product for non-cartesian meshes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data-Driven Modal Decompositions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dft/index.html">Discrete Fourier Transform (DFT)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pod/index.html">Proper Orthogonal Decomposition (POD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Dynamic Mode Decomposition (DMD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpod/index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kpod/index.html">Kernel Proper Orthogonal Decomposition (KPOD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spod/index.html">Spectral Proper Orthogonal Decomposition (SPOD)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/readdata.html">Read Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/dft.html">DFT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/pod.html">POD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/mpod.html">mPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/dmd.html">DMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/spod.html">SPOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/kpod.html">kPOD</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contributing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/get_code.html">Base contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/testing.html">Development and Testing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../change_log.html">Versions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/refs.html">Useful References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/ack.html">Ackowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../intro.html">MODULO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../intro.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Example in MODULO</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/decompositions/dmd/basic_usage.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="example-in-modulo">
+<h1>Example in MODULO<a class="headerlink" href="#example-in-modulo" title="Link to this heading">¶</a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Initialize MODULO object</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">ModuloVKI</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">D</span><span class="p">))</span>
+<span class="c1"># Compute the POD using PIP&#39;s method</span>
+<span class="n">Phi_D</span><span class="p">,</span> <span class="n">Lambda</span><span class="p">,</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">a0s</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">DMD</span><span class="p">(</span><span class="n">save_dmd</span><span class="p">,</span> <span class="n">F_S</span><span class="o">=</span><span class="n">F_S</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">DMD</span></code> module returns the spatial structures <span class="math notranslate nohighlight">\(\mathbf{\Phi}_D\)</span>, the complex
+eigenvalues <span class="math notranslate nohighlight">\(\lambda_r\)</span> of the reduced-order propagator <span class="math notranslate nohighlight">\(\tilde{\mathbf{S}}\)</span>,
+the frequency associated with each DMD mode, and their amplitudes <span class="math notranslate nohighlight">\(\mathbf{a}_0\)</span>.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025 von Karman Institute.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
