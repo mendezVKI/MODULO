@@ -1,6 +1,11 @@
 Versions
 ================================
 
+2.1.5
+------
+1. Fixed issue with SPOD-S in Memory Saving mode (`Issue 37 <https://github.com/mendezVKI/MODULO/issues/37>`_)
+2. Indexing refactor for S-POD rescaling in Memory Saving mode
+
 2.1.4
 ------
 1. Introduced additional inputs consistency check when using `MEMORY SAVING`. If this option is set to True, MODULO verifies that `D=None`, and requires data partitions to be already computed. We provide a routine to carry out this step (see Tutorial 4), but other routines can be used as long inputs are consistent.
