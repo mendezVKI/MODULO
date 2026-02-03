@@ -28,7 +28,8 @@ While the discontinued MATLAB version of MODULO (ninni2020modulo) is accessible 
 it is no longer maintained. The latest decomposition techniques are exclusively available in the current Python version.
 
 As a part of the MODULO project, we provide a series of lectures on data-driven modal decomposition, and its applications.
-These are available at the `MODULO YouTube channel <https://www.youtube.com/@modulompod5682>`_.
+These are available at the `MODULO YouTube channel <https://www.youtube.com/@modulompod5682>`_. 
+The extended documentation can be found at: `MODULO ReadTheDocs <https://lorenzoschena.github.io/MODULO/intro.html>`.
 
 .. contents:: Table of contents
 
