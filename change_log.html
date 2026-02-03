@@ -78,9 +78,10 @@
 <p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Versions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">2.1.4</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">2.1.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">2.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">2.1.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">2.1.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">2.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">2.0.7</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#modulo-2-0">MODULO &lt; 2.0</a></li>
 </ul>
 </li>
@@ -118,13 +119,20 @@
   <section id="versions">
 <h1>Versions<a class="headerlink" href="#versions" title="Link to this heading">¶</a></h1>
 <section id="id1">
-<h2>2.1.4<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<h2>2.1.5<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Fixed issue with SPOD-S in Memory Saving mode (<a class="reference external" href="https://github.com/mendezVKI/MODULO/issues/37">Issue 37</a>)</p></li>
+<li><p>Indexing refactor for S-POD rescaling in Memory Saving mode</p></li>
+</ol>
+</section>
+<section id="id2">
+<h2>2.1.4<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Introduced additional inputs consistency check when using <cite>MEMORY SAVING</cite>. If this option is set to True, MODULO verifies that <cite>D=None</cite>, and requires data partitions to be already computed. We provide a routine to carry out this step (see Tutorial 4), but other routines can be used as long inputs are consistent.</p></li>
 </ol>
 </section>
-<section id="id2">
-<h2>2.1.0<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<section id="id3">
+<h2>2.1.0<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>mPOD bug fix: the previous version of mPOD was skipping the last scale of the frequency splitting vector. Fixed in this version.</p></li>
 <li><p>SPOD parallelisation: CSD - SPOD can now be parallelized, leveraging <cite>joblib</cite>. The user needs just to pass the argument <cite>n_processes</cite> for the computation to be
@@ -135,8 +143,8 @@ split between different workers.</p></li>
 <li><p>Extended documentation: the documentation has been significantly enriched, now including theoretical foundations for all the supported modal decomposition techniques.</p></li>
 </ol>
 </section>
-<section id="id3">
-<h2>2.0.7<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<section id="id4">
+<h2>2.0.7<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
 <p>Major updates:</p>
 <p>1. Faster EIG/SVD algorithms, using powerful randomized svd solvers from scikit_learn (see <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html">TruncatedSVD</a>
 and
