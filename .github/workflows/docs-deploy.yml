@@ -2,7 +2,7 @@ name: Deploy Docs to GitHub Pages
 
 on:
   push:
-    branches: [dev] # Or master, or your default branch
+    branches: [master, dev] # Or master, or your default branch
 
 jobs:
   build-and-deploy:
