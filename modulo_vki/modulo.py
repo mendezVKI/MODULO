@@ -437,7 +437,8 @@ class ModuloVKI:
         return Phi_M, Psi_M, Sigma_M
 
 
-    def fastmPOD(self, F_V, fs, Keep = None, winType = "hann", taper = None, mode = "fullK", GThresh = -1, ncpus = os.cpu_count(), oversampling = 10, n_iter = -1, useFortran = False):
+    def fastmPOD(self, F_V, fs, Keep = None, winType = "hann", taper = None, mode = "fullK", GThresh = -1, ncpus = os.cpu_count(), 
+                 oversampling = 10, n_iter = -1, useFortran = False):
 
         """
         Fast spectral variant of Multi-Scale Proper Orthogonal Decomposition (mPOD) of a signal.
@@ -652,7 +653,8 @@ class ModuloVKI:
                     print(" -> Computing K_Fsc on the fly")
                     # Assemble K_Fsc in place
                     if useFortran:
-                        import modulo_vki.fortran.symMatmulRoutines as sm  # Import Fortran routines for per-band assembly of K_Fsc.
+                        from modulo_vki.fortran import load_sym_matmul
+                        sm = load_sym_matmul()
                         if f[k,0] == 0:
                             K_Fsc = sm.sym_routines.compute_persym_aha_dc(np.asfortranarray(D_hat[:,indices].copy()), D_hat.shape[0], N)
                         elif f[k,1] == fs/2 and Nt%2 == 0:
@@ -1080,49 +1082,66 @@ class ModuloVKI:
                 alpha=1e-6,
                 metric='rbf',
                 K_out=False, SAVE_KPOD=False):
-        """
-        Perform kernel PCA (kPOD) for snapshot data as in VKI Machine Learning for Fluid Dynamics course.
+        r"""
+        Perform kernel PCA (kPOD) for snapshot data, following the VKI Machine Learning for Fluid Dynamics course.
 
         Parameters
         ----------
         M_DIST : array-like of shape (2,), optional
-                Indices of two snapshots used to estimate the minimal kernel value.
-                These should be the most “distant” snapshots in your dataset. Default is [1, 10].
+            Indices of two snapshots used to estimate the minimal kernel value.
+            These should correspond to the most distant snapshots in the dataset.
+            Default is [1, 10].
+
         k_m : float, optional
-                Minimum value for the kernelized correlation. Default is 0.1.
+            Minimum value for the kernelized correlation. Default is 0.1.
+
         cent : bool, optional
-                If True, center the kernel matrix before decomposition. Default is True.
+            If True, center the kernel matrix before decomposition.
+            Default is True.
+
         n_Modes : int, optional
-                Number of principal modes to compute. Default is 10.
+            Number of principal modes to compute. Default is 10.
+
         alpha : float, optional
-                Regularization parameter for the modified kernel matrix \(K_{\zeta}\). Default is 1e-6.
+            Regularization parameter for the modified kernel matrix \(K_{\zeta}\).
+            Default is 1e-6.
+
         metric : str, optional
-                Kernel function identifier (passed to `sklearn.metrics.pairwise.pairwise_kernels`).
-                Only 'rbf' has been tested; other metrics may require different parameters. Default is 'rbf'.
+            Kernel function identifier passed to
+            `sklearn.metrics.pairwise.pairwise_kernels`.
+            Only 'rbf' has been tested; other metrics may require additional
+            parameters. Default is 'rbf'.
+
         K_out : bool, optional
-                If True, also return the full kernel matrix \(K\). Default is False.
+            If True, also return the full kernel matrix \(K\).
+            Default is False.
+
         SAVE_KPOD : bool, optional
-                If True, save the computed kPOD results to disk. Default is False.
+            If True, save the computed kPOD results to disk.
+            Default is False.
 
         Returns
         -------
         Psi_xi : ndarray of shape (n_samples, n_Modes)
-                The kPOD principal component time coefficients.
+            The kPOD principal component coefficients.
+
         Sigma_xi : ndarray of shape (n_Modes,)
-                The kPOD singular values (eigenvalues of the centered kernel).
+            The kPOD singular values, obtained from the eigendecomposition of the
+            centered kernel matrix.
+
         Phi_xi : ndarray of shape (n_samples, n_Modes)
-                The mapped eigenvectors (principal modes) in feature space.
+            The mapped eigenvectors, that is, the principal modes in feature space.
+
         K_zeta : ndarray of shape (n_samples, n_samples)
-                The (regularized and centered) kernel matrix used for decomposition.
-                Only returned if `K_out` is True.
+            The regularized and centered kernel matrix used for the decomposition.
+            Returned only if `K_out` is True.
 
         Notes
         -----
-        - Follows the hands-on ML for Fluid Dynamics tutorial by VKI
-        (https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552).
-        - Kernel computed as described in
-        Horenko et al., *Machine learning for dynamics and model reduction*, arXiv:2208.07746.
-
+        - This implementation follows the hands-on tutorial from the VKI Machine
+        Learning for Fluid Dynamics course.
+        - The kernel is computed as described in Horenko et al.,
+        *Machine learning for dynamics and model reduction*, arXiv:2208.07746.
         """
 
         if self.D is None:

@@ -1,6 +1,15 @@
 Versions
 ================================
 
+3.0.0
+------
+Version `3.0` of MODULO includes the following updates:
+
+1. **fast mPOD formulation** for large datasets is now available. This formulation does all processing efficiently in the frequency domain, reducing computational time by orders of magnitude (Belda et al. 2026). For very large datasets it includes Fortran support for correlation matrix assembly. See `Tutorial_6.ipynb` for an example.
+ 
+2. **vtk support** for both uniform and nonuniform grids. MODULO now supports reading and writing of vtk and vtu files. A utility to get cell volumes is also included.
+
+
 2.1.4
 ------
 1. Introduced additional inputs consistency check when using `MEMORY SAVING`. If this option is set to True, MODULO verifies that `D=None`, and requires data partitions to be already computed. We provide a routine to carry out this step (see Tutorial 4), but other routines can be used as long inputs are consistent.

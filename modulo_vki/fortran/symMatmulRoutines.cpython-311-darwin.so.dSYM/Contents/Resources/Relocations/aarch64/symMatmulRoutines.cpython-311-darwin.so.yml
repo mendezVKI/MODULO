@@ -1,0 +1,21 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     './symMatmulRoutines.cpython-311-darwin.so'
+relocations:
+  - { offset: 0x1A, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD___copy___iso_c_binding_C_ptr, symObjAddr: 0x0, symBinAddr: 0x4D20, symSize: 0xC }
+  - { offset: 0x3B, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD___copy___iso_c_binding_C_ptr, symObjAddr: 0x0, symBinAddr: 0x4D20, symSize: 0xC }
+  - { offset: 0x7E, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD___copy___iso_c_binding_C_funptr, symObjAddr: 0xC, symBinAddr: 0x4D2C, symSize: 0x14 }
+  - { offset: 0xC6, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD_hermitize_upper_to_lower, symObjAddr: 0x20, symBinAddr: 0x4D40, symSize: 0x1F0 }
+  - { offset: 0x15C, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD_symmetrize_upper_to_lower, symObjAddr: 0x210, symBinAddr: 0x4F30, symSize: 0x1D0 }
+  - { offset: 0x1E1, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD_compute_persym_aha_nyq, symObjAddr: 0x3E0, symBinAddr: 0x5100, symSize: 0x4A4 }
+  - { offset: 0x2FA, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD_compute_persym_aha_band, symObjAddr: 0x884, symBinAddr: 0x55A4, symSize: 0x484 }
+  - { offset: 0x40C, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD_compute_persym_aha_dc, symObjAddr: 0xD08, symBinAddr: 0x5A28, symSize: 0x4A0 }
+  - { offset: 0x51D, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD_compute_persym_aha_fullmat, symObjAddr: 0x11A8, symBinAddr: 0x5EC8, symSize: 0x720 }
+  - { offset: 0x62E, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD_compute_aha, symObjAddr: 0x18C8, symBinAddr: 0x65E8, symSize: 0x23C }
+  - { offset: 0x710, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD_compute_ata, symObjAddr: 0x1B04, symBinAddr: 0x6824, symSize: 0x208 }
+  - { offset: 0x7F2, size: 0x8, addend: 0x0, symName: _f2pyinitsym_routines_, symObjAddr: 0x1D0C, symBinAddr: 0x6A2C, symSize: 0x68 }
+  - { offset: 0x832, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD___def_init___iso_c_binding_C_funptr, symObjAddr: 0x4FB8, symBinAddr: 0x11EE0, symSize: 0x0 }
+  - { offset: 0x849, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD___vtab___iso_c_binding_C_funptr, symObjAddr: 0x1DC8, symBinAddr: 0x11CC0, symSize: 0x0 }
+  - { offset: 0x95A, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD___def_init___iso_c_binding_C_ptr, symObjAddr: 0x4FC0, symBinAddr: 0x11EE8, symSize: 0x0 }
+  - { offset: 0x971, size: 0x8, addend: 0x0, symName: ___sym_routines_MOD___vtab___iso_c_binding_C_ptr, symObjAddr: 0x1E00, symBinAddr: 0x11CF8, symSize: 0x0 }
+...

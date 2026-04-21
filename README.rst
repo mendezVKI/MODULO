@@ -25,10 +25,9 @@ MODULO: a python toolbox for data-driven modal decomposition
 **MODULO** is a modal decomposition package developed at the von Karman Institute for Fluid Dynamics (VKI). It offers a wide range of decomposition techniques, allowing users to choose the most appropriate method for their specific problem. MODULO can efficiently handle large datasets natively, thanks to a memory-saving feature that partitions the data and processes the decomposition in chunks (ninni2020modulo). Moreover, it supports non-uniform meshes through a weighted inner product formulation. Currently, MODULO heavily relies on NumPy routines and does not offer additional parallel computing capabilities beyond those naturally provided by NumPy.
 
 While the discontinued MATLAB version of MODULO (ninni2020modulo) is accessible in the “Old_Matlab_Implementation” branch, 
-it is no longer maintained. The latest decomposition techniques are exclusively available in the current Python version.
+it is no longer maintained. The latest updates are exclusively available in the current Python version.
 
-As a part of the MODULO project, we provide a series of lectures on data-driven modal decomposition, and its applications.
-These are available at the `MODULO YouTube channel <https://www.youtube.com/@modulompod5682>`_.
+As part of the MODULO project, we provide a tutorial on data-driven modal decomposition and its applications, structured as a combination of video lectures and a basic theoretical guide. The video lectures are available on the `MODULO YouTube channel <https://www.youtube.com/@modulompod5682>`_, and the accompanying introductory theory is presented in the `MODULO documentation <https://mendezvki.github.io/MODULO/intro.html>`_.
 
 .. contents:: Table of contents
 
@@ -63,13 +62,11 @@ documentation for a practical guide on how to use them in MODULO.
 
 Release Notes
 -------------
-Version 3.0 of MODULO includes the following updates:
+Version `3.0` of MODULO includes the following updates:
 
-1. **fast mPOD formulation** for large datasets is now available. This formulation does all processing efficiently in the frequency domain, reducing computational time by orders of magnitude. For very large datasets it includes Fortran support for correlation matrix assembly. 
+1. **fast mPOD formulation** for large datasets is now available. This formulation does all processing efficiently in the frequency domain, reducing computational time by orders of magnitude. For very large datasets it includes Fortran support for correlation matrix assembly. See `Tutorial_6.ipynb` for an example.
 
-2. **vtk support** for both uniform and nonuniform grids. Modulo now supports reading and writing of vtk and vtu files. A utility to get cell volumes is also included.
-
-3. **new tutorial** for fast mPOD method illustrating the basic use of the method is included. 
+2. **vtk support** for both uniform and nonuniform grids. MODULO now supports reading and writing of vtk and vtu files. A utility to get cell volumes is also included.
 
 
 Installation
@@ -115,7 +112,7 @@ The fast mPOD implementation includes fortran support for the correlation matrix
 Documentation
 -------------
 
-The documentation of MODULO is available `here <https://lorenzoschena.github.io/MODULO/intro.html>`_. It 
+The documentation of MODULO is available `here <https://mendezvki.github.io/MODULO/intro.html>`_. It 
 contains a comprehensive guide on how to install and use the package, as well as a detailed description of the
 decompositions required inputs and outputs. A `list of YouTube videos <https://www.youtube.com/@modulompod5682>`_ 
 is also available to guide the introduce the user to modal decomposition and MODULO.
@@ -375,6 +372,7 @@ References
 - Sieber, Moritz, C. Oliver Paschereit, and Kilian Oberleithner. "Spectral proper orthogonal decomposition." Journal of Fluid Mechanics 792 (2016): 798-828.
 - Towne, Aaron, Oliver T. Schmidt, and Tim Colonius. "Spectral proper orthogonal decomposition and its relationship to dynamic mode decomposition and resolvent analysis." Journal of Fluid Mechanics 847 (2018): 821-867.
 - Mika, Sebastian, et al. "Kernel PCA and de-noising in feature spaces." Advances in neural information processing systems 11 (1998).
+- Belda, Marek, Lorenzo Schena, Romain Poletti, Martin Isoz, Tomáš Hyhlík, and Miguel A. Mendez. "A Fast Spectral Formulation of the Multiscale Proper Orthogonal Decomposition." arXiv preprint arXiv:2604.12077 (2026).
 
 Related projects
 ----------------
