@@ -250,7 +250,9 @@ def main():
     out_folder = versioned_output + '/T2'
     os.makedirs(out_folder, exist_ok=True)
      
-    FOLDER= args.dataset_dir + 'Tutorial_2_JET_PIV/Ex_4_TR_PIV_Jet'
+    FOLDER = os.path.join(
+        args.dataset_dir, 'Tutorial_2_JET_PIV', 'Ex_4_TR_PIV_Jet'
+    )
     n_t = 2000
     Fs = 2000
     dt = 1/Fs 
@@ -284,9 +286,9 @@ def main():
     
     m = ModuloVKI(data=D)
     
-    try: 
+    if hasattr(m, 'compute_DFT'):
         Sorted_Freqs, Phi_F, Sorted_Sigmas = m.compute_DFT(Fs)
-    except: 
+    else:
         Phi_F, Sorted_Freqs, Sorted_Sigmas = m.DFT(Fs) # change of order of outputs to align modules in MODULO
         
     np.savez(os.path.join(dft_folder, 'out.npz'), Phi=Phi_F, 
@@ -295,10 +297,13 @@ def main():
     # -------- POD (SVD) ------- #
     pod_folder = os.path.join(out_folder, 'pod')
     os.makedirs(pod_folder, exist_ok=True) 
-    
-    try:
+
+    # The default truncated-SVD backend is randomized.  Seed it here so two
+    # isolated MODULO versions are compared on the same numerical draw.
+    np.random.seed(0)
+    if hasattr(m, 'compute_POD_svd'):
         Phi_P, Psi_P, Sigma_P = m.compute_POD_svd() # POD via svd
-    except:
+    else:
         Phi_P, Psi_P, Sigma_P = m.POD(mode='svd')
         
     np.savez(os.path.join(pod_folder, 'out.npz'), Phi=Phi_P,
@@ -309,13 +314,13 @@ def main():
     spod_folder = os.path.join(out_folder, 'spod_t')
     os.makedirs(spod_folder, exist_ok=True) 
     
-    try:
+    if hasattr(m, 'SPOD'):
         Phi_SP, Sigma_SP, Freqs_Pos = m.SPOD(mode='towne', 
                                             F_S=2000, # sampling frequency
                                             L_B=200, # Length of the chunks for time average
                                             O_B=150, # Overlap between chunks
                                             n_Modes=3, SAVE_SPOD=False) # number of modes PER FREQUENCY
-    except: 
+    else:
         Phi_SP, Sigma_SP, Freqs_Pos = m.compute_SPOD_t(F_S=2000, # sampling frequency
                                                     L_B=200, # Length of the chunks for time average
                                                     O_B=150, # Overlap between chunks
@@ -344,14 +349,14 @@ def main():
     spod_folder = os.path.join(out_folder, 'spod_s')
     os.makedirs(spod_folder, exist_ok=True) 
      
-    try:
+    if hasattr(m, 'SPOD'):
         Phi_S, Psi_S, Sigma_S = m.SPOD(mode='sieber', 
                                        F_S=Fs, 
                                        n_Modes=25,
                                        SAVE_SPOD=False,
                                        N_O=100, 
                                        f_c=0.01,)
-    except:
+    else:
         Phi_S, Psi_S, Sigma_S = m.compute_SPOD_s(Fs,N_O=100,
                                                f_c=0.01,
                                                n_Modes=25,
@@ -381,12 +386,31 @@ def main():
     mpod_folder = os.path.join(out_folder, 'mpod')
     os.makedirs(mpod_folder, exist_ok=True) 
       
-    try: 
+    if hasattr(m, 'compute_mPOD'):
         Phi_M, Psi_M, Sigmas_M = m.compute_mPOD(Nf, Ex, F_V, Keep, 20 ,boundaries, MODE, dt, False)
-    except: 
+    else:
         Phi_M, Psi_M, Sigmas_M = m.mPOD(Nf, Ex, F_V, Keep, 20 , boundaries, MODE, dt, False) 
 
     np.savez(os.path.join(mpod_folder, 'out.npz'), Phi=Phi_M, Psi=Psi_M, Sigmas=Sigmas_M)
+
+    # ----- fast mPOD (MODULO >= 3.0) ----- #
+    if hasattr(m, 'fastmPOD'):
+        fast_mpod_folder = os.path.join(out_folder, 'fast_mpod')
+        os.makedirs(fast_mpod_folder, exist_ok=True)
+        Phi_FM, Psi_FM, Sigmas_FM = m.fastmPOD(
+            F_V.tolist(),
+            Fs,
+            Keep=Keep.tolist(),
+            mode='fullK',
+            ncpus=1,
+            useFortran=False,
+        )
+        np.savez(
+            os.path.join(fast_mpod_folder, 'out.npz'),
+            Phi=Phi_FM,
+            Psi=Psi_FM,
+            Sigmas=Sigmas_FM,
+        )
     
     # ------------------ #
     print('--- \t Second round of tests completed. --- \t')

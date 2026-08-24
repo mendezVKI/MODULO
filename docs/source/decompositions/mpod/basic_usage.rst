@@ -47,6 +47,11 @@ while `Nf` is a vector of size `len(F_V) + 1` is the number of points in the fre
 Fast mPOD
 ^^^^^^^^^
 
+Fast mPOD is fully functional without Fortran. The default
+``useFortran=False`` path is portable and is the supported configuration on
+Windows. See :doc:`../../installation` before opting into the Linux/macOS
+Fortran accelerator.
+
 An example of the usage of the fast mPOD routine, extracted from the `examples` folder is reported below.
 
 .. code-block:: python

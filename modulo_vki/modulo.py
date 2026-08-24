@@ -437,7 +437,7 @@ class ModuloVKI:
         return Phi_M, Psi_M, Sigma_M
 
 
-    def fastmPOD(self, F_V, fs, Keep = None, winType = "hann", taper = None, mode = "fullK", GThresh = -1, ncpus = os.cpu_count(), 
+    def fastmPOD(self, F_V, fs, Keep = None, winType = "hann", taper = None, mode = "fullK", GThresh = -1, ncpus = os.cpu_count(),
                  oversampling = 10, n_iter = -1, useFortran = False):
 
         """
@@ -464,32 +464,14 @@ class ModuloVKI:
             Default = None (no taper).
 
         mode : str, optional
-            Computation mode. Has 4 options: "fullK", "bandK", "fullSVD", "randSVD".
-                "fullK" = compute full K = D.T @ D, transform it to frequency domain as K_F and do all computations
-                        based on K_F. Good when Ns >> Nt and kept bands are reasonably broad.
-                "bandK" = compute D_hat as FFT of D and from D_hat compute K_Fsc on-the-fly for each scale, without computing
-                        global K_F. This is usually a good pick when Ns ~ Nt and only a few narrow bands are kept.
-                "fullSVD" = compute exact SVD of the part of D_hat belonging to current scale and select appropriate amount of modes.
-                            This option skips building K of any sort. Usage similar to "bandK", should be a bit less memory-hungry.
-                            BandK is however still the prefered option for those cases.
-                "randSVD" = compute randomized SVD (truncated to nModes) of the part of D_hat belonging to current scale. This is
-                            by far the fastest option when Ns < Nt, but it is approximate and can do badly in cases when lower
-                            importance modes should be captured. Should not be used when band matrices are ill-suited for randomized SVD,
-                            e.g., when the singular values of the band matrices do not decay fast enough or when the singular values
-                            are not well separated. Gives the worst performance of all methods for Ns >> Nt.
-            Default = "fullK".
+            Computation backend: fullK, bandK, fullSVD, or randSVD. The K-based
+            modes use correlation matrices; the SVD-based modes operate on the
+            spectral data matrix. Default is fullK.
 
         GThresh : float >= 0, optional
-            When to start applying Gershgorin circle theorem to estimate number of signifficant modes in the scale.
-            Only for K-based approaches. Gershgorin estimation is applied, when total energy of the scale in question is
-            less than or equal to GThresh*lamMin where lamMin is the smallest signifficant eigenvalue at a time.
-            For good performance must be set to "reasonable" value.
-            Too low value: Increased computing cost due to computation of scales that can be safely skipped
-                        or due to computing more eigenvalues than needed in the scale.
-            Too high value: increased cost due to computing Gershgorin at scales that can not benefit from it.
-            Special value: -1 = set to default value.
-            Set to <1 to disable.
-            Default -1 (set to nModes/2 on initialization).
+            Energy ratio at which the K-based backends start using Gershgorin
+            bounds to estimate the number of significant modes. Values below
+            one disable the estimate. The special value -1 selects n_Modes/2.
 
         ncpus : int >0, optional
             Number of CPUs available for FFT parallelization. Set to number of physical cores /
@@ -529,32 +511,59 @@ class ModuloVKI:
 
         Raises
         ------
-        AssertionError
-            When incorrect entries are provided.
+        TypeError
+            When an input has an invalid type.
 
         ValueError
-            When invalid computation mode or invalid n_iter value is provided.
+            When an input value or computation mode is invalid.
 
-        See documentation of the called functions to see which errors you may get from them.
-
-        See numpy and scipy documentation of the functions used in the code to see,
-        which other error messages you may get.
+        NotImplementedError
+            When memory saving or weighted inner products are requested.
         """
 
         print("Computing mPOD using fast mPOD algorithm ...")
 
         nModes = self.n_Modes
 
-        # Input type checks
-        assert isinstance(F_V,list), "F_V must be a list. Got %s of type %s."%(F_V, type(F_V))
-        assert fs > 0, "Invalid sampling frequency, must be a positive number. Got %s."%fs
-        assert (isinstance(nModes,int) and nModes > 0 and nModes < np.min([self.D.shape[0],self.D.shape[1]])), "Invalid number of modes specified. Parameter 'nModes' must be of type 'int' and 0 < nModes < min(rows,cols) of D"
-        assert isinstance(Keep,list) or Keep is None, "Keep variable must be a list"
-        assert isinstance(winType,str), "winType variable must be a string"
-        assert isinstance(taper,list) or taper is None, "taper variable must be a list"
-        assert mode in ["fullK", "bandK", "fullSVD", "randSVD"], "Illegal computation mode. See the documentation for supported entries. Recieved %s"%mode
-        assert oversampling >= 0 and isinstance(oversampling,int), "Invalid oversampling parameter for randomized SVD. Must be int >= 0."
-        assert n_iter >= -1 and isinstance(n_iter,int), "Invalid n_iter for randomized SVD. Must be int >= 0 for manual setting or -1 for auto-setting."
+        # Input checks use explicit exceptions so they remain active under
+        # ``python -O`` and provide useful errors to library callers.
+        if self.D is None:
+            raise NotImplementedError(
+                "fastmPOD currently requires the snapshot matrix in memory."
+            )
+        if self.weights.size:
+            raise NotImplementedError(
+                "Weighted inner products are not yet implemented for fastmPOD."
+            )
+        if not isinstance(F_V, list):
+            raise TypeError("F_V must be a list. Got %s." % type(F_V).__name__)
+        if not np.isscalar(fs) or fs <= 0:
+            raise ValueError("fs must be a positive number. Got %s." % fs)
+        if not isinstance(nModes, int) or not 0 < nModes < min(self.D.shape):
+            raise ValueError(
+                "n_Modes must be an int satisfying 0 < n_Modes < min(D.shape)."
+            )
+        if Keep is not None and not isinstance(Keep, list):
+            raise TypeError("Keep must be a list or None.")
+        if not isinstance(winType, str):
+            raise TypeError("winType must be a string.")
+        if taper is not None and not isinstance(taper, list):
+            raise TypeError("taper must be a list or None.")
+        if mode not in ["fullK", "bandK", "fullSVD", "randSVD"]:
+            raise ValueError("Unsupported fastmPOD mode: %s" % mode)
+        if not isinstance(ncpus, int) or ncpus < 1:
+            raise ValueError("ncpus must be a positive integer.")
+        if not isinstance(oversampling, int) or oversampling < 0:
+            raise ValueError("oversampling must be an integer >= 0.")
+        if not isinstance(n_iter, int) or n_iter < -1:
+            raise ValueError("n_iter must be >= 0, or -1 for automatic selection.")
+        if useFortran and mode not in ["fullK", "bandK"]:
+            raise ValueError("useFortran=True is supported only in fullK and bandK modes.")
+        if useFortran and self.D.dtype != np.float64:
+            raise ValueError(
+                "The optional Fortran extension requires float64 input. "
+                "Initialize ModuloVKI with dtype='float64'."
+            )
 
         # Prepare F_V, Keep, Nf, GThresh
         F_V = [0] + F_V + [fs/2]
@@ -572,10 +581,16 @@ class ModuloVKI:
         taper = np.array(taper)
 
         # Check input validity
-        assert (np.diff(F_V) > 0).all(), "Entries of F_V outside allowed range or in incorrect order."
-        assert Keep.size == F_V.size-1, "Length of 'Keep' variable must be len(F_V)+1."
-        assert taper.size == F_V.size-1, "Length of 'taper' variable must be len(F_V)+1."
-        assert GThresh >= 0, "Invalid 'GThresh' value, must be >=0"
+        if not (np.diff(F_V) > 0).all():
+            raise ValueError("F_V entries must be strictly increasing and lie in (0, fs/2).")
+        if Keep.size != F_V.size - 1:
+            raise ValueError("Keep must contain len(F_V)+1 entries.")
+        if not np.any(Keep):
+            raise ValueError("Keep must select at least one frequency band.")
+        if taper.size != F_V.size - 1:
+            raise ValueError("taper must contain len(F_V)+1 entries.")
+        if GThresh < 0:
+            raise ValueError("GThresh must be >= 0.")
 
 
         # Precompute K_F if mode = "fullK", otherwise compute D_hat
@@ -607,7 +622,7 @@ class ModuloVKI:
         lamMin = 0
         for k in scaleOrder:
 
-            print("Processing band %d/%d (%.1f Hz - %.1f Hz), %.1f %% of resolved energy in %d bins ..."%(scalesToKeep[k]+1,noOfScales,f[k,0],f[k,1],E[k]/Etot,indTot[k].size))
+            print("Processing band %d/%d (%.4g Hz - %.4g Hz), %.1f %% of resolved energy in %d bins ..."%(scalesToKeep[k]+1,noOfScales,f[k,0],f[k,1],E[k]/Etot,indTot[k].size))
 
             """
             NOTE:
@@ -821,7 +836,7 @@ class ModuloVKI:
         #print("Done in %.3f s"%(time()-startSpat))
 
         return phi, psi, sigTot
-    
+
 
     def DMD(self, SAVE_T_DMD: bool = True, F_S: float = 1.0, verbose:  bool = True):
         """
@@ -1122,6 +1137,9 @@ class ModuloVKI:
 
         Returns
         -------
+        Phi_xi : ndarray of shape (n_samples, n_Modes)
+            The mapped eigenvectors, that is, the principal modes in feature space.
+
         Psi_xi : ndarray of shape (n_samples, n_Modes)
             The kPOD principal component coefficients.
 
@@ -1129,19 +1147,16 @@ class ModuloVKI:
             The kPOD singular values, obtained from the eigendecomposition of the
             centered kernel matrix.
 
-        Phi_xi : ndarray of shape (n_samples, n_Modes)
-            The mapped eigenvectors, that is, the principal modes in feature space.
-
         K_zeta : ndarray of shape (n_samples, n_samples)
             The regularized and centered kernel matrix used for the decomposition.
             Returned only if `K_out` is True.
 
         Notes
         -----
-        - This implementation follows the hands-on tutorial from the VKI Machine
-        Learning for Fluid Dynamics course.
-        - The kernel is computed as described in Horenko et al.,
-        *Machine learning for dynamics and model reduction*, arXiv:2208.07746.
+        This implementation follows the hands-on tutorial from the VKI Machine
+        Learning for Fluid Dynamics course. The kernel is computed as described
+        in Horenko et al., *Machine learning for dynamics and model reduction*,
+        arXiv:2208.07746.
         """
 
         if self.D is None:
@@ -1171,8 +1186,7 @@ class ModuloVKI:
 
         if K_out:
             return Phi_xi, Psi_xi, Sigma_xi, K_r
-        else:
-            return Phi_xi, Psi_xi, Sigma_xi, None
+        return Phi_xi, Psi_xi, Sigma_xi
 
 
 #     def kDMD(self,

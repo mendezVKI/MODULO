@@ -1,0 +1,77 @@
+name: Tests
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Python ${{ matrix.python }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - name: Install the pure-Python package and test runner
+        run: python -m pip install --upgrade pip pytest .
+      - name: Verify the base install has no compiled Fortran extension
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import modulo_vki
+
+          package = Path(modulo_vki.__file__).resolve().parent
+          compiled = [
+              path for path in package.rglob("*")
+              if path.suffix.lower() in {".so", ".pyd", ".dylib"}
+          ]
+          if compiled:
+              raise SystemExit(f"Unexpected compiled extensions: {compiled}")
+          print(f"Verified pure-Python MODULO {modulo_vki.__version__}")
+          PY
+      - name: Run tests
+        run: python -m pytest -q
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Build wheel and source distribution
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build
+      - name: Check distribution metadata and contents
+        run: |
+          python -m pip install twine
+          python -m twine check dist/*
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          wheel = next(Path("dist").glob("modulo_vki-3.0.0-*.whl"))
+          with ZipFile(wheel) as archive:
+              names = archive.namelist()
+          compiled = [
+              name for name in names
+              if Path(name).suffix.lower() in {".so", ".pyd", ".dylib"}
+          ]
+          if compiled:
+              raise SystemExit(f"Wheel is not platform-neutral: {compiled}")
+          if "modulo_vki/fortran/symMatmulRoutines.f90" not in names:
+              raise SystemExit("Fortran source missing from wheel")
+          print(f"Verified pure-Python wheel: {wheel}")
+          PY

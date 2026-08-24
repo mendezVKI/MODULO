@@ -4,6 +4,7 @@ import sys
 import argparse
 import platform
 import shlex
+import shutil
 import subprocess
 
 def _openblas_flags():
@@ -12,14 +13,16 @@ def _openblas_flags():
     prefix_lib = pathlib.Path(sys.prefix) / "lib"
     candidates.append(prefix_lib)
 
-    brew = subprocess.run(
-        ["brew", "--prefix", "openblas"],
-        capture_output=True,
-        check=False,
-        text=True,
-    )
-    if brew.returncode == 0:
-        candidates.append(pathlib.Path(brew.stdout.strip()) / "lib")
+    brew_bin = shutil.which("brew")
+    if brew_bin:
+        brew = subprocess.run(
+            [brew_bin, "--prefix", "openblas"],
+            capture_output=True,
+            check=False,
+            text=True,
+        )
+        if brew.returncode == 0:
+            candidates.append(pathlib.Path(brew.stdout.strip()) / "lib")
 
     for lib_dir in candidates:
         if any(lib_dir.glob("libopenblas*")):
@@ -57,6 +60,13 @@ def main(argv=None):
         help="Fortran optimization level. Default: safe",
     )
     args = parser.parse_args(argv)
+
+    if platform.system() == "Windows":
+        raise RuntimeError(
+            "The optional Fortran extension is not currently supported by the "
+            "MODULO build helper on Windows. Install MODULO normally and keep "
+            "useFortran=False (the default)."
+        )
 
     level = args.opt
 

@@ -37,7 +37,7 @@ the mPOD is equivalent to DFT.
 fast mPOD
 ^^^^^^^^^
 
-The fast mPOD follows the spectral formulation introduced in Belda *et al.* by replacing the classical FIR filter bank with compact spectral masks :math:`M_m` acting on strictly disjoint frequency supports. Starting from the spectral representation of the temporal correlation matrix,
+The fast mPOD follows the spectral formulation introduced by Belda *et al.* :cite:`belda2026fast` by replacing the classical FIR filter bank with compact spectral masks :math:`M_m` acting on strictly disjoint frequency supports. Starting from the spectral representation of the temporal correlation matrix,
 
 .. math::
    \mathbf{K}_F = \mathbf{\Psi}_F \mathbf{K} \mathbf{\Psi}_F,
@@ -59,4 +59,4 @@ and the temporal modes are finally recovered as
 .. math::
    \mathbf{\Psi}_m = \mathbf{\Psi}_F \widehat{\mathbf{\Psi}}_m.
 
-Compared with the classical mPOD, the essential difference is therefore that each scale is no longer treated through a full :math:`n_t \times n_t` eigenvalue problem, but through an independent reduced problem whose size is set only by the number of active frequencies in that band. This is the key idea behind the fast spectral formulation proposed in Belda *et al (2026)*.
+Compared with the classical mPOD, the essential difference is therefore that each scale is no longer treated through a full :math:`n_t \times n_t` eigenvalue problem, but through an independent reduced problem whose size is set only by the number of active frequencies in that band. This is the key idea behind the fast spectral formulation proposed by Belda *et al.* (2026).

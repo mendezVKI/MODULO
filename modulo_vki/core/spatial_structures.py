@@ -51,9 +51,11 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,
             if verbose:
                 print("Completing Spatial Structures Modes: \n")
 
-            for i in tqdm(range(0, R)):
-                # Normalize the columns of C to get spatial modes
-                Phi_P[:, i] = PHI_P_SIGMA_P[:, i] / Sigma_P[i]
+            # Filtered-covariance SPOD temporal eigenvalues do not generally
+            # equal the norms of D @ Psi.  Recompute the returned singular
+            # values before normalizing, as in MODULO 2.1.5.
+            Sigma_P[:] = np.linalg.norm(PHI_P_SIGMA_P, axis=0)
+            Phi_P = PHI_P_SIGMA_P / Sigma_P
 
         else:
             # We take only the first R modes.

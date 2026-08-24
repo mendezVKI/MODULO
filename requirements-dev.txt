@@ -1,18 +1,20 @@
-# These are required for developing the package (running the tests, building
-# the documentation) but not necessarily required for _using_ it.
-numpy
-pandas
-matplotlib
+# Test and documentation tooling
 pytest
 sphinx
-tqdm
+sphinx-rtd-theme
+sphinxcontrib-bibtex
+
+# Tutorial and development dependencies
+numpy
 scipy
 scikit-learn
+randomized-svd
+pandas
+matplotlib
+tqdm
 pyvista
-pytest
-##########
-sphinx
-sphinx_rtd_theme
 imageio
 
-
+# Release tooling
+build
+twine

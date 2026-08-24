@@ -1,108 +1,91 @@
+import tempfile
 import unittest
+
 import numpy as np
-import os, shutil
-import urllib.request
-from zipfile import ZipFile
 
 from modulo_vki.core._k_matrix import CorrelationMatrix
-from modulo_vki.core._pod_time import Temporal_basis_POD
+from modulo_vki.core.spatial_structures import Spatial_basis_POD
+from modulo_vki.core.temporal_structures import Temporal_basis_POD
+from modulo_vki.utils.read_db import ReadData
 
-from modulo_vki.core._pod_space import Spatial_basis_POD
-from modulo_vki.utils.read_db import ReadData # to read the data
 
 class TestPhi(unittest.TestCase):
-
     def setUp(self):
-        # %% Download the data
-        # --- same as for tutorial 1 ---
-        # Extract all the Zip Files
-        FOLDER = 'Tutorial_1_2D_Cylinder_CFD_POD_DMD'
-        print('Downloading Data...')
-        url = 'https://osf.io/emgv2/download'
-        urllib.request.urlretrieve(url, 'Ex_7_2D_CFD.zip')
-        print('Download Completed! I prepare data Folder')
-        # Unzip the file
-        String = 'Ex_7_2D_CFD.zip'
-        zf = ZipFile(String, 'r')
-        zf.extractall('./')
-        zf.close()
-        os.rename('Ex_7_2D_Cylinder_CFD', FOLDER)  # rename the data flolder to FOLDER
-        os.remove(String)  # Delete the zip file with the data
-        print('Data set unzipped and ready ! ')
-
-        # Read one snapshot and plot it
-        U = np.loadtxt(FOLDER + os.sep + 'U_Cyl.txt')  # U component
-        V = np.loadtxt(FOLDER + os.sep + 'V_Cyl.txt')  # V component
-        X = np.loadtxt(FOLDER + os.sep + 'X_Cyl.txt')  # X coordinates
-        Y = np.loadtxt(FOLDER + os.sep + 'Y_Cyl.txt')  # Y coordinates
-
-        # We rebuild the mesh
-        n_x = len(Y)
-        n_y = len(X)
-        nxny = n_x * n_y
-        n_s = 2 * nxny
-        n_t = np.shape(U)[1]
-
-        # Crete the snapshot Matrix:
-        D = np.zeros((n_s, n_t))
-
-        for k in range(0, n_t):
-            D[:int(n_s / 2), k] = U[:, k]
-            D[int(n_s / 2):, k] = V[:, k]
-
-        D = np.nan_to_num(D)
-        self.D = D
-        self.N_T = n_t
-
-        self.FOLDER_OUT = './MODULO_tmp'
-        self.N_PARTITIONS = 10
-        self.n_Modes = 5
-
-        print('Computing correlation matrix...')
-        K = CorrelationMatrix(self.N_T, D=D)
-        print(np.shape(K))
-        print("Computing Temporal Basis...")
-        self.Psi_P, self.Sigma_P = Temporal_basis_POD(K,n_Modes=self.n_Modes)
-
-        # Assert tolerance
-        self.rtol = 1e-4
-        self.atol = 1e-4
-
+        rng = np.random.default_rng(10)
+        self.data = rng.normal(size=(23, 30))
+        self.n_modes = 5
+        self.n_partitions = 4
+        self.tmp = tempfile.TemporaryDirectory()
+        correlation = CorrelationMatrix(self.data.shape[1], D=self.data, verbose=False)
+        self.psi, self.sigma = Temporal_basis_POD(
+            correlation, n_Modes=self.n_modes, verbose=False
+        )
 
     def tearDown(self):
-        if os.path.isdir("Tutorial_1_2D_Cylinder_CFD_POD_DMD"):
-            shutil.rmtree("Tutorial_1_2D_Cylinder_CFD_POD_DMD")
-        if os.path.isdir("MODULO_tmp"):
-            shutil.rmtree("MODULO_tmp")
+        self.tmp.cleanup()
 
+    def test_phi_pod_matches_partitioned_computation(self):
+        phi = Spatial_basis_POD(
+            self.data,
+            N_T=self.data.shape[1],
+            PSI_P=self.psi,
+            Sigma_P=self.sigma,
+            MEMORY_SAVING=False,
+            rescale=False,
+            verbose=False,
+        )
 
-    def test_phi_pod(self):
-        """ Test the computation of the spatial structures for POD"""
-        # Method 1
-        Phi_P_mat = Spatial_basis_POD(self.D, N_T=self.N_T, PSI_P=self.Psi_P, Sigma_P=self.Sigma_P,
-                                  MEMORY_SAVING=False,rescale=False)
-        # Method 2
-        Phi_P_norm = Spatial_basis_POD(self.D, N_T=self.N_T, PSI_P=self.Psi_P, Sigma_P=self.Sigma_P,
-                                  MEMORY_SAVING=False,rescale=True)
-        # Method 1 = Method2
-        np.testing.assert_allclose(Phi_P_mat,Phi_P_norm ,rtol=self.rtol, atol=self.atol)
+        ReadData._data_processing(
+            D=self.data,
+            N_PARTITIONS=self.n_partitions,
+            MR=False,
+            FOLDER_OUT=self.tmp.name,
+        )
+        CorrelationMatrix(
+            self.data.shape[1],
+            N_PARTITIONS=self.n_partitions,
+            MEMORY_SAVING=True,
+            FOLDER_OUT=self.tmp.name,
+            verbose=False,
+        )
+        correlation = np.load(
+            self.tmp.name + "/correlation_matrix/k_matrix.npz"
+        )["K"]
+        psi, sigma = Temporal_basis_POD(
+            correlation, n_Modes=self.n_modes, verbose=False
+        )
+        phi_partitioned = Spatial_basis_POD(
+            np.array([1]),
+            N_T=self.data.shape[1],
+            PSI_P=psi,
+            Sigma_P=sigma,
+            MEMORY_SAVING=True,
+            FOLDER_OUT=self.tmp.name,
+            N_PARTITIONS=self.n_partitions,
+            verbose=False,
+        )
 
-        # Check if w/ memory saving the same Phi are computed
-        print('Computing correlation matrix...')
-        _ = ReadData._data_processing(D=self.D,N_PARTITIONS=self.N_PARTITIONS, MR=False,
-                                      FOLDER_OUT=self.FOLDER_OUT)
-        _ = CorrelationMatrix(np.shape(self.D)[1], N_PARTITIONS=self.N_PARTITIONS,MEMORY_SAVING=True, FOLDER_OUT=self.FOLDER_OUT) #return None
-        K = np.load(self.FOLDER_OUT + '/correlation_matrix/k_matrix.npz')['K']
-        Psi_P, Sigma_P = Temporal_basis_POD(K,n_Modes=self.n_Modes)
+        np.testing.assert_allclose(
+            np.abs(phi), np.abs(phi_partitioned), rtol=1e-5, atol=1e-7
+        )
 
-        Phi_P_memorySaving  = Spatial_basis_POD(np.array([1]), N_T=self.N_T,
-                             PSI_P=Psi_P,
-                             Sigma_P=Sigma_P,
-                             MEMORY_SAVING=True,
-                             FOLDER_OUT=self.FOLDER_OUT,
-                             N_PARTITIONS=self.N_PARTITIONS)
+    def test_rescale_recomputes_sigma_and_normalizes_modes(self):
+        sigma = np.full(self.n_modes, np.nan)
+        phi = Spatial_basis_POD(
+            self.data,
+            N_T=self.data.shape[1],
+            PSI_P=self.psi,
+            Sigma_P=sigma,
+            MEMORY_SAVING=False,
+            rescale=True,
+            verbose=False,
+        )
 
-        np.testing.assert_allclose(Phi_P_mat,Phi_P_memorySaving ,rtol=self.rtol, atol=self.atol)
+        projected = self.data @ self.psi
+        np.testing.assert_allclose(sigma, np.linalg.norm(projected, axis=0))
+        np.testing.assert_allclose(np.linalg.norm(phi, axis=0), 1.0)
+        np.testing.assert_allclose(phi * sigma, projected)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

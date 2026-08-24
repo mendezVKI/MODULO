@@ -333,17 +333,9 @@ def segment_and_fft(D: np.ndarray,
     
     n_s, n_t = D.shape 
     
-    '''
-    For this SPOD, we assemble a tensor of overlapping chunks (similar to Welch method).
-    This tensor has size
-    
-    D_t \in \mathbb{R}^{n_s \times n_B \times n_P}
-    
-    where:
-        - n_s is space grid (unchanged)
-        - n_B defines the blocks length
-        - n_P defines the number of partitions (blocks)
-    '''
+    # For this SPOD, assemble a tensor of overlapping chunks, similarly to
+    # Welch's method. Its shape is (n_s, n_B, n_P), where n_s is the number of
+    # spatial points, n_B is the block length, and n_P is the number of blocks.
     ind = np.arange(n_t)
     indices = overlap(ind, len_chunk=L_B, len_sep=O_B)
     

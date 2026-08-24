@@ -5,9 +5,18 @@ Versions
 ------
 Version `3.0` of MODULO includes the following updates:
 
-1. **fast mPOD formulation** for large datasets is now available. This formulation does all processing efficiently in the frequency domain, reducing computational time by orders of magnitude (Belda et al. 2026). For very large datasets it includes Fortran support for correlation matrix assembly. See `Tutorial_6.ipynb` for an example.
+1. **fast mPOD formulation** for large datasets is now available. This formulation does all processing efficiently in the frequency domain, reducing computational time by orders of magnitude :cite:`belda2026fast`. For very large datasets it includes optional Fortran support for correlation matrix assembly. See ``examples/notebooks/Tutorial_06_fast_mPOD.ipynb`` for an example.
  
 2. **vtk support** for both uniform and nonuniform grids. MODULO now supports reading and writing of vtk and vtu files. A utility to get cell volumes is also included.
+
+3. **cross-platform installation** keeps the Fortran accelerator opt-in. The
+   default installation remains pure Python and is the supported path on
+   Windows.
+
+4. **minor fixes** include removal of invalid docstring escape sequences that
+   emitted ``SyntaxWarning`` messages on Python 3.12, corrected kPOD return
+   values, preservation of the normalized filtered-covariance SPOD outputs,
+   deterministic offline tests, and more robust tutorial setup.
 
 
 2.1.4

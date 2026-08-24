@@ -2,31 +2,35 @@ name: Deploy Docs to GitHub Pages
 
 on:
   push:
-    branches: [dev] # Or master, or your default branch
+    branches: [master, dev]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Add this to fetch all history for proper link resolution
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: 3.x
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt  # If you have a requirements file
-          pip install sphinx sphinx-rtd-theme sphinxcontrib.bibtex # Install the missing dependency
+          pip install -r requirements-dev.txt
+          pip install .
 
       - name: Build documentation
         run: |
-          make -C docs html # Assuming your Sphinx Makefile is in the docs/ directory
+          python -m sphinx -W --keep-going -b html docs/source docs/build/html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4

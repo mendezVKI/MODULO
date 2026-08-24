@@ -3,6 +3,12 @@ Multiscale Proper Orthogonal Decomposition (mPOD)
 
 This document offers a brief reference guide to the use of the Multiscale Proper Orthogonal Decomposition (mPOD).
 
+.. toctree::
+   :hidden:
+
+   theory
+   basic_usage
+
 .. .. toctree::
 ..    :caption: Multiscale POD User Guide
 ..    :maxdepth: 2
@@ -51,7 +57,7 @@ the mPOD is equivalent to DFT.
 fast mPOD
 ^^^^^^^^^
 
-The fast mPOD changes the workflow of classical mPOD by performing the analysis in frequency domain and replacing filters with compact-support masks. This allows to reduce the computational cost of the mPOD by orders of magnitude, while preserving the key properties of the decomposition. Since it uses spectral masks instead of filter bank, it sacrifices the advanced boundary treatment of the classical mPOD to gain the aforementioned computational benefits.
+The fast mPOD changes the workflow of classical mPOD by performing the analysis in frequency domain and replacing filters with compact-support masks :cite:`belda2026fast`. This allows to reduce the computational cost of the mPOD by orders of magnitude, while preserving the key properties of the decomposition. Since it uses spectral masks instead of filter bank, it sacrifices the advanced boundary treatment of the classical mPOD to gain the aforementioned computational benefits.
 
 Example in MODULO
 ------------------
@@ -96,6 +102,11 @@ while `Nf` is a vector of size `len(F_V) + 1` is the number of points in the fre
 
 Fast mPOD
 ^^^^^^^^^
+
+Fast mPOD is fully functional without Fortran. The default
+``useFortran=False`` path is portable and is the supported configuration on
+Windows. See :doc:`../../installation` before opting into the Linux/macOS
+Fortran accelerator.
 
 An example of the usage of the fast mPOD routine, extracted from the `examples` folder is reported below.
 
