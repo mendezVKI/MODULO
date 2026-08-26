@@ -6,13 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DMD &mdash; MODULO 2.1.0 documentation</title>
+  <title>DMD &mdash; MODULO 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
 
   
-      <script src="../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=acc74ff5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
@@ -85,7 +86,7 @@
 <p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/refs.html">Useful References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/ack.html">Ackowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/ack.html">Acknowledgements and Contributors</a></li>
 </ul>
 
         </div>
@@ -113,10 +114,10 @@
            <div itemprop="articleBody">
              
   <section id="dmd">
-<h1>DMD<a class="headerlink" href="#dmd" title="Link to this heading">¶</a></h1>
+<h1>DMD<a class="headerlink" href="#dmd" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="modulo_vki.modulo.ModuloVKI.DMD">
-<span class="sig-prename descclassname"><span class="pre">modulo_vki.modulo.ModuloVKI.</span></span><span class="sig-name descname"><span class="pre">DMD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_T_DMD</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo_vki.modulo.ModuloVKI.DMD" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">modulo_vki.modulo.ModuloVKI.</span></span><span class="sig-name descname"><span class="pre">DMD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_T_DMD</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo_vki.modulo.ModuloVKI.DMD" title="Link to this definition"></a></dt>
 <dd><p>Compute the Dynamic Mode Decomposition (DMD) of the dataset.</p>
 <p>This implementation follows the algorithm in Tu et al. (2014) <a class="footnote-reference brackets" href="#id4" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, which is
 essentially the same as Penland (1996) <a class="footnote-reference brackets" href="#id5" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.  For
@@ -124,8 +125,8 @@ additional low-level details see v1 of Mendez et al. (2020) <a class="footnote-r
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>SAVE_T_DMD</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, save time-dependent DMD results to disk. Default is True.</p></li>
-<li><p><strong>F_S</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling frequency in Hz. Default is 1.0.</p></li>
+<li><p><strong>SAVE_T_DMD</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, save time-dependent DMD results to disk. Default is True.</p></li>
+<li><p><strong>F_S</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling frequency in Hz. Default is 1.0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -168,7 +169,7 @@ additional low-level details see v1 of Mendez et al. (2020) <a class="footnote-r
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 von Karman Institute.</p>
+    <p>&#169; Copyright 2026 von Karman Institute.</p>
   </div>
 
    

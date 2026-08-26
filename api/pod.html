@@ -6,13 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>POD &mdash; MODULO 2.1.0 documentation</title>
+  <title>POD &mdash; MODULO 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
 
   
-      <script src="../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=acc74ff5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
@@ -85,7 +86,7 @@
 <p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/refs.html">Useful References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/ack.html">Ackowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/ack.html">Acknowledgements and Contributors</a></li>
 </ul>
 
         </div>
@@ -113,10 +114,10 @@
            <div itemprop="articleBody">
              
   <section id="pod">
-<h1>POD<a class="headerlink" href="#pod" title="Link to this heading">¶</a></h1>
+<h1>POD<a class="headerlink" href="#pod" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="modulo_vki.modulo.ModuloVKI.POD">
-<span class="sig-prename descclassname"><span class="pre">modulo_vki.modulo.ModuloVKI.</span></span><span class="sig-name descname"><span class="pre">POD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_T_POD</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'K'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo_vki.modulo.ModuloVKI.POD" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">modulo_vki.modulo.ModuloVKI.</span></span><span class="sig-name descname"><span class="pre">POD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_T_POD</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'K'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo_vki.modulo.ModuloVKI.POD" title="Link to this definition"></a></dt>
 <dd><p>Compute the Proper Orthogonal Decomposition (POD) of a dataset.</p>
 <p>The POD is computed using the snapshot approach, working on the
 temporal correlation matrix.  The eigenvalue solver for this
@@ -124,8 +125,8 @@ matrix is defined in the <cite>eig_solver</cite> attribute of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>SAVE_T_POD</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to save time-dependent POD data. Default is False.</p></li>
-<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – The mode of POD computation. Must be either ‘K’ or ‘svd’.
+<li><p><strong>SAVE_T_POD</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to save time-dependent POD data. Default is False.</p></li>
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – The mode of POD computation. Must be either ‘K’ or ‘svd’.
 ‘K’ (default) uses the snapshot method on the temporal
 correlation matrix.
 ‘svd’ uses the SVD decomposition (full dataset must fit in memory).</p></li>
@@ -140,7 +141,7 @@ correlation matrix.
 </p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <cite>mode</cite> is not ‘k’ or ‘svd’.</p>
+<dd class="field-odd"><p><strong>ValueError</strong> – If <cite>mode</cite> is not ‘k’ or ‘svd’.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -161,7 +162,7 @@ available at <a class="reference external" href="https://youtu.be/8fhupzhAR_M">h
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 von Karman Institute.</p>
+    <p>&#169; Copyright 2026 von Karman Institute.</p>
   </div>
 
    

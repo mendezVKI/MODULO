@@ -6,19 +6,22 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Theory &mdash; MODULO 2.1.0 documentation</title>
+  <title>Theory &mdash; MODULO 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
 
   
-      <script src="../../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=acc74ff5"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Example in MODULO" href="basic_usage.html" />
+    <link rel="prev" title="Proper Orthogonal Decomposition (POD)" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,9 +54,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../../weights_inner.html">Weighted inner product for non-cartesian meshes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data-Driven Modal Decompositions</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../dft/index.html">Discrete Fourier Transform (DFT)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html">Proper Orthogonal Decomposition (POD)</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Proper Orthogonal Decomposition (POD)</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage.html">Example in MODULO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#theory">Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#example-in-modulo">Example in MODULO</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../dmd/index.html">Dynamic Mode Decomposition (DMD)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../mpod/index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../kpod/index.html">Kernel Proper Orthogonal Decomposition (KPOD)</a></li>
@@ -81,7 +90,7 @@
 <p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/refs.html">Useful References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/ack.html">Ackowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/ack.html">Acknowledgements and Contributors</a></li>
 </ul>
 
         </div>
@@ -98,6 +107,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../intro.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Proper Orthogonal Decomposition (POD)</a></li>
       <li class="breadcrumb-item active">Theory</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/decompositions/pod/theory.rst.txt" rel="nofollow"> View page source</a>
@@ -109,7 +119,7 @@
            <div itemprop="articleBody">
              
   <section id="theory">
-<h1>Theory<a class="headerlink" href="#theory" title="Link to this heading">¶</a></h1>
+<h1>Theory<a class="headerlink" href="#theory" title="Link to this heading"></a></h1>
 <p>The POD is an energy-based decomposition, which provides the modes capturing the largest amount of energy (variance) in the dataset,
 such that the convergence of an approximation with increasing number of modes is optimal.</p>
 <p>The temporal structures satisfying these properties are the eigenvectors of the temporal correlation matrix <span class="math notranslate nohighlight">\(\mathbf{K}=\langle \mathbf{u}(x, t), \mathbf{u}(x, t)\rangle\)</span>,
@@ -138,12 +148,15 @@ standard Euclidean one used in the SVD procedure.</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Proper Orthogonal Decomposition (POD)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="basic_usage.html" class="btn btn-neutral float-right" title="Example in MODULO" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 von Karman Institute.</p>
+    <p>&#169; Copyright 2026 von Karman Institute.</p>
   </div>
 
    

@@ -6,13 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; MODULO 2.1.0 documentation</title>
+  <title>Installation &mdash; MODULO 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
 
   
-      <script src="_static/documentation_options.js?v=20623aea"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=acc74ff5"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
@@ -44,7 +45,12 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#optional-dependencies">Optional dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-fortran-acceleration">Optional Fortran acceleration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#development-installation">Development installation</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data pre-processing</span></p>
 <ul>
@@ -82,7 +88,7 @@
 <p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="refs_and_ack/refs.html">Useful References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="refs_and_ack/ack.html">Ackowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="refs_and_ack/ack.html">Acknowledgements and Contributors</a></li>
 </ul>
 
         </div>
@@ -110,31 +116,70 @@
            <div itemprop="articleBody">
              
   <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
-<p>You can access the latest update of the modulo python package on PyPI using the command line:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">modulo_vki</span>
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h1>
+<p>MODULO requires Python 3.10 or newer. The standard installation is pure Python
+and works without a Fortran compiler, including on Windows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>modulo_vki
 </pre></div>
 </div>
-<p>Alternatively, you can clone the repository and install the package locally:</p>
-<p>The package requires the following dependencies:</p>
-<ul class="simple">
-<li><p>“tqdm”,</p></li>
-<li><p>“numpy”,</p></li>
-<li><p>“scipy”,</p></li>
-<li><p>“scikit-learn”,</p></li>
-<li><p>“ipykernel”,</p></li>
-<li><p>“ipython”,</p></li>
-<li><p>“ipython-genutils”,</p></li>
-<li><p>“ipywidgets”,</p></li>
-<li><p>“matplotlib”.</p></li>
-</ul>
-<p>To run the Jupyter notebooks, you will also need to install the Jupyter notebook package:</p>
-<p>and the additional packages:</p>
-<ul class="simple">
-<li><p>“pyvista”,</p></li>
-<li><p>“imageio”,</p></li>
-</ul>
-<p>that are specified in the <cite>setup.py</cite> file as optional dependencies.</p>
+<p>To install the current source tree instead:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mendezVKI/MODULO.git
+<span class="nb">cd</span><span class="w"> </span>MODULO
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[tutorials]"</span>
+</pre></div>
+</div>
+<p>This editable tutorial installation includes an IPython kernel and
+<code class="docutils literal notranslate"><span class="pre">nbconvert</span></code> so the notebooks can be opened in an IDE or executed from the
+command line.</p>
+<section id="optional-dependencies">
+<h2>Optional dependencies<a class="headerlink" href="#optional-dependencies" title="Link to this heading"></a></h2>
+<p>Tutorial and VTK dependencies are deliberately kept out of the base package:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"modulo_vki[tutorials]"</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"modulo_vki[vtk_utils]"</span>
+</pre></div>
+</div>
+</section>
+<section id="optional-fortran-acceleration">
+<h2>Optional Fortran acceleration<a class="headerlink" href="#optional-fortran-acceleration" title="Link to this heading"></a></h2>
+<p>Fast mPOD uses the NumPy implementation by default. The optional Fortran
+extension is never compiled or imported during a normal installation. This is
+the recommended configuration on Windows and is selected with the default
+<code class="docutils literal notranslate"><span class="pre">useFortran=False</span></code> argument.</p>
+<p>Linux and macOS users who want to build the accelerator need a GNU-compatible
+Fortran compiler and OpenBLAS in addition to the Python build tools:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"modulo_vki[fortran]"</span>
+python<span class="w"> </span>-m<span class="w"> </span>modulo_vki.fortran.compile_fortran
+</pre></div>
+</div>
+<p>The build helper accepts explicit BLAS linker flags when OpenBLAS cannot be
+detected automatically. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>modulo_vki.fortran.compile_fortran<span class="w"> </span>--blas<span class="w"> </span><span class="s2">"-L/path/to/lib -lopenblas"</span>
+</pre></div>
+</div>
+<p>After a successful build, opt in for a supported K-based backend:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">ModuloVKI</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n_Modes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"float64"</span><span class="p">)</span>
+<span class="n">phi</span><span class="p">,</span> <span class="n">psi</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fastmPOD</span><span class="p">(</span>
+    <span class="n">frequency_splits</span><span class="p">,</span>
+    <span class="n">sampling_frequency</span><span class="p">,</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s2">"bandK"</span><span class="p">,</span>
+    <span class="n">useFortran</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The MODULO build helper intentionally does not compile the extension on
+Windows. Windows users should install the base package and retain
+<code class="docutils literal notranslate"><span class="pre">useFortran=False</span></code>.</p>
+</section>
+<section id="development-installation">
+<h2>Development installation<a class="headerlink" href="#development-installation" title="Link to this heading"></a></h2>
+<p>For tests and documentation builds:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-dev.txt
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q
+python<span class="w"> </span>-m<span class="w"> </span>sphinx<span class="w"> </span>-W<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>docs/source<span class="w"> </span>docs/build/html
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -148,7 +193,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 von Karman Institute.</p>
+    <p>&#169; Copyright 2026 von Karman Institute.</p>
   </div>
 
    

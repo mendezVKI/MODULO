@@ -6,13 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kPOD &mdash; MODULO 2.1.0 documentation</title>
+  <title>kPOD &mdash; MODULO 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
 
   
-      <script src="../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=acc74ff5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
@@ -85,7 +86,7 @@
 <p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/refs.html">Useful References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/ack.html">Ackowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/ack.html">Acknowledgements and Contributors</a></li>
 </ul>
 
         </div>
@@ -113,44 +114,50 @@
            <div itemprop="articleBody">
              
   <section id="kpod">
-<h1>kPOD<a class="headerlink" href="#kpod" title="Link to this heading">¶</a></h1>
+<h1>kPOD<a class="headerlink" href="#kpod" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="modulo_vki.modulo.ModuloVKI.kPOD">
-<span class="sig-prename descclassname"><span class="pre">modulo_vki.modulo.ModuloVKI.</span></span><span class="sig-name descname"><span class="pre">kPOD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M_DIST</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">10]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_Modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_KPOD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo_vki.modulo.ModuloVKI.kPOD" title="Link to this definition">¶</a></dt>
-<dd><p>Perform kernel PCA (kPOD) for snapshot data as in VKI Machine Learning for Fluid Dynamics course.</p>
+<span class="sig-prename descclassname"><span class="pre">modulo_vki.modulo.ModuloVKI.</span></span><span class="sig-name descname"><span class="pre">kPOD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M_DIST</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">10]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_Modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE_KPOD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo_vki.modulo.ModuloVKI.kPOD" title="Link to this definition"></a></dt>
+<dd><p>Perform kernel PCA (kPOD) for snapshot data, following the VKI Machine Learning for Fluid Dynamics course.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>M_DIST</strong> (<em>array-like</em><em> of </em><em>shape</em><em> (</em><em>2</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – Indices of two snapshots used to estimate the minimal kernel value.
-These should be the most “distant” snapshots in your dataset. Default is [1, 10].</p></li>
-<li><p><strong>k_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Minimum value for the kernelized correlation. Default is 0.1.</p></li>
-<li><p><strong>cent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, center the kernel matrix before decomposition. Default is True.</p></li>
-<li><p><strong>n_Modes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of principal modes to compute. Default is 10.</p></li>
-<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Regularization parameter for the modified kernel matrix (K_{zeta}). Default is 1e-6.</p></li>
-<li><p><strong>metric</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Kernel function identifier (passed to <cite>sklearn.metrics.pairwise.pairwise_kernels</cite>).
-Only ‘rbf’ has been tested; other metrics may require different parameters. Default is ‘rbf’.</p></li>
-<li><p><strong>K_out</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, also return the full kernel matrix (K). Default is False.</p></li>
-<li><p><strong>SAVE_KPOD</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, save the computed kPOD results to disk. Default is False.</p></li>
+These should correspond to the most distant snapshots in the dataset.
+Default is [1, 10].</p></li>
+<li><p><strong>k_m</strong> (<em>float</em><em>, </em><em>optional</em>) – Minimum value for the kernelized correlation. Default is 0.1.</p></li>
+<li><p><strong>cent</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, center the kernel matrix before decomposition.
+Default is True.</p></li>
+<li><p><strong>n_Modes</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of principal modes to compute. Default is 10.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em>) – Regularization parameter for the modified kernel matrix (K_{zeta}).
+Default is 1e-6.</p></li>
+<li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – Kernel function identifier passed to
+<cite>sklearn.metrics.pairwise.pairwise_kernels</cite>.
+Only ‘rbf’ has been tested; other metrics may require additional
+parameters. Default is ‘rbf’.</p></li>
+<li><p><strong>K_out</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, also return the full kernel matrix (K).
+Default is False.</p></li>
+<li><p><strong>SAVE_KPOD</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, save the computed kPOD results to disk.
+Default is False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>Psi_xi</strong> (<em>ndarray of shape (n_samples, n_Modes)</em>) – The kPOD principal component time coefficients.</p></li>
-<li><p><strong>Sigma_xi</strong> (<em>ndarray of shape (n_Modes,)</em>) – The kPOD singular values (eigenvalues of the centered kernel).</p></li>
-<li><p><strong>Phi_xi</strong> (<em>ndarray of shape (n_samples, n_Modes)</em>) – The mapped eigenvectors (principal modes) in feature space.</p></li>
-<li><p><strong>K_zeta</strong> (<em>ndarray of shape (n_samples, n_samples)</em>) – The (regularized and centered) kernel matrix used for decomposition.
-Only returned if <cite>K_out</cite> is True.</p></li>
+<li><p><strong>Phi_xi</strong> (<em>ndarray of shape (n_samples, n_Modes)</em>) – The mapped eigenvectors, that is, the principal modes in feature space.</p></li>
+<li><p><strong>Psi_xi</strong> (<em>ndarray of shape (n_samples, n_Modes)</em>) – The kPOD principal component coefficients.</p></li>
+<li><p><strong>Sigma_xi</strong> (<em>ndarray of shape (n_Modes,)</em>) – The kPOD singular values, obtained from the eigendecomposition of the
+centered kernel matrix.</p></li>
+<li><p><strong>K_zeta</strong> (<em>ndarray of shape (n_samples, n_samples)</em>) – The regularized and centered kernel matrix used for the decomposition.
+Returned only if <cite>K_out</cite> is True.</p></li>
 </ul>
 </p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>Follows the hands-on ML for Fluid Dynamics tutorial by VKI</p></li>
-</ul>
-<p>(<a class="reference external" href="https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552">https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552</a>).
-- Kernel computed as described in
-Horenko et al., <em>Machine learning for dynamics and model reduction</em>, arXiv:2208.07746.</p>
+<p>This implementation follows the hands-on tutorial from the VKI Machine
+Learning for Fluid Dynamics course. The kernel is computed as described
+in Horenko et al., <em>Machine learning for dynamics and model reduction</em>,
+arXiv:2208.07746.</p>
 </dd></dl>
 
 </section>
@@ -166,7 +173,7 @@ Horenko et al., <em>Machine learning for dynamics and model reduction</em>, arXi
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 von Karman Institute.</p>
+    <p>&#169; Copyright 2026 von Karman Institute.</p>
   </div>
 
    

@@ -6,13 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Versions &mdash; MODULO 2.1.0 documentation</title>
+  <title>Versions &mdash; MODULO 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
 
   
-      <script src="_static/documentation_options.js?v=20623aea"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=acc74ff5"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
@@ -78,10 +79,11 @@
 <p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Versions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">2.1.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">2.1.4</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">2.1.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id4">2.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">3.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">2.1.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">2.1.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">2.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">2.0.7</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#modulo-2-0">MODULO &lt; 2.0</a></li>
 </ul>
 </li>
@@ -89,7 +91,7 @@
 <p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="refs_and_ack/refs.html">Useful References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="refs_and_ack/ack.html">Ackowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="refs_and_ack/ack.html">Acknowledgements and Contributors</a></li>
 </ul>
 
         </div>
@@ -117,22 +119,45 @@
            <div itemprop="articleBody">
              
   <section id="versions">
-<h1>Versions<a class="headerlink" href="#versions" title="Link to this heading">¶</a></h1>
+<h1>Versions<a class="headerlink" href="#versions" title="Link to this heading"></a></h1>
 <section id="id1">
-<h2>2.1.5<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<h2>3.0.0<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>Version <cite>3.0</cite> of MODULO includes the following updates:</p>
+<ol class="arabic simple">
+<li><p><strong>fast mPOD formulation</strong> for large datasets is now available. This formulation does all processing efficiently in the frequency domain, reducing computational time by orders of magnitude <span class="bibtex-citation" id="id2">[<a class="reference internal" href="refs_and_ack/refs.html#id5" title="Marek Belda, Lorenzo Schena, Romain Poletti, Martin Isoz, Tomáš Hyhlík, and Miguel A Mendez. A fast spectral formulation of the multiscale proper orthogonal decomposition. arXiv preprint arXiv:2604.12077, 2026. URL: https://arxiv.org/abs/2604.12077, arXiv:2604.12077.">7</a>]</span>. For very large datasets it includes optional Fortran support for correlation matrix assembly. See <code class="docutils literal notranslate"><span class="pre">examples/notebooks/Tutorial_6_fast_mPOD.ipynb</span></code> for an example.</p></li>
+<li><p><strong>vtk support</strong> for both uniform and nonuniform grids. MODULO now supports reading and writing of vtk and vtu files. A utility to get cell volumes is also included.</p></li>
+<li><p><strong>cross-platform installation</strong> keeps the Fortran accelerator opt-in. The
+default installation remains pure Python and is the supported path on
+Windows.</p></li>
+<li><p><strong>minor fixes</strong> include removal of invalid docstring escape sequences that
+emitted <code class="docutils literal notranslate"><span class="pre">SyntaxWarning</span></code> messages on Python 3.12, corrected kPOD return
+values, preservation of the normalized filtered-covariance SPOD outputs,
+deterministic offline tests, and more robust tutorial setup.</p></li>
+<li><p><strong>backward-compatibility validation</strong> compared MODULO 3.0.0 with the
+published 2.1.5 package on the 2,000-snapshot JET-PIV release dataset. The
+shared DFT, POD, classical mPOD, and both SPOD formulations (including
+parallel Towne SPOD) matched within <code class="docutils literal notranslate"><span class="pre">rtol=1e-5</span></code> and <code class="docutils literal notranslate"><span class="pre">atol=1e-8</span></code>; the
+final reference run had zero maximum absolute difference for every saved
+array. Deterministic synthetic tests additionally cover DMD, kPOD, weighted
+and memory-saving POD, and all four fast-mPOD backends. Reproduction
+instructions are provided in <a class="reference internal" href="contributing/testing.html"><span class="doc">Development and Testing</span></a>.</p></li>
+</ol>
+</section>
+<section id="id3">
+<h2>2.1.5<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
 <li><p>Fixed issue with SPOD-S in Memory Saving mode (<a class="reference external" href="https://github.com/mendezVKI/MODULO/issues/37">Issue 37</a>)</p></li>
 <li><p>Indexing refactor for S-POD rescaling in Memory Saving mode</p></li>
 </ol>
 </section>
-<section id="id2">
-<h2>2.1.4<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<section id="id4">
+<h2>2.1.4<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
 <li><p>Introduced additional inputs consistency check when using <cite>MEMORY SAVING</cite>. If this option is set to True, MODULO verifies that <cite>D=None</cite>, and requires data partitions to be already computed. We provide a routine to carry out this step (see Tutorial 4), but other routines can be used as long inputs are consistent.</p></li>
 </ol>
 </section>
-<section id="id3">
-<h2>2.1.0<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<section id="id5">
+<h2>2.1.0<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
 <li><p>mPOD bug fix: the previous version of mPOD was skipping the last scale of the frequency splitting vector. Fixed in this version.</p></li>
 <li><p>SPOD parallelisation: CSD - SPOD can now be parallelized, leveraging <cite>joblib</cite>. The user needs just to pass the argument <cite>n_processes</cite> for the computation to be
@@ -143,8 +168,8 @@ split between different workers.</p></li>
 <li><p>Extended documentation: the documentation has been significantly enriched, now including theoretical foundations for all the supported modal decomposition techniques.</p></li>
 </ol>
 </section>
-<section id="id4">
-<h2>2.0.7<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<section id="id6">
+<h2>2.0.7<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
 <p>Major updates:</p>
 <p>1. Faster EIG/SVD algorithms, using powerful randomized svd solvers from scikit_learn (see <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html">TruncatedSVD</a>
 and
@@ -160,7 +185,7 @@ and
 </ol>
 </section>
 <section id="modulo-2-0">
-<h2>MODULO &lt; 2.0<a class="headerlink" href="#modulo-2-0" title="Link to this heading">¶</a></h2>
+<h2>MODULO &lt; 2.0<a class="headerlink" href="#modulo-2-0" title="Link to this heading"></a></h2>
 <p>The first version was developed in Matlab and was equipped with a GUI by D. Ninni.
 A minicourse on data-driven decompositions and the usage of MODULO was provided here:</p>
 <p><a class="reference external" href="https://www.youtube.com/watch?v=ED3x00H4yN4&amp;list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR&amp;index=1">https://www.youtube.com/watch?v=ED3x00H4yN4&amp;list=PLEJZLD0-4PeKW6Ze984q08bNz28GTntkR&amp;index=1</a></p>
@@ -187,7 +212,7 @@ A tutorial on how to use that version is given here:</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 von Karman Institute.</p>
+    <p>&#169; Copyright 2026 von Karman Institute.</p>
   </div>
 
    

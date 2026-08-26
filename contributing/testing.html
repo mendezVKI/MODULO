@@ -6,13 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Development and Testing &mdash; MODULO 2.1.0 documentation</title>
+  <title>Development and Testing &mdash; MODULO 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
 
   
-      <script src="../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=acc74ff5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
@@ -73,7 +74,12 @@
 <p class="caption" role="heading"><span class="caption-text">Contributing</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="get_code.html">Base contributions</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Development and Testing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Development and Testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-local-checks">Quick local checks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cross-version-release-regression">Cross-version release regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modulo-3-0-release-assessment">MODULO 3.0 release assessment</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
 <ul>
@@ -82,7 +88,7 @@
 <p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/refs.html">Useful References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/ack.html">Ackowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/ack.html">Acknowledgements and Contributors</a></li>
 </ul>
 
         </div>
@@ -110,7 +116,63 @@
            <div itemprop="articleBody">
              
   <section id="development-and-testing">
-<h1>Development and Testing<a class="headerlink" href="#development-and-testing" title="Link to this heading">¶</a></h1>
+<h1>Development and Testing<a class="headerlink" href="#development-and-testing" title="Link to this heading"></a></h1>
+<section id="quick-local-checks">
+<h2>Quick local checks<a class="headerlink" href="#quick-local-checks" title="Link to this heading"></a></h2>
+<p>The normal test suite is deterministic and does not download external data:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>modulo_vki/test/test_fast_mpod.py
+<span class="nv">PYTHONWARNINGS</span><span class="o">=</span>error::SyntaxWarning<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>python<span class="w"> </span>-m<span class="w"> </span>compileall<span class="w"> </span>-f<span class="w"> </span>-q<span class="w"> </span>modulo_vki<span class="w"> </span>dev_tests
+</pre></div>
+</div>
+<p>The fast-mPOD tests compare the <code class="docutils literal notranslate"><span class="pre">fullK</span></code>, <code class="docutils literal notranslate"><span class="pre">bandK</span></code>, <code class="docutils literal notranslate"><span class="pre">fullSVD</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">randSVD</span></code> backends, check reconstruction and temporal orthogonality, and
+exercise the default installation without the optional Fortran extension.</p>
+</section>
+<section id="cross-version-release-regression">
+<h2>Cross-version release regression<a class="headerlink" href="#cross-version-release-regression" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">dev_tests/test_all_modal.py</span></code> runs the decompositions on the external
+2,000-snapshot JET-PIV tutorial dataset and stores one <code class="docutils literal notranslate"><span class="pre">.npz</span></code> result per
+method. Run it once with the published 2.1.5 package and once with the 3.0.0
+candidate, using separate environments and working directories:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>dev_tests/test_all_modal.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--version<span class="w"> </span><span class="m">2</span>.1.5<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--dataset-dir<span class="w"> </span>/path/to/tutorial-data<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output-dir<span class="w"> </span>/tmp/modulo-regression
+
+python<span class="w"> </span>dev_tests/test_all_modal.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--version<span class="w"> </span><span class="m">3</span>.0.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--dataset-dir<span class="w"> </span>/path/to/tutorial-data<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output-dir<span class="w"> </span>/tmp/modulo-regression
+</pre></div>
+</div>
+<p>The dataset directory must contain
+<code class="docutils literal notranslate"><span class="pre">Tutorial_2_JET_PIV/Ex_4_TR_PIV_Jet</span></code>. The dataset is available from
+<code class="docutils literal notranslate"><span class="pre">https://osf.io/c28de/download</span></code>.</p>
+<p>Compare the shared outputs while allowing fast mPOD as the expected new
+candidate-only result:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>dev_tests/compare_all_modal.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>/tmp/modulo-regression/2.1.5<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>/tmp/modulo-regression/3.0.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--rtol<span class="w"> </span>1e-5<span class="w"> </span>--atol<span class="w"> </span>1e-8<span class="w"> </span>--allow-extra-candidate
+</pre></div>
+</div>
+<p>The comparison exits with a non-zero status for missing files or keys, shape
+mismatches, non-finite values, or numerical differences outside tolerance.
+Real eigenvector signs and complex phases are aligned before comparison.</p>
+</section>
+<section id="modulo-3-0-release-assessment">
+<h2>MODULO 3.0 release assessment<a class="headerlink" href="#modulo-3-0-release-assessment" title="Link to this heading"></a></h2>
+<p>The final 3.0.0 release assessment produced zero maximum absolute difference
+between 2.1.5 and 3.0.0 for every saved JET-PIV result from DFT, POD, classical
+mPOD, filtered-covariance SPOD, and serial and parallel cross-spectral-density
+SPOD. The fast-mPOD result was the sole expected candidate-only artifact.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Tutorial_6_fast_mPOD.ipynb</span></code> also executed without errors, produced 61 PDF
+figures, and reproduced all committed numerical reference arrays. These
+external-data checks complement the normal pytest suite and should be rerun
+before a final release tag is created.</p>
+</section>
 </section>
 
 
@@ -124,7 +186,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 von Karman Institute.</p>
+    <p>&#169; Copyright 2026 von Karman Institute.</p>
   </div>
 
    

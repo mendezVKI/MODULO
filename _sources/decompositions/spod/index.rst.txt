@@ -32,7 +32,7 @@ matrix :math:`\mathbf{K}^f` is botained, the procedure of the SPOD is the same a
 
 
 Cross-Spectral Density SPOD (Towne et al.)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 This formulation operates directly in the frequency domain. Thus, to find modes that depends on both space and time, 
 one needs to define the appropriate inner product. Following the original derivation, this reads:
 

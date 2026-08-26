@@ -6,13 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MODULO (MODal mULtiscale pOd): Data-Driven Modal Analysis &mdash; MODULO 2.1.0 documentation</title>
+  <title>MODULO (MODal mULtiscale pOd): Data-Driven Modal Analysis &mdash; MODULO 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
 
   
-      <script src="_static/documentation_options.js?v=20623aea"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=acc74ff5"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -82,7 +83,7 @@
 <p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="refs_and_ack/refs.html">Useful References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="refs_and_ack/ack.html">Ackowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="refs_and_ack/ack.html">Acknowledgements and Contributors</a></li>
 </ul>
 
         </div>
@@ -110,13 +111,18 @@
            <div itemprop="articleBody">
              
   <section id="modulo-modal-multiscale-pod-data-driven-modal-analysis">
-<h1>MODULO (MODal mULtiscale pOd): Data-Driven Modal Analysis<a class="headerlink" href="#modulo-modal-multiscale-pod-data-driven-modal-analysis" title="Link to this heading">¶</a></h1>
+<h1>MODULO (MODal mULtiscale pOd): Data-Driven Modal Analysis<a class="headerlink" href="#modulo-modal-multiscale-pod-data-driven-modal-analysis" title="Link to this heading"></a></h1>
 <p>MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute for Fluid Dynamics to perform data-driven modal decompositions.
 Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it has recently been extended to perform also other decompositions that include POD, SPODs, DFT, DMD, mPOD.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#optional-dependencies">Optional dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#optional-fortran-acceleration">Optional Fortran acceleration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#development-installation">Development installation</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -127,8 +133,8 @@ Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it h
 </ul>
 </div>
 <section id="data-driven-modal-decompositions">
-<h2>Data-Driven Modal Decompositions<a class="headerlink" href="#data-driven-modal-decompositions" title="Link to this heading">¶</a></h2>
-<p>All modal decompositions are implemented in MODULO <span id="id1">[<a class="reference internal" href="refs_and_ack/refs.html#id3" title="Romain Poletti, L Schena, D Ninni, and Miguel Alfonso Mendez. Modulo: a python toolbox for data-driven modal decomposition. Journal of Open Source Software, 9(102):6753, 2024.">1</a>]</span> as matrix factorization of the snapshot matrix <span class="math notranslate nohighlight">\(D(\mathbf{x}, t) \in \mathbb{R}^{n_S \times n_t}\)</span>.
+<h2>Data-Driven Modal Decompositions<a class="headerlink" href="#data-driven-modal-decompositions" title="Link to this heading"></a></h2>
+<p>All modal decompositions are implemented in MODULO <span class="bibtex-citation" id="id1">[<a class="reference internal" href="refs_and_ack/refs.html#id3" title="Romain Poletti, L Schena, D Ninni, and Miguel Alfonso Mendez. Modulo: a python toolbox for data-driven modal decomposition. Journal of Open Source Software, 9(102):6753, 2024.">1</a>]</span> as matrix factorization of the snapshot matrix <span class="math notranslate nohighlight">\(D(\mathbf{x}, t) \in \mathbb{R}^{n_S \times n_t}\)</span>.
 Each entry of the snapshot matrix is a flattened realization of the data, regardless of the data dimensionality (2D, 3D). Thus, this decomposition
 reads</p>
 <div class="math notranslate nohighlight">
@@ -144,7 +150,7 @@ respectively, and <span class="math notranslate nohighlight">\(\mathbf{\Sigma} \
 <p>The reminder of this section overviews the salient theoretical aspects of the implement modal decompositions, and the corresponding
 implementation in MODULO. The following decompositions are available:</p>
 <p>The field of applications ranges from <strong>reduced-order modeling</strong> (ROM) and <strong>flow control</strong> to <strong>filtering</strong>, and <strong>feature extraction</strong>.
-For a comprehensive review of modal methods in fluid dynamics, see Mendez et al. (2023) <span id="id2">[<a class="reference internal" href="refs_and_ack/refs.html#id10" title="Miguel A. Mendez. Linear and nonlinear dimensionality reduction from fluid mechanics to machine learning. Measurement Science and Technology, 34:042001, January 2023. doi:10.1088/1361-6501/acaffe.">2</a>]</span>.</p>
+For a comprehensive review of modal methods in fluid dynamics, see Mendez et al. (2023) <span class="bibtex-citation" id="id2">[<a class="reference internal" href="refs_and_ack/refs.html#id11" title="Miguel A. Mendez. Linear and nonlinear dimensionality reduction from fluid mechanics to machine learning. Measurement Science and Technology, 34:042001, January 2023. doi:10.1088/1361-6501/acaffe.">2</a>]</span>.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Data-Driven Modal Decompositions</span></p>
 <ul>
@@ -158,7 +164,7 @@ For a comprehensive review of modal methods in fluid dynamics, see Mendez et al.
 </div>
 </section>
 <section id="key-features-of-modulo">
-<h2>Key features of MODULO<a class="headerlink" href="#key-features-of-modulo" title="Link to this heading">¶</a></h2>
+<h2>Key features of MODULO<a class="headerlink" href="#key-features-of-modulo" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><strong>Multiple decomposition algorithms</strong>:</p>
 <ul>
@@ -170,7 +176,7 @@ For a comprehensive review of modal methods in fluid dynamics, see Mendez et al.
 <li><p><strong>KPOD</strong> (Kernel POD)</p></li>
 </ul>
 </li>
-<li><p><strong>Memory‐saving implementations</strong> (Ninni et al., (2020) <span id="id3">[<a class="reference internal" href="refs_and_ack/refs.html#id6" title="Davide Ninni and Miguel A. Mendez. Modulo: a software for multiscale proper orthogonal decomposition of data. SoftwareX, 12:100622, 12 2020. doi:10.1016/j.softx.2020.100622.">3</a>]</span>):</p>
+<li><p><strong>Memory‐saving implementations</strong> (Ninni et al., (2020) <span class="bibtex-citation" id="id3">[<a class="reference internal" href="refs_and_ack/refs.html#id7" title="Davide Ninni and Miguel A. Mendez. Modulo: a software for multiscale proper orthogonal decomposition of data. SoftwareX, 12:100622, 12 2020. doi:10.1016/j.softx.2020.100622.">3</a>]</span>):</p>
 <ul>
 <li><p>Partition‐based loading for very large datasets</p></li>
 <li><p>On‐disk correlation matrices</p></li>
@@ -191,7 +197,7 @@ For a comprehensive review of modal methods in fluid dynamics, see Mendez et al.
 </div>
 </section>
 <section id="quick-start">
-<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">¶</a></h2>
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
 <p>MODULO is published on PyPI and can be installed with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">modulo_vki</span></code> (see <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a>). The user is first
 requested to assemble the matrix field to be decomposed, or the folder of the raw files to be imported if she wants to use the
 data loading routines present in the auxialliary code of MODULO. We refer the reader to <a class="reference internal" href="importing_data.html"><span class="doc">Importing data and D matrix preparation</span></a> for an example
@@ -225,7 +231,7 @@ In this case, the decomposition can be carried out as:</p>
 <p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="refs_and_ack/refs.html">Useful References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="refs_and_ack/ack.html">Ackowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="refs_and_ack/ack.html">Acknowledgements and Contributors</a></li>
 </ul>
 </div>
 </section>
@@ -241,7 +247,7 @@ In this case, the decomposition can be carried out as:</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 von Karman Institute.</p>
+    <p>&#169; Copyright 2026 von Karman Institute.</p>
   </div>
 
    

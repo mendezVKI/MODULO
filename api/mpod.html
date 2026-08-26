@@ -6,13 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mPOD &mdash; MODULO 2.1.0 documentation</title>
+  <title>mPOD &mdash; MODULO 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
 
   
-      <script src="../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=acc74ff5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
@@ -67,6 +68,10 @@
 <li class="toctree-l1"><a class="reference internal" href="pod.html">POD</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">mPOD</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#modulo_vki.modulo.ModuloVKI.mPOD"><code class="docutils literal notranslate"><span class="pre">mPOD()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fast-spectral-mpod">Fast spectral mPOD</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#modulo_vki.modulo.ModuloVKI.fastmPOD"><code class="docutils literal notranslate"><span class="pre">fastmPOD()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="dmd.html">DMD</a></li>
@@ -85,7 +90,7 @@
 <p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/refs.html">Useful References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/ack.html">Ackowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../refs_and_ack/ack.html">Acknowledgements and Contributors</a></li>
 </ul>
 
         </div>
@@ -113,24 +118,24 @@
            <div itemprop="articleBody">
              
   <section id="mpod">
-<h1>mPOD<a class="headerlink" href="#mpod" title="Link to this heading">¶</a></h1>
+<h1>mPOD<a class="headerlink" href="#mpod" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="modulo_vki.modulo.ModuloVKI.mPOD">
-<span class="sig-prename descclassname"><span class="pre">modulo_vki.modulo.ModuloVKI.</span></span><span class="sig-name descname"><span class="pre">mPOD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Nf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_V</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Keep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MODE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'accurate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1d'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo_vki.modulo.ModuloVKI.mPOD" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">modulo_vki.modulo.ModuloVKI.</span></span><span class="sig-name descname"><span class="pre">mPOD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Nf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_V</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Keep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MODE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SAVE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'accurate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1d'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo_vki.modulo.ModuloVKI.mPOD" title="Link to this definition"></a></dt>
 <dd><p>Multi-Scale Proper Orthogonal Decomposition (mPOD) of a signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>Nf</strong> (<em>np.array</em>) – Orders of the FIR filters used to isolate each scale. Must be of size len(F_V) + 1.</p></li>
-<li><p><strong>Ex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Extension length at the boundaries to impose boundary conditions (must be at least as large as Nf).</p></li>
+<li><p><strong>Ex</strong> (<em>int</em>) – Extension length at the boundaries to impose boundary conditions (must be at least as large as Nf).</p></li>
 <li><p><strong>F_V</strong> (<em>np.array</em>) – Frequency splitting vector, containing the cutoff frequencies for each scale. Units depend on the temporal step <cite>dt</cite>.</p></li>
 <li><p><strong>Keep</strong> (<em>np.array</em>) – Boolean array indicating scales to retain. Must be of size len(F_V) + 1.</p></li>
-<li><p><strong>SAT</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Maximum number of modes per scale.</p></li>
+<li><p><strong>SAT</strong> (<em>int</em>) – Maximum number of modes per scale.</p></li>
 <li><p><strong>boundaries</strong> (<em>{'nearest'</em><em>, </em><em>'reflect'</em><em>, </em><em>'wrap'</em><em>, </em><em>'extrap'}</em>) – Boundary conditions for filtering to avoid edge effects. Refer to:
 <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/tutorial/ndimage.html">https://docs.scipy.org/doc/scipy/reference/tutorial/ndimage.html</a></p></li>
 <li><p><strong>MODE</strong> (<em>{'reduced'</em><em>, </em><em>'complete'</em><em>, </em><em>'r'</em><em>, </em><em>'raw'}</em>) – Mode option for QR factorization, used to enforce orthonormality of the mPOD basis to account for non-ideal filter responses.</p></li>
-<li><p><strong>dt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Temporal step size between snapshots.</p></li>
-<li><p><strong>SAVE</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>default=False</em>) – Whether to save intermediate results to disk.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Temporal step size between snapshots.</p></li>
+<li><p><strong>SAVE</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Whether to save intermediate results to disk.</p></li>
 <li><p><strong>K_in</strong> (<em>np.array</em><em>, </em><em>default = none</em>) – K matrix. If none, compute it with D.</p></li>
 <li><p><strong>Sigma_type</strong> (<em>{'accurate'</em><em>, </em><em>'fast'}</em>) – If accurate, recompute the Sigmas after QR polishing. Slightly slower than the fast option in which the Sigmas are not recomputed.</p></li>
 <li><p><strong>conv_type</strong> (<em>{'1d'</em><em>, </em><em>'2d'}</em>) – If 1d, compute Kf applying 1d FIR filters to the columns and then rows of the extended K.
@@ -149,6 +154,67 @@ If 2d, compute Kf applying a 2d FIR filter on the extended K.</p></li>
 </dl>
 </dd></dl>
 
+<section id="fast-spectral-mpod">
+<h2>Fast spectral mPOD<a class="headerlink" href="#fast-spectral-mpod" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="modulo_vki.modulo.ModuloVKI.fastmPOD">
+<span class="sig-prename descclassname"><span class="pre">modulo_vki.modulo.ModuloVKI.</span></span><span class="sig-name descname"><span class="pre">fastmPOD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_V</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Keep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">winType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hann'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">taper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fullK'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GThresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncpus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oversampling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useFortran</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modulo_vki.modulo.ModuloVKI.fastmPOD" title="Link to this definition"></a></dt>
+<dd><p>Fast spectral variant of Multi-Scale Proper Orthogonal Decomposition (mPOD) of a signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>F_V</strong> (<em>list</em><em> of </em><em>float in ascending order</em><em>, </em><em>&gt;0 and &lt;f_Nyq</em>) – Frequency splitting vector. Must NOT include 0 and f_Nyq.</p></li>
+<li><p><strong>fs</strong> (<em>float &gt; 0</em>) – Sampling frequency of the dataset.</p></li>
+<li><p><strong>Keep</strong> (<em>list</em><em> of </em><em>bool</em><em>, </em><em>optional</em>) – Which frequency bands to keep. No of elements is len(F_V)+1.
+Default = None (initialize to keep all scales)</p></li>
+<li><p><strong>winType</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of window to be used for creating tapering functions. Simple smooth windows are recommended.
+Default = “hann”.</p></li>
+<li><p><strong>taper</strong> (<em>list</em><em> of </em><em>float</em><em>, </em><em>optional</em>) – Tapering width for each scale in Hz.
+Default = None (no taper).</p></li>
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – Computation backend: fullK, bandK, fullSVD, or randSVD. The K-based
+modes use correlation matrices; the SVD-based modes operate on the
+spectral data matrix. Default is fullK.</p></li>
+<li><p><strong>GThresh</strong> (<em>float &gt;= 0</em><em>, </em><em>optional</em>) – Energy ratio at which the K-based backends start using Gershgorin
+bounds to estimate the number of significant modes. Values below
+one disable the estimate. The special value -1 selects n_Modes/2.</p></li>
+<li><p><strong>ncpus</strong> (<em>int &gt;0</em><em>, </em><em>optional</em>) – Number of CPUs available for FFT parallelization. Set to number of physical cores /
+number of physical cores - 1 for best performance.
+Default = os.cpu_count()</p></li>
+<li><p><strong>oversampling</strong> (<em>int &gt;0</em><em>, </em><em>optional</em>) – Oversampling parameter for randomized SVD. Higher values can increase accuracy of randomized SVD,
+but also increase computational cost. This is the first parameter to tweak when randomized SVD
+does not give good results. For “randSVD” mode only, for other modes has no effect.
+Default = 10, as in scikit-learn implementation of randomized SVD.</p></li>
+<li><p><strong>n_iter</strong> (<em>int &gt;0</em><em>, </em><em>optional</em>) – Power iteration parameter for randomized SVD. Higher values can increase accuracy of randomized SVD,
+especially when singular values decay slowly, but also increase computational cost. Change only when
+changing oversampling does not improve the results. Set to -1 to let the algorithm set it on-the-fly
+based on the number of modes and size of the processed band matrix. For “randSVD” mode only,
+for other modes has no effect.
+Default = -1 (Set value on-the fly, in the same way as in scikit-learn).</p></li>
+<li><p><strong>useFortran</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use Fortran implementations for assembly of correlation matrices. Can give up to 2x speedup
+for assembly of K (mode = ‘fullK’) and up to 2.7x speedup for assembly of K_Fsc (mode = ‘bandK’) under
+the assumption of FLOP-bound computation. For memory-bound computation this option has little to no effect.
+Default = False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>phi</strong> (<em>2D np.ndarray of float</em>) – Spatial modes in descending signifficancy order. Column-wise (i-th column = i-th mode).</p></li>
+<li><p><strong>psi</strong> (<em>2D np.ndarray of float</em>) – Temporal modes in descending signifficancy order. Column-wise (i-th column = i-th mode).</p></li>
+<li><p><strong>sigTot</strong> (<em>1D np.ndarray of float &gt;0</em>) – Mode amplitudes in descending signifficancy order.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> – When an input has an invalid type.</p></li>
+<li><p><strong>ValueError</strong> – When an input value or computation mode is invalid.</p></li>
+<li><p><strong>NotImplementedError</strong> – When memory saving or weighted inner products are requested.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -162,7 +228,7 @@ If 2d, compute Kf applying a 2d FIR filter on the extended K.</p></li>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 von Karman Institute.</p>
+    <p>&#169; Copyright 2026 von Karman Institute.</p>
   </div>
 
    

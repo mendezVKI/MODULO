@@ -6,13 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spectral Proper Orthogonal Decomposition (SPOD) &mdash; MODULO 2.1.0 documentation</title>
+  <title>Spectral Proper Orthogonal Decomposition (SPOD) &mdash; MODULO 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
 
   
-      <script src="../../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=acc74ff5"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -91,7 +92,7 @@
 <p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/refs.html">Useful References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/ack.html">Ackowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/ack.html">Acknowledgements and Contributors</a></li>
 </ul>
 
         </div>
@@ -119,17 +120,17 @@
            <div itemprop="articleBody">
              
   <section id="spectral-proper-orthogonal-decomposition-spod">
-<h1>Spectral Proper Orthogonal Decomposition (SPOD)<a class="headerlink" href="#spectral-proper-orthogonal-decomposition-spod" title="Link to this heading">¶</a></h1>
+<h1>Spectral Proper Orthogonal Decomposition (SPOD)<a class="headerlink" href="#spectral-proper-orthogonal-decomposition-spod" title="Link to this heading"></a></h1>
 <p>This document offers a brief reference guide to the use of the Spectral Proper Orthogonal Decomposition (SPOD).</p>
 <section id="theory">
-<h2>Theory<a class="headerlink" href="#theory" title="Link to this heading">¶</a></h2>
+<h2>Theory<a class="headerlink" href="#theory" title="Link to this heading"></a></h2>
 <p>The SPOD aims at identifying the coherent modes of a stochastic process at specific frequencies. In the literature,
 there are two spectral paths to achieve this result: (1) low-pass filtering the covariance matrix <span class="math notranslate nohighlight">\(\mathbf{K}\)</span>
-along the diagonals (<span id="id1">[<a class="reference internal" href="../../refs_and_ack/refs.html#id4" title="Moritz Sieber, C. Oliver Paschereit, and Kilian Oberleithner. Spectral proper orthogonal decomposition. Journal of Fluid Mechanics, 792:798–828, 2016. doi:10.1017/jfm.2016.103.">7</a>]</span>); or (2) by solving an Fredholm eigenvalue problem for
-the cross-spectral density matrix at each frequency bin (<span id="id2">[<a class="reference internal" href="../../refs_and_ack/refs.html#id9" title="Aaron Towne, Oliver T. Schmidt, and Tim Colonius. Spectral proper orthogonal decomposition and its relationship to dynamic mode decomposition and resolvent analysis. Journal of Fluid Mechanics, 847:821–867, 2018. doi:10.1017/jfm.2018.283.">8</a>]</span>).</p>
+along the diagonals (<span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../refs_and_ack/refs.html#id4" title="Moritz Sieber, C. Oliver Paschereit, and Kilian Oberleithner. Spectral proper orthogonal decomposition. Journal of Fluid Mechanics, 792:798–828, 2016. doi:10.1017/jfm.2016.103.">8</a>]</span>); or (2) by solving an Fredholm eigenvalue problem for
+the cross-spectral density matrix at each frequency bin (<span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../refs_and_ack/refs.html#id10" title="Aaron Towne, Oliver T. Schmidt, and Tim Colonius. Spectral proper orthogonal decomposition and its relationship to dynamic mode decomposition and resolvent analysis. Journal of Fluid Mechanics, 847:821–867, 2018. doi:10.1017/jfm.2018.283.">9</a>]</span>).</p>
 <p>Both options are available in MODULO, and are briefly reviewed below.</p>
 <section id="filtered-covariance-spod-sieber-et-al">
-<h3>Filtered-Covariance SPOD (Sieber et al.)<a class="headerlink" href="#filtered-covariance-spod-sieber-et-al" title="Link to this heading">¶</a></h3>
+<h3>Filtered-Covariance SPOD (Sieber et al.)<a class="headerlink" href="#filtered-covariance-spod-sieber-et-al" title="Link to this heading"></a></h3>
 <p>The key idea of this approach is to enforce a diagonal similarity of the correlation matrix to get a smoother dynamics.
 To this end, the (temporal) correlation matrix <span class="math notranslate nohighlight">\(\mathbf{K}\)</span> is low-pass filtered along the diagonals. This reads:</p>
 <div class="math notranslate nohighlight">
@@ -144,7 +145,7 @@ in the <code class="docutils literal notranslate"><span class="pre">Spatial_basi
 </div>
 </section>
 <section id="cross-spectral-density-spod-towne-et-al">
-<h3>Cross-Spectral Density SPOD (Towne et al.)<a class="headerlink" href="#cross-spectral-density-spod-towne-et-al" title="Link to this heading">¶</a></h3>
+<h3>Cross-Spectral Density SPOD (Towne et al.)<a class="headerlink" href="#cross-spectral-density-spod-towne-et-al" title="Link to this heading"></a></h3>
 <p>This formulation operates directly in the frequency domain. Thus, to find modes that depends on both space and time,
 one needs to define the appropriate inner product. Following the original derivation, this reads:</p>
 <div class="math notranslate nohighlight">
@@ -170,18 +171,18 @@ and the full spatio‐temporal structures become</p>
 </section>
 </section>
 <section id="example-in-modulo">
-<h2>Example in MODULO<a class="headerlink" href="#example-in-modulo" title="Link to this heading">¶</a></h2>
+<h2>Example in MODULO<a class="headerlink" href="#example-in-modulo" title="Link to this heading"></a></h2>
 <p>The function <code class="docutils literal notranslate"><span class="pre">SPOD</span></code> of MODULO wraps both approaches, yet the arguments required are different.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Initialize MODULO object</span>
 <span class="n">m</span> <span class="o">=</span> <span class="n">ModuloVKI</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">D</span><span class="p">))</span>
 <span class="c1"># Compute the SPOD of Sieber et al.</span>
-<span class="n">Phi_S</span><span class="p">,</span> <span class="n">Psi_S</span><span class="p">,</span> <span class="n">Sigma_S</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">SPOD</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;sieber&#39;</span><span class="p">,</span>
+<span class="n">Phi_S</span><span class="p">,</span> <span class="n">Psi_S</span><span class="p">,</span> <span class="n">Sigma_S</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">SPOD</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">'sieber'</span><span class="p">,</span>
                                 <span class="n">N_O</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                                 <span class="n">f_c</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
                                 <span class="n">n_Modes</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
                                 <span class="n">SAVE_SPOD</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1"># Compute the SPOD of Towne et al.</span>
-<span class="n">Phi_ST</span><span class="p">,</span> <span class="n">Sigma_ST</span><span class="p">,</span> <span class="n">Freqs_PosT</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">SPOD</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;towne&#39;</span><span class="p">,</span>
+<span class="n">Phi_ST</span><span class="p">,</span> <span class="n">Sigma_ST</span><span class="p">,</span> <span class="n">Freqs_PosT</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">SPOD</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">'towne'</span><span class="p">,</span>
                                         <span class="n">F_S</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="c1"># sampling frequency</span>
                                         <span class="n">L_B</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="c1"># Length of the chunks for time average</span>
                                         <span class="n">O_B</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="c1"># Overlap between chunks</span>
@@ -209,7 +210,7 @@ leveraged in the computation, that otherwise are left up to the numpy vectorizat
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 von Karman Institute.</p>
+    <p>&#169; Copyright 2026 von Karman Institute.</p>
   </div>
 
    

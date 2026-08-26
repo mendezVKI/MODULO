@@ -6,18 +6,21 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Example in MODULO &mdash; MODULO 2.1.0 documentation</title>
+  <title>Example in MODULO &mdash; MODULO 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
 
   
-      <script src="../../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=acc74ff5"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Kernel Proper Orthogonal Decomposition (KPOD)" href="../kpod/index.html" />
+    <link rel="prev" title="Theory" href="theory.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,11 +53,21 @@
 <li class="toctree-l1"><a class="reference internal" href="../../weights_inner.html">Weighted inner product for non-cartesian meshes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data-Driven Modal Decompositions</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../dft/index.html">Discrete Fourier Transform (DFT)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../pod/index.html">Proper Orthogonal Decomposition (POD)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dmd/index.html">Dynamic Mode Decomposition (DMD)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="theory.html">Theory</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Example in MODULO</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#classical-mpod">Classical mPOD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fast-mpod">Fast mPOD</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#theory">Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#example-in-modulo">Example in MODULO</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../kpod/index.html">Kernel Proper Orthogonal Decomposition (KPOD)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../spod/index.html">Spectral Proper Orthogonal Decomposition (SPOD)</a></li>
 </ul>
@@ -80,7 +93,7 @@
 <p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/refs.html">Useful References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/ack.html">Ackowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/ack.html">Acknowledgements and Contributors</a></li>
 </ul>
 
         </div>
@@ -97,6 +110,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../intro.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a></li>
       <li class="breadcrumb-item active">Example in MODULO</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/decompositions/mpod/basic_usage.rst.txt" rel="nofollow"> View page source</a>
@@ -108,13 +122,15 @@
            <div itemprop="articleBody">
              
   <section id="example-in-modulo">
-<h1>Example in MODULO<a class="headerlink" href="#example-in-modulo" title="Link to this heading">¶</a></h1>
+<h1>Example in MODULO<a class="headerlink" href="#example-in-modulo" title="Link to this heading"></a></h1>
+<section id="classical-mpod">
+<h2>Classical mPOD<a class="headerlink" href="#classical-mpod" title="Link to this heading"></a></h2>
 <p>An example of the usage of the mPOD routine, extracted from the <cite>examples</cite> folder is reported below.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">modulo_vki.modulo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuloVKI</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">modulo_vki.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_mPOD</span>
 
-<span class="n">FOLDER_MPOD_RESULTS</span><span class="o">=</span><span class="n">FOLDER</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s1">&#39;mPOD_Results_Jet&#39;</span>
+<span class="n">FOLDER_MPOD_RESULTS</span><span class="o">=</span><span class="n">FOLDER</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s1">'mPOD_Results_Jet'</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">FOLDER_MPOD_RESULTS</span><span class="p">):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">FOLDER_MPOD_RESULTS</span><span class="p">)</span>
 
@@ -136,8 +152,8 @@
 <span class="n">F_V</span> <span class="o">=</span> <span class="n">ST_V</span> <span class="o">*</span> <span class="n">U0</span> <span class="o">/</span> <span class="n">H</span>
 <span class="c1"># + Size of the extension for the BC (Check Docs)</span>
 <span class="n">Ex</span> <span class="o">=</span> <span class="mi">203</span>  <span class="c1"># This must be at least as Nf.</span>
-<span class="n">dt</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2000</span><span class="p">;</span> <span class="n">boundaries</span> <span class="o">=</span> <span class="s1">&#39;reflective&#39;</span><span class="p">;</span> <span class="n">MODE</span> <span class="o">=</span> <span class="s1">&#39;reduced&#39;</span>
-<span class="c1"># Here &#39;s the mPOD</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2000</span><span class="p">;</span> <span class="n">boundaries</span> <span class="o">=</span> <span class="s1">'reflective'</span><span class="p">;</span> <span class="n">MODE</span> <span class="o">=</span> <span class="s1">'reduced'</span>
+<span class="c1"># Here 's the mPOD</span>
 <span class="n">Phi_M</span><span class="p">,</span> <span class="n">Psi_M</span><span class="p">,</span> <span class="n">Sigmas_M</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">mPOD</span><span class="p">(</span><span class="n">Nf</span><span class="p">,</span> <span class="n">Ex</span><span class="p">,</span> <span class="n">F_V</span><span class="p">,</span> <span class="n">Keep</span><span class="p">,</span> <span class="mi">20</span> <span class="p">,</span><span class="n">boundaries</span><span class="p">,</span> <span class="n">MODE</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -146,16 +162,96 @@ while <cite>Nf</cite> is a vector of size <cite>len(F_V) + 1</cite> is the numbe
 <cite>Ex</cite> is the size of the extension for the BC. The boundary conditions can be set to <cite>reflect</cite>, <cite>nearest</cite>,
 <cite>wrap</cite> or <cite>extract</cite>.</p>
 </section>
+<section id="fast-mpod">
+<h2>Fast mPOD<a class="headerlink" href="#fast-mpod" title="Link to this heading"></a></h2>
+<p>Fast mPOD is fully functional without Fortran. The default
+<code class="docutils literal notranslate"><span class="pre">useFortran=False</span></code> path is portable and is the supported configuration on
+Windows. See <a class="reference internal" href="../../installation.html"><span class="doc">Installation</span></a> before opting into the Linux/macOS
+Fortran accelerator.</p>
+<p>An example of the usage of the fast mPOD routine, extracted from the <cite>examples</cite> folder is reported below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">modulo_vki.modulo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuloVKI</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"./ex6_results"</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">"./ex6_results"</span><span class="p">)</span>
+
+<span class="c1"># Create artificial spatial structure</span>
+<span class="n">toposes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3000</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">toposes</span><span class="p">[:</span><span class="mi">1000</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">toposes</span><span class="p">[</span><span class="mi">1000</span><span class="p">:</span><span class="mi">2000</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">toposes</span><span class="p">[</span><span class="mi">2000</span><span class="p">:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">toposes</span> <span class="o">=</span> <span class="n">toposes</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">toposes</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Associate importance with the test modes</span>
+<span class="n">sigmas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">6000</span><span class="p">,</span><span class="mi">4000</span><span class="p">,</span><span class="mi">2000</span><span class="p">])</span>
+
+<span class="c1"># Create artificial temporal structure</span>
+<span class="n">nt</span> <span class="o">=</span> <span class="mi">6000</span>   <span class="c1"># number of time steps</span>
+<span class="n">chronoses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nt</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2000</span><span class="p">):</span>
+    <span class="n">chronoses</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">i</span><span class="o">/</span><span class="mi">60</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">500</span><span class="p">)</span><span class="o">/</span><span class="mi">1200</span>     <span class="c1"># f1/fs = 1/60 + slope</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4000</span><span class="p">,</span><span class="mi">6000</span><span class="p">):</span>
+    <span class="n">chronoses</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">4000</span><span class="p">)</span><span class="o">/</span><span class="mi">30</span><span class="p">)</span><span class="o">-</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">4000</span><span class="p">)</span><span class="o">/</span><span class="mi">800</span>   <span class="c1"># f2/fs = 1/30 + slope</span>
+
+<span class="c1"># single wavelet</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2200</span><span class="p">,</span><span class="mi">3000</span><span class="p">):</span>
+    <span class="n">chronoses</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span><span class="mi">3800</span><span class="p">):</span>
+    <span class="n">chronoses</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">chronoses</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">chronoses</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">chronoses</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
+
+<span class="c1"># Assemble the data matrix</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">toposes</span> <span class="o">@</span> <span class="n">sigmas</span> <span class="o">@</span> <span class="n">chronoses</span><span class="o">.</span><span class="n">T</span>
+
+<span class="c1"># Save temporal evolutions</span>
+<span class="n">chronTot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">chronoses</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">chronoses</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">chronTot</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nt</span><span class="p">)</span>
+<span class="n">chronTot</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">chronoses</span>
+<span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">target_dir</span><span class="si">}</span><span class="s2">/chronoses.npy"</span><span class="p">,</span> <span class="n">chronTot</span><span class="p">)</span>
+
+<span class="c1"># Frequency split and selection of scales</span>
+<span class="n">nModes</span> <span class="o">=</span> <span class="mi">10</span>     <span class="c1"># Number of modes to compute</span>
+<span class="n">F_V</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">120</span><span class="p">,</span><span class="mi">3</span><span class="o">/</span><span class="mi">120</span><span class="p">,</span><span class="mi">5</span><span class="o">/</span><span class="mi">120</span><span class="p">,</span><span class="mi">10</span><span class="o">/</span><span class="mi">120</span><span class="p">]</span>   <span class="c1"># Frequency splitting vector in Hz, assuming fs = 1 (normalized frequencies) for this tutorial</span>
+<span class="n">Keep</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># Which scales to keep (0 means not processed, 1 means processed)</span>
+<span class="n">winType</span> <span class="o">=</span> <span class="s2">"hann"</span> <span class="c1"># Type of window for the tapering (hann, hamming, blackman, etc)</span>
+<span class="n">taper</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">300</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">300</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">300</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">300</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">300</span><span class="p">]</span> <span class="c1"># Taper width in Hz for each scale, assuming fs = 1 (normalized frequencies) for this tutorial</span>
+<span class="n">mode</span> <span class="o">=</span> <span class="s2">"fullK"</span> <span class="c1"># Type of computation (supports "fullK", "bandK", "fullSVD", "randSVD")</span>
+
+
+<span class="c1"># MODULO object initialization when NOT using Fortran.</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">ModuloVKI</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">n_Modes</span> <span class="o">=</span> <span class="n">nModes</span><span class="p">)</span>
+
+<span class="c1"># Fast mPOD call</span>
+<span class="n">phi</span><span class="p">,</span> <span class="n">psi</span><span class="p">,</span> <span class="n">sig</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">fastmPOD</span><span class="p">(</span><span class="n">F_V</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">Keep</span><span class="p">,</span> <span class="n">winType</span> <span class="o">=</span> <span class="n">winType</span><span class="p">,</span> <span class="n">taper</span> <span class="o">=</span> <span class="n">taper</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span><span class="p">,</span> <span class="n">GThresh</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>An example of the usage of the fast mPOD routine with Fortran support for correlation matrix assembly. Only the parts that differ from the previous example are shown below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MODULO object initialization when USING Fortran.</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">ModuloVKI</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">n_Modes</span> <span class="o">=</span> <span class="n">nModes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># dtype = np.float64 is MANDATORY for Fortran support.</span>
+
+<span class="c1"># Fast mPOD call</span>
+<span class="n">phi</span><span class="p">,</span> <span class="n">psi</span><span class="p">,</span> <span class="n">sig</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">fastmPOD</span><span class="p">(</span><span class="n">F_V</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">Keep</span><span class="p">,</span> <span class="n">winType</span> <span class="o">=</span> <span class="n">winType</span><span class="p">,</span> <span class="n">taper</span> <span class="o">=</span> <span class="n">taper</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span><span class="p">,</span> <span class="n">GThresh</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">useFortran</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="theory.html" class="btn btn-neutral float-left" title="Theory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../kpod/index.html" class="btn btn-neutral float-right" title="Kernel Proper Orthogonal Decomposition (KPOD)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 von Karman Institute.</p>
+    <p>&#169; Copyright 2026 von Karman Institute.</p>
   </div>
 
    

@@ -6,19 +6,22 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Theory &mdash; MODULO 2.1.0 documentation</title>
+  <title>Theory &mdash; MODULO 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
 
   
-      <script src="../../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=acc74ff5"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Example in MODULO" href="basic_usage.html" />
+    <link rel="prev" title="Dynamic Mode Decomposition (DMD)" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,10 +54,16 @@
 <li class="toctree-l1"><a class="reference internal" href="../../weights_inner.html">Weighted inner product for non-cartesian meshes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data-Driven Modal Decompositions</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../dft/index.html">Discrete Fourier Transform (DFT)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../pod/index.html">Proper Orthogonal Decomposition (POD)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html">Dynamic Mode Decomposition (DMD)</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Dynamic Mode Decomposition (DMD)</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage.html">Example in MODULO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#theory">Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#example-in-modulo">Example in MODULO</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../mpod/index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../kpod/index.html">Kernel Proper Orthogonal Decomposition (KPOD)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../spod/index.html">Spectral Proper Orthogonal Decomposition (SPOD)</a></li>
@@ -81,7 +90,7 @@
 <p class="caption" role="heading"><span class="caption-text">References &amp; Acknowledgements</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/refs.html">Useful References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/ack.html">Ackowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../refs_and_ack/ack.html">Acknowledgements and Contributors</a></li>
 </ul>
 
         </div>
@@ -98,6 +107,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../intro.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Dynamic Mode Decomposition (DMD)</a></li>
       <li class="breadcrumb-item active">Theory</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/decompositions/dmd/theory.rst.txt" rel="nofollow"> View page source</a>
@@ -109,12 +119,12 @@
            <div itemprop="articleBody">
              
   <section id="theory">
-<h1>Theory<a class="headerlink" href="#theory" title="Link to this heading">¶</a></h1>
+<h1>Theory<a class="headerlink" href="#theory" title="Link to this heading"></a></h1>
 <p>The DMD seeks to overcome the <cite>spectral-mixing</cite> induced by the POD compression, while simultaneously avoid _windowing_ problems
-caused by the dependency of the DFT on the fundamental tone of the data to be decomposed. The main idea introduced by Schmid (2010) <span id="id1">[<a class="reference internal" href="../../refs_and_ack/refs.html#id8" title="Peter J. Schmid. Dynamic mode decomposition of numerical and experimental data. Journal of Fluid Mechanics, 656:5–28, 2010. doi:10.1017/S0022112010001217.">4</a>]</span>,
+caused by the dependency of the DFT on the fundamental tone of the data to be decomposed. The main idea introduced by Schmid (2010) <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../refs_and_ack/refs.html#id9" title="Peter J. Schmid. Dynamic mode decomposition of numerical and experimental data. Journal of Fluid Mechanics, 656:5–28, 2010. doi:10.1017/S0022112010001217.">4</a>]</span>,
 is to fit a linear system onto a reduced POD projection of the dataset.</p>
-<p>The algorithm we implement in MODULO is the one proposed by Tu et al. (2013) <span id="id2">[<a class="reference internal" href="../../refs_and_ack/refs.html#id17" title="Jonathan H Tu. Dynamic mode decomposition: Theory and applications. PhD thesis, Princeton University, 2013.">5</a>]</span>, and a more robust theoretical formulation can also be found
-in Mendez (2021) <span id="id3">[<a class="reference internal" href="../../refs_and_ack/refs.html#id18" title="Miguel Alfonso Mendez. Statistical treatment, fourier and modal decomposition. arXiv preprint arXiv:2201.03847, 2022.">6</a>]</span>.</p>
+<p>The algorithm we implement in MODULO is the one proposed by Tu et al. (2013) <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../refs_and_ack/refs.html#id18" title="Jonathan H Tu. Dynamic mode decomposition: Theory and applications. PhD thesis, Princeton University, 2013.">5</a>]</span>, and a more robust theoretical formulation can also be found
+in Mendez (2021) <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../refs_and_ack/refs.html#id19" title="Miguel Alfonso Mendez. Statistical treatment, fourier and modal decomposition. arXiv preprint arXiv:2201.03847, 2022.">6</a>]</span>.</p>
 <p>This method creates two portions of the snapshot matrix <span class="math notranslate nohighlight">\(\mathbf{D}\)</span> that differ of one step in time, that is:</p>
 <div class="math notranslate nohighlight">
 \[\mathbf{D}_1 = [\mathbf{d}_1, \dots, \mathbf{d}_{n_t - 1}] \in \mathbb{R}^{n_S \times n_t - 1} \;,\]</div>
@@ -143,17 +153,20 @@ in this latter case, the frequency is not constrained to be a multiple of the fu
 <div class="math notranslate nohighlight">
 \[\mathbf{\Phi}_D = \tilde{\Phi}_P \mathbf{Q}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathbf{Q}\)</span> are the eigenvectors of the propagator <span class="math notranslate nohighlight">\(\tilde{\mathbf{S}}\)</span>.</p>
-<span class="target" id="id4"></span></section>
+</section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Dynamic Mode Decomposition (DMD)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="basic_usage.html" class="btn btn-neutral float-right" title="Example in MODULO" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 von Karman Institute.</p>
+    <p>&#169; Copyright 2026 von Karman Institute.</p>
   </div>
 
    
