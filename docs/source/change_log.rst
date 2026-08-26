@@ -27,6 +27,10 @@ Version `3.0` of MODULO includes the following updates:
    and memory-saving POD, and all four fast-mPOD backends. Reproduction
    instructions are provided in :doc:`contributing/testing`.
 
+2.1.5
+------
+1. Fixed issue with SPOD-S in Memory Saving mode (`Issue 37 <https://github.com/mendezVKI/MODULO/issues/37>`_)
+2. Indexing refactor for S-POD rescaling in Memory Saving mode
 
 2.1.4
 ------

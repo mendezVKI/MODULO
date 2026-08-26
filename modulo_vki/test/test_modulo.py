@@ -7,6 +7,7 @@ import numpy as np
 
 from modulo_vki import ModuloVKI, __version__
 from modulo_vki.core.temporal_structures import temporal_basis_mPOD
+from modulo_vki.utils.read_db import ReadData
 
 
 def synthetic_dataset(seed=42, n_space=36, n_time=128, fs=128.0):
@@ -108,6 +109,45 @@ class TestModulo(unittest.TestCase):
         self.assertEqual(phi_k.shape, (self.data.shape[0], self.n_modes))
         self.assertEqual(psi_k.shape, (self.data.shape[1], self.n_modes))
         self.assertEqual(sigma_k.shape, (self.n_modes,))
+
+    def test_sieber_spod_memory_saving_matches_in_memory(self):
+        memory_dir = self.tmp.name + "/memory"
+        ReadData._data_processing(
+            D=self.data.copy(),
+            N_PARTITIONS=4,
+            MR=False,
+            FOLDER_OUT=memory_dir,
+        )
+        in_memory = self.make_modulo()
+        partitioned = ModuloVKI(
+            data=None,
+            N_T=self.data.shape[1],
+            N_S=self.data.shape[0],
+            N_PARTITIONS=4,
+            n_Modes=self.n_modes,
+            FOLDER_OUT=memory_dir + "/",
+        )
+
+        kwargs = dict(
+            mode="sieber",
+            F_S=self.fs,
+            n_Modes=self.n_modes,
+            SAVE_SPOD=False,
+            N_O=8,
+            f_c=0.2,
+        )
+        with contextlib.redirect_stdout(io.StringIO()):
+            phi_full, psi_full, sigma_full = in_memory.SPOD(**kwargs)
+            phi_part, psi_part, sigma_part = partitioned.SPOD(**kwargs)
+
+        np.testing.assert_allclose(sigma_part, sigma_full, rtol=2e-5, atol=1e-7)
+        np.testing.assert_allclose(
+            np.abs(psi_part), np.abs(psi_full), rtol=2e-4, atol=2e-5
+        )
+        np.testing.assert_allclose(
+            np.abs(phi_part), np.abs(phi_full), rtol=2e-4, atol=2e-5
+        )
+        np.testing.assert_allclose(np.linalg.norm(phi_part, axis=0), 1.0)
 
     def test_classical_mpod_and_boundary_validation(self):
         model = self.make_modulo()
