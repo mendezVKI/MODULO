@@ -5,7 +5,7 @@ Versions
 ------
 Version `3.0` of MODULO includes the following updates:
 
-1. **fast mPOD formulation** for large datasets is now available. This formulation does all processing efficiently in the frequency domain, reducing computational time by orders of magnitude :cite:`belda2026fast`. For very large datasets it includes optional Fortran support for correlation matrix assembly. See ``examples/notebooks/Tutorial_06_fast_mPOD.ipynb`` for an example.
+1. **fast mPOD formulation** for large datasets is now available. This formulation does all processing efficiently in the frequency domain, reducing computational time by orders of magnitude :cite:`belda2026fast`. For very large datasets it includes optional Fortran support for correlation matrix assembly. See ``examples/notebooks/Tutorial_6_fast_mPOD.ipynb`` for an example.
  
 2. **vtk support** for both uniform and nonuniform grids. MODULO now supports reading and writing of vtk and vtu files. A utility to get cell volumes is also included.
 
@@ -17,6 +17,15 @@ Version `3.0` of MODULO includes the following updates:
    emitted ``SyntaxWarning`` messages on Python 3.12, corrected kPOD return
    values, preservation of the normalized filtered-covariance SPOD outputs,
    deterministic offline tests, and more robust tutorial setup.
+
+5. **backward-compatibility validation** compared MODULO 3.0.0 with the
+   published 2.1.5 package on the 2,000-snapshot JET-PIV release dataset. The
+   shared DFT, POD, classical mPOD, and both SPOD formulations (including
+   parallel Towne SPOD) matched within ``rtol=1e-5`` and ``atol=1e-8``; the
+   final reference run had zero maximum absolute difference for every saved
+   array. Deterministic synthetic tests additionally cover DMD, kPOD, weighted
+   and memory-saving POD, and all four fast-mPOD backends. Reproduction
+   instructions are provided in :doc:`contributing/testing`.
 
 
 2.1.4

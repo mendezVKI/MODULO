@@ -37,11 +37,11 @@ documentation for a practical guide on how to use them in MODULO.
 
 Release Notes
 -------------
-This version of MODULO includes the following updates:
+Version `3.0` of MODULO includes the following updates:
 
-1. **fast mPOD formulation:** fast mPOD implementation for large datasets is now available. It performs the processing efficiently in the frequency domain. For very large datasets it includes optional Fortran support for correlation matrix assembly; the default installation remains pure Python.
+1. **fast mPOD formulation** for large datasets is now available. This formulation does all processing efficiently in the frequency domain, reducing computational time by orders of magnitude. For very large datasets it includes optional Fortran support for correlation matrix assembly. See `Tutorial_6_fast_mPOD.ipynb <examples/notebooks/Tutorial_6_fast_mPOD.ipynb>`_ for an example.
 
-2. **vtk support:** for both uniform and nonuniform grids, Modulo now supports reading and writing of vtk and vtu files. A utility to get cell volumes is also included.
+2. **vtk support** for both uniform and nonuniform grids. MODULO now supports reading and writing of vtk and vtu files. A utility to get cell volumes is also included.
 
 3. **new tutorial:** a tutorial for fast mPOD method illustrating the basic use of the method is included.
 
