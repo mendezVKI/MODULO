@@ -2,7 +2,7 @@ Example in MODULO
 ------------------
 
 Classical mPOD
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
 
 An example of the usage of the mPOD routine, extracted from the `examples` folder is reported below.
 

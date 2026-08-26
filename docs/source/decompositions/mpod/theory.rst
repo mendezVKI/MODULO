@@ -34,7 +34,7 @@ where :math:`\mathbf{P}_\mathbf{\Sigma}` is a permutation matrix that ranks the 
 In conclusion, we note that the mPOD generalizes POD and DFT: for :math:`M=1`, the mPOD is equivalent to POD, while for :math:`M=n_t`, 
 the mPOD is equivalent to DFT.
 
-fast mPOD
+Fast mPOD
 ^^^^^^^^^
 
 The fast mPOD follows the spectral formulation introduced by Belda *et al.* :cite:`belda2026fast` by replacing the classical FIR filter bank with compact spectral masks :math:`M_m` acting on strictly disjoint frequency supports. Starting from the spectral representation of the temporal correlation matrix,
