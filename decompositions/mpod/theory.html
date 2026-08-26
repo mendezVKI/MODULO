@@ -60,7 +60,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../dmd/index.html">Dynamic Mode Decomposition (DMD)</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Multiscale Proper Orthogonal Decomposition (mPOD)</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Theory</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fast-mpod">fast mPOD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fast-mpod">Fast mPOD</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="basic_usage.html">Example in MODULO</a></li>
@@ -146,7 +146,7 @@ are orthogonal complements that span <span class="math notranslate nohighlight">
 <p>In conclusion, we note that the mPOD generalizes POD and DFT: for <span class="math notranslate nohighlight">\(M=1\)</span>, the mPOD is equivalent to POD, while for <span class="math notranslate nohighlight">\(M=n_t\)</span>,
 the mPOD is equivalent to DFT.</p>
 <section id="fast-mpod">
-<h2>fast mPOD<a class="headerlink" href="#fast-mpod" title="Link to this heading"></a></h2>
+<h2>Fast mPOD<a class="headerlink" href="#fast-mpod" title="Link to this heading"></a></h2>
 <p>The fast mPOD follows the spectral formulation introduced by Belda <em>et al.</em> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../refs_and_ack/refs.html#id5" title="Marek Belda, Lorenzo Schena, Romain Poletti, Martin Isoz, Tomáš Hyhlík, and Miguel A Mendez. A fast spectral formulation of the multiscale proper orthogonal decomposition. arXiv preprint arXiv:2604.12077, 2026. URL: https://arxiv.org/abs/2604.12077, arXiv:2604.12077.">7</a>]</span> by replacing the classical FIR filter bank with compact spectral masks <span class="math notranslate nohighlight">\(M_m\)</span> acting on strictly disjoint frequency supports. Starting from the spectral representation of the temporal correlation matrix,</p>
 <div class="math notranslate nohighlight">
 \[\mathbf{K}_F = \mathbf{\Psi}_F \mathbf{K} \mathbf{\Psi}_F,\]</div>
