@@ -4,11 +4,11 @@ Proper Orthogonal Decomposition (POD)
 This document offers a brief reference guide to the use of the Proper Orthogonal Decomposition (POD).
 
 
-.. .. toctree::
-..    :maxdepth: 1
+.. toctree::
+   :hidden:
 
-..    theory
-..    basic_usage
+   theory
+   basic_usage
 
 Theory
 --------------------------------------
@@ -49,7 +49,7 @@ standard Euclidean one used in the SVD procedure.
 
 
 Example in MODULO
-----------------
+-----------------
 
 .. code-block:: python
 

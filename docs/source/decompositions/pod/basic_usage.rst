@@ -1,5 +1,5 @@
 Example in MODULO
-----------------
+-----------------
 
 .. code-block:: python
 

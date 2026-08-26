@@ -1,10 +1,18 @@
-# Exclude all _py_chache
-modulo/__pycache__/
-modulo/core/__pycache__
-modulo/utils/__pycache__
+# Generated Python and packaging artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+/build/
+/MANIFEST
+
+# Locally compiled optional extensions
+*.so
+*.pyd
+*.dylib
+*.dSYM/
+
 /examples/_dev/
 # Exclude all undesired files
-*.pyc
 *.pyo
 *.DS_Store
 *.env
@@ -15,3 +23,7 @@ modulo/utils/__pycache__
 
 /modulo_vki_2/
 /tests/
+
+## Examples outputs
+examples/notebooks/ex6_results
+examples/python_files/ex6_results

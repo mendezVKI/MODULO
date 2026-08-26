@@ -1,1 +1,2 @@
 include README_pypi.rst
+recursive-include modulo_vki/fortran *.f90

@@ -9,28 +9,26 @@ MODULO: a python toolbox for data-driven modal decomposition
 
 **MODULO** is a modal decomposition package developed at the von Karman Institute for Fluid Dynamics (VKI). It offers a wide range of decomposition techniques, allowing users to choose the most appropriate method for their specific problem. MODULO can efficiently handle large datasets natively, thanks to a memory-saving feature that partitions the data and processes the decomposition in chunks (`Nini et al. (2022) <https://www.sciencedirect.com/science/article/pii/S2352711020303356>`_). Moreover, it supports non-uniform meshes through a weighted inner product formulation. Currently, MODULO heavily relies on NumPy routines and does not offer additional parallel computing capabilities beyond those naturally provided by NumPy.
 
-While the discontinued MATLAB version of MODULO is accessible in the “Old_Matlab_Implementation” branch, 
-it is no longer maintained. The latest decomposition techniques are exclusively available in the current Python version (`Poletti et al. (2024) <https://joss.theoj.org/papers/10.21105/joss.06753>`_).
+While the discontinued MATLAB version of MODULO is accessible in the “Old_Matlab_Implementation” branch,
+it is no longer maintained. The latest updates are exclusively available in the current Python version (`Poletti et al. (2024) <https://joss.theoj.org/papers/10.21105/joss.06753>`_).
 
-As a part of the MODULO project, we provide a series of lectures on data-driven modal decomposition, and its applications.
-These are available at the `MODULO YouTube channel <https://www.youtube.com/@modulompod5682>`_. 
-The full package documentation can be found at: `MODULO ReadTheDocs <https://lorenzoschena.github.io/MODULO/intro.html>`_.
+As part of the MODULO project, we provide a tutorial on data-driven modal decomposition and its applications, structured as a combination of video lectures and a basic theoretical guide. The video lectures are available on the `MODULO YouTube channel <https://www.youtube.com/@modulompod5682>`_, and the accompanying introductory theory is presented in the `MODULO documentation <https://mendezvki.github.io/MODULO/intro.html>`_.
 
 .. contents:: Table of contents
 
 Modal decompositions
 --------------------
-Modal decompositions aim to describe the data as a linear combination of *modes*, obtained by projecting the data 
-onto a suitable set of basis. Different decompositions employ different bases, such as prescribed Fourier basis for 
-the Discrete Fourier Transform (DFT), or data-driven basis, i.e. tailored on the dataset at hand, 
-for the Proper Orthogonal Decomposition (POD). We refer to `Mendez (2022) <https://doi.org/10.48550/arXiv.2201.03847>`_, `Mendez (2023) <https://doi.org/10.1017/9781108896214.013>`_, and `Mendez et al. (2023) <https://arxiv.org/abs/2208.07746>`_  for an introduction to the topic. 
-MODULO currently features the following decompositions: 
+Modal decompositions aim to describe the data as a linear combination of *modes*, obtained by projecting the data
+onto a suitable set of basis. Different decompositions employ different bases, such as prescribed Fourier basis for
+the Discrete Fourier Transform (DFT), or data-driven basis, i.e. tailored on the dataset at hand,
+for the Proper Orthogonal Decomposition (POD). We refer to `Mendez (2022) <https://doi.org/10.48550/arXiv.2201.03847>`_, `Mendez (2023) <https://doi.org/10.1017/9781108896214.013>`_, and `Mendez et al. (2023) <https://arxiv.org/abs/2208.07746>`_  for an introduction to the topic.
+MODULO currently features the following decompositions:
 
 - Discrete Fourier Transform (DFT) (`Briggs et al. (1997) <https://epubs.siam.org/doi/book/10.1137/1.9781611971514>`_)
 - Proper Orthogonal Decomposition (POD) (`Sirovich et al. (1987) <https://www.ams.org/journals/qam/1987-45-03/S0033-569X-1987-0910464-1/S0033-569X-1987-0910464-1.pdf>`_ , `Berkooz et al. (1993) <https://doi.org/10.1146/annurev.fl.25.010193.002543>`_)
-- Multi-Scale Proper Orthogonal Decomposition (mPOD) (`Mendez et al. (2019) <https://arxiv.org/abs/1804.09646>`_)
+- Multi-Scale Proper Orthogonal Decomposition (mPOD) (`Mendez et al. (2019) <https://arxiv.org/abs/1804.09646>`_) and its fast spectral variant (`Belda et al. (2026) <https://arxiv.org/abs/2604.12077>`_)
 - Dynamic Mode Decomposition (DMD) (`Schmid (2010) <https://doi.org/10.1017/S0022112010001217>`_)
-- Spectral Proper Orthogonal Decomposition (SPOD) (`Sieber et al. (2016) <https://doi.org/10.48550/arXiv.1508.04642>`_, `Towne et al. (2018) <https://doi.org/10.48550/arXiv.1708.04393>`_), 
+- Spectral Proper Orthogonal Decomposition (SPOD) (`Sieber et al. (2016) <https://doi.org/10.48550/arXiv.1508.04642>`_, `Towne et al. (2018) <https://doi.org/10.48550/arXiv.1708.04393>`_),
   note that the two are different formulations, and both are available in MODULO.
 - Kernel Proper Orthogonal Decomposition (KPOD) (`Mika et al. (1998) <https://proceedings.neurips.cc/paper_files/paper/1998/file/226d1f15ecd35f784d2a20c3ecf56d7f-Paper.pdf>`_)
 
@@ -39,28 +37,21 @@ documentation for a practical guide on how to use them in MODULO.
 
 Release Notes
 -------------
-This version of MODULO includes the following updates:
+Version `3.0` of MODULO includes the following updates:
 
-1. **mPOD bug fix:** the previous version of mPOD was skipping the last scale of the frequency splitting vector. Fixed in this version.
+1. **fast mPOD formulation** for large datasets is now available. This formulation does all processing efficiently in the frequency domain, reducing computational time by orders of magnitude. For very large datasets it includes optional Fortran support for correlation matrix assembly. See `Tutorial_6_fast_mPOD.ipynb <examples/notebooks/Tutorial_6_fast_mPOD.ipynb>`_ for an example.
 
-2. **SPOD parallelisation:** CSD - SPOD can now be parallelized, leveraging `joblib`. The user needs just to pass the argument `n_processes` for the computation to be
-   split between different workers.
-   
-3. **Simplified decomposition interface:** the interface of the decomposition methods has been simplified to improve user experience. 
+2. **vtk support** for both uniform and nonuniform grids. MODULO now supports reading and writing of vtk and vtu files. A utility to get cell volumes is also included.
 
-4. **Enhanced POD selection:** the POD function has been redesigned, allowing users to easily choose between different POD methods.  
-   
-5. **Improved computational efficiency:** the code of the decomposition functions has been optimised, resulting in reduced computation time. mPOD now includes two additional optional arguments to enable faster filtering and to avoid recomputing the Sigmas after QR polishing. 
-	
-6. **Extended documentation:** the documentation has been significantly enriched, now including theoretical foundations for all the supported modal decomposition techniques. 
+3. **new tutorial:** a tutorial for fast mPOD method illustrating the basic use of the method is included.
 
-	
+
 Documentation
 -------------
 
-The documentation of MODULO is available `here <https://lorenzoschena.github.io/MODULO/intro.html>`_. It 
+The documentation of MODULO is available `here <https://mendezvki.github.io/MODULO/intro.html>`_. It
 contains a comprehensive guide on how to install and use the package, as well as a detailed description of the
-decompositions required inputs and outputs. A `list of YouTube videos <https://www.youtube.com/@modulompod5682>`_ 
+decompositions required inputs and outputs. A `list of YouTube videos <https://www.youtube.com/@modulompod5682>`_
 is also available to guide the introduce the user to modal decomposition and MODULO.
 
 Installation
@@ -75,7 +66,7 @@ You can access the latest update of the modulo python package on PyPI using the 
 
     $ pip install modulo_vki
 
-Installation from source 
+Installation from source
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 Alternatively, you can clone the repository and install the package locally:
@@ -86,16 +77,25 @@ Alternatively, you can clone the repository and install the package locally:
 
     $ cd MODULO
 
-    $ python setup.py install
+    $ python -m pip install .
 
-or, if you have pip installed in your environment, 
+Optional Fortran acceleration for fast mPOD
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The standard installation is pure Python and does not compile or import
+Fortran. This is the supported path on Windows. Linux and macOS users can opt
+in to the build tools and compile the extension:
 
 .. code-block:: bash
 
-    $ pip install .
+    $ python -m pip install "modulo_vki[fortran]"
+    $ python -m modulo_vki.fortran.compile_fortran
 
+The extension is loaded only when ``fastmPOD(..., useFortran=True)`` is used;
+the default remains ``useFortran=False``. A compatible Fortran compiler and
+OpenBLAS must be installed separately.
 
-Example 
+Example
 -------------
 
 Example 1: POD decomposition
@@ -103,27 +103,27 @@ Example 1: POD decomposition
 
 The following example illustrates how to decompose a data set (D) using the POD decomposition.
 
-.. code-block:: python 
+.. code-block:: python
 
-    from modulo_vki import ModuloVKI 
+    from modulo_vki import ModuloVKI
     import numpy as np
 
     # Create a random dataset
     D = np.random.rand(100, 1000)
 
     # Initialize the ModuloVKI object
-    m = ModuloVKI(D) 
+    m = ModuloVKI(D)
 
     # Compute the POD decomposition
     phi_POD, Sigma_POD, psi_POD = m.POD()
 
-which returns the spatial basis ($\phi$), the temporal basis ($\psi$), and the modal 
-amplitudes ($\Sigma$) of the POD decomposition. 
+which returns the spatial basis ($\phi$), the temporal basis ($\psi$), and the modal
+amplitudes ($\Sigma$) of the POD decomposition.
 
-Example 2: Memory Saving option 
+Example 2: Memory Saving option
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-For the Memory Saving option, MODULO decomposes $D$ in `N_partitions`, defined 
+For the Memory Saving option, MODULO decomposes $D$ in `N_partitions`, defined
 by the user (refer to `examples/ex_04_Memory_Saving.py`).
 
 .. code-block:: python
@@ -174,7 +174,7 @@ by the user (refer to `examples/ex_04_Memory_Saving.py`).
     )
 
     # --- 5. Initialize ModuloVKI and compute the POD ---
-    # Initialize the object, passing the number of partitions. D must be set to None 
+    # Initialize the object, passing the number of partitions. D must be set to None
     # MODULO will look for the partitions in FOLDER_OUT/MODULO_tmp
     m = ModuloVKI(None, N_PARTITIONS=10, FOLDER_OUT=FOLDER_OUT)
 
@@ -189,9 +189,9 @@ Example 3: non-uniform grid
 If you are dealing with non-uniform grid (e.g. output of a Computational Fluid Dynamic (CFD) simulation),
 you can use the weighted inner product formulation (refer to `examples/ex_05_nonUniform_POD.py`).
 
-.. code-block:: python 
+.. code-block:: python
 
-    from modulo_vki import ModuloVKI 
+    from modulo_vki import ModuloVKI
     import numpy as np
 
     # Create a random dataset
@@ -206,17 +206,17 @@ you can use the weighted inner product formulation (refer to `examples/ex_05_non
     weights = area/areaTot # sum should be equal to 1
 
     # Initialize the ModuloVKI object
-    m = ModuloVKI(D, weights=weights) 
+    m = ModuloVKI(D, weights=weights)
 
     # Compute the POD decomposition
     phi_POD, Sigma_POD, psi_POD = m.POD()
-	
+
 Community guidelines
 ---------------------
 
 Contributing to MODULO
 ^^^^^^^^^^^^^^^^^^^^^^^
-We welcome contributions to MODULO. 
+We welcome contributions to MODULO.
 
 It is recommended to perform a shallow clone of the repository to avoid downloading the entire history of the project:
 
@@ -224,15 +224,15 @@ It is recommended to perform a shallow clone of the repository to avoid download
 
     $ git clone --depth 1 https://github.com/mendezVKI/MODULO.git
 
-This will download only the latest version of the repository, which is sufficient for contributing to the project, and will save 
+This will download only the latest version of the repository, which is sufficient for contributing to the project, and will save
 you time and disk space.
 
-To create a new feature, please submit a pull request, specifying the proposed changes and 
+To create a new feature, please submit a pull request, specifying the proposed changes and
 providing an example of how to use the new feature (that will be included in the `examples/` folder).
 
 The pull request will be reviewed by the MODULO team before being merged into the main branch, and your contribution duly acknowledged.
 
-Report bugs 
+Report bugs
 ^^^^^^^^^^^^
 If you find a bug, or you encounter unexpected behaviour, please open an issue on the MODULO GitHub repository.
 
@@ -245,29 +245,29 @@ Citation
 
 If you use MODULO in your research, please cite it as follows:
 
-Poletti, R., Schena, L., Ninni, D., Mendez, M. A. (2024).  
-*MODULO: A Python toolbox for data-driven modal decomposition*.  
+Poletti, R., Schena, L., Ninni, D., Mendez, M. A. (2024).
+*MODULO: A Python toolbox for data-driven modal decomposition*.
 Journal of Open Source Software, 9(102), 6753. https://doi.org/10.21105/joss.06753
 
 .. code-block:: text
 
-    @article{Poletti2024, 
-      doi = {10.21105/joss.06753}, 
-      url = {https://doi.org/10.21105/joss.06753}, 
+    @article{Poletti2024,
+      doi = {10.21105/joss.06753},
+      url = {https://doi.org/10.21105/joss.06753},
       year = {2024},
-      publisher = {The Open Journal}, 
-      volume = {9}, 
-      number = {102}, 
+      publisher = {The Open Journal},
+      volume = {9},
+      number = {102},
       pages = {6753},
-      author = {R. Poletti and L. Schena and D. Ninni and M. A. Mendez}, 
+      author = {R. Poletti and L. Schena and D. Ninni and M. A. Mendez},
       title = {MODULO: A Python toolbox for data-driven modal decomposition},
       journal = {Journal of Open Source Software}
     }
-	
-and 
 
-Ninni, D., & Mendez, M. A. (2020).  
-*MODULO: A software for Multiscale Proper Orthogonal Decomposition of data*.  
+and
+
+Ninni, D., & Mendez, M. A. (2020).
+*MODULO: A software for Multiscale Proper Orthogonal Decomposition of data*.
 SoftwareX, 12, 100622. https://doi.org/10.1016/j.softx.2020.100622
 
 .. code-block:: text
@@ -287,16 +287,17 @@ References
 ----------
 
 - Mendez, Miguel Alfonso. "Statistical Treatment, Fourier and Modal Decomposition." arXiv preprint arXiv:2201.03847 (2022).
-- Mendez, M. A. (2023) "Generalized and Multiscale Modal Analysis". In : Mendez M.A., Ianiro, A., Noack, B.R., Brunton, S. L. (Eds), 
-  "Data-Driven Fluid Mechanics: Combining First Principles and Machine Learning". Cambridge University Press, 2023:153-181. 
+- Mendez, M. A. (2023) "Generalized and Multiscale Modal Analysis". In : Mendez M.A., Ianiro, A., Noack, B.R., Brunton, S. L. (Eds),
+  "Data-Driven Fluid Mechanics: Combining First Principles and Machine Learning". Cambridge University Press, 2023:153-181.
   https://doi.org/10.1017/9781108896214.013. The pre-print is available at https://arxiv.org/abs/2208.12630.
 - Ninni, Davide, and Miguel A. Mendez. "MODULO: A software for Multiscale Proper Orthogonal Decomposition of data." SoftwareX 12 (2020): 100622.
 - Poletti, Romain, Schena, Lorenzo, Ninni, David, and Mendez, Miguel A. "Modulo: A python toolbox for data-driven modal decomposition". Journal of Open Source Software (2024), 9(102), 6753.
-- Mendez, Miguel A. "Linear and nonlinear dimensionality reduction from fluid mechanics to machine learning." Measurement Science and Technology 34.4 (2023): 042001. 
+- Mendez, Miguel A. "Linear and nonlinear dimensionality reduction from fluid mechanics to machine learning." Measurement Science and Technology 34.4 (2023): 042001.
 - Briggs, William L., and Van Emden Henson. The DFT: an owner's manual for the discrete Fourier transform. Society for Industrial and Applied Mathematics, 1995.
 - Berkooz, Gal, Philip Holmes, and John L. Lumley. "The proper orthogonal decomposition in the analysis of turbulent flows." Annual review of fluid mechanics 25.1 (1993): 539-575.
 - Sirovich, Lawrence. "Turbulence and the dynamics of coherent structures. III. Dynamics and scaling." Quarterly of Applied mathematics 45.3 (1987): 583-590.
 - Mendez, M. A., M. Balabane, and J-M. Buchlin. "Multi-scale proper orthogonal decomposition of complex fluid flows." Journal of Fluid Mechanics 870 (2019): 988-1036.
+- Belda, M., L. Schena, R. Poletti, M. Isoz, T. Hyhlík, and M. A. Mendez. `A Fast Spectral Formulation of the Multiscale Proper Orthogonal Decomposition <https://arxiv.org/abs/2604.12077>`_. arXiv:2604.12077 (2026).
 - Schmid, Peter J. "Dynamic mode decomposition of numerical and experimental data." Journal of fluid mechanics 656 (2010): 5-28.
 - Sieber, Moritz, C. Oliver Paschereit, and Kilian Oberleithner. "Spectral proper orthogonal decomposition." Journal of Fluid Mechanics 792 (2016): 798-828.
 - Towne, Aaron, Oliver T. Schmidt, and Tim Colonius. "Spectral proper orthogonal decomposition and its relationship to dynamic mode decomposition and resolvent analysis." Journal of Fluid Mechanics 847 (2018): 821-867.

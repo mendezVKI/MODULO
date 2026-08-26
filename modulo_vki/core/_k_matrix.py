@@ -5,6 +5,7 @@ import math
 from scipy.signal import firwin
 from scipy import signal
 from sklearn.metrics.pairwise import pairwise_kernels
+from scipy.fft import fft, ifft, fftfreq
 
 def CorrelationMatrix(N_T,
                       N_PARTITIONS=1,
@@ -204,6 +205,70 @@ def kernelized_K(D, M_ij, k_m, metric, cent, alpha):
     K_r = K_zeta + alpha * np.eye(n_t)
     
     return K_r 
+
+
+####  FAST MPOD UTILS  ####
+def compute_K_F(D,fs,ncpus,useFortran):
+    """
+    This function computes the correlation matrix K and transforms it to frequency domain.
+
+    NOTE:
+    If D is short and wide (Ns < Nt, preferably Ns << Nt) or the scales are highly spectrally localized,
+    it is more efficient to compute K_F on-the-fly for each scale or use randomized SVD approach, instead of 
+    computing global K_F. This is especially true when only a few narrow-banded scales are to be kept.
+
+    Parameters
+    ----------
+    D : 2D np.ndarray
+        Data matrix to be processed.
+
+    fs : float >0
+        Sampling frequency of the dataset.
+
+    ncpus : int >0
+        Number of CPUs available for FFT parallelization.
+
+    useFortran : bool
+        Whether to use Fortran implementations for assembly of correlation matrices.
+
+    Returns
+    -------
+    K_F : 2D complex np.ndarray
+        Cross-spectral density matrix.
+    
+    freq : 1D np.ndarray of float
+        Array of frequencies generated during fft
+    
+    Nt : int >0
+        Number of snapshots in data
+
+    Raises
+    ------
+    This function does not raise any exceptions by itself. See numpy and scipy documentation 
+    of the functions used in the code to see, which error messages you may get. 
+    """
+
+    Nt = D.shape[1]
+    freq = fftfreq(Nt,1/fs)
+
+    # Compute temporal correlation matrix K
+    if useFortran:
+        from modulo_vki.fortran import load_sym_matmul
+        sm = load_sym_matmul()
+        K = sm.sym_routines.compute_ata(np.asfortranarray(D),D.shape[0],Nt)
+    else:
+        K = np.linalg.matmul(D.T, D)
+
+    # Transform K to cross spectral density matrix 
+    K_F = fft(K,axis=1,norm='ortho',workers=ncpus)
+    K_F = ifft(K_F,axis=0,norm='ortho',workers=ncpus)
+
+    """
+    NOTE:
+    This approach is a lot cheaper than the other way around (compute D_hat from D and from it global K_F).
+    """
+
+    return K_F, freq, Nt
         
     
     

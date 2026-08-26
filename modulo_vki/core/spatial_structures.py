@@ -51,6 +51,9 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,
             if verbose:
                 print("Completing Spatial Structures Modes: \n")
 
+            # Filtered-covariance SPOD temporal eigenvalues do not generally
+            # equal the norms of D @ Psi.  Recompute the returned singular
+            # values before normalizing, as in MODULO 2.1.5.
             Sigma_P[:] = np.linalg.norm(PHI_P_SIGMA_P, axis=0)
             Phi_P = PHI_P_SIGMA_P / Sigma_P
 
@@ -174,7 +177,7 @@ def Spatial_basis_POD(D, PSI_P, Sigma_P, MEMORY_SAVING,
             else:
                 for j in range(R1, R2):
                     jj = j - R1
-                    Phi_P = dps[:, jj] / Sigma_P[j] 
+                    Phi_P = dps[:, jj] / Sigma_P[j]
                     np.savez(FOLDER_OUT + f"/phi_{j + 1}", phi_p=Phi_P)
 
         Phi_P_M = np.zeros((N_S, R))

@@ -9,7 +9,6 @@ Initially focused on the Multiscale Proper Orthogonal Decomposition (mPOD), it h
    :maxdepth: 2
    :caption: Getting Started  
 
-   intro
    installation
 
 
@@ -58,9 +57,6 @@ For a comprehensive review of modal methods in fluid dynamics, see Mendez et al.
    decompositions/mpod/index
    decompositions/kpod/index
    decompositions/spod/index
-
-   .. decompositions/index
-
 
 Key features of MODULO
 ----------------------

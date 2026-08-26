@@ -5,6 +5,8 @@ from sklearn.decomposition import TruncatedSVD
 from scipy.linalg import eigh
 from sklearn.utils.extmath import randomized_svd
 import warnings
+from scipy.linalg import norm
+from scipy.signal.windows import get_window 
 
 
 def Bound_EXT(S, Ex, boundaries):
@@ -331,17 +333,9 @@ def segment_and_fft(D: np.ndarray,
     
     n_s, n_t = D.shape 
     
-    '''
-    For this SPOD, we assemble a tensor of overlapping chunks (similar to Welch method).
-    This tensor has size
-    
-    D_t \in \mathbb{R}^{n_s \times n_B \times n_P}
-    
-    where:
-        - n_s is space grid (unchanged)
-        - n_B defines the blocks length
-        - n_P defines the number of partitions (blocks)
-    '''
+    # For this SPOD, assemble a tensor of overlapping chunks, similarly to
+    # Welch's method. Its shape is (n_s, n_B, n_P), where n_s is the number of
+    # spatial points, n_B is the block length, and n_P is the number of blocks.
     ind = np.arange(n_t)
     indices = overlap(ind, len_chunk=L_B, len_sep=O_B)
     
@@ -472,3 +466,207 @@ def apply_weights(D: np.ndarray, weights: np.ndarray) -> np.ndarray:
         raise ValueError(f"weights must be length {n_s} or {2*n_s}, got {w.size}")
     # apply weights: scale each row i by sqrt(w_full[i])
     return (D.T * np.sqrt(w_full)).T
+
+
+####  FAST MPOD UTILS  ####
+def sortScalesByEnergy(F_V, Keep, freq, mode, sourceMat):
+    """
+    This function sorts scales by decreasing energy.
+
+    NOTE:
+    Sorting the scales by decreasing energy increases the chance of correctly recognizing
+    and skipping low energy scales further in the algorithm. It also reduces the number of modes
+    kept at each scale, since the most energetic scales are processed first.
+    It brings close to no additional computational overhead, since scale energies have to be computed
+    anyway for the kept scales, and sorting at most a few tens of scales is negligible.
+    However, it can bring significant computational savings, especially when high energy
+    dynamics is located at high frequencies.
+
+    Parameters
+    ----------
+    F_V : list of floats >=0
+        Frequency splitting vector in ascending order. Must obey F_V[0]=0, F_V[-1]=f_Nyq and F_V[:-1]<f_Nyq. 
+
+    Keep : list of bool
+        Which frequency bands to keep.
+
+    freq : 1D np.ndarray
+        Array of frequencies generated during fft.
+
+    mode : str
+        Whether or not the global cross-spectral density matrix is available.
+    
+    sourceMat : 2D complex np.ndarray
+        Matrix to be processes. Either K_F or D_hat.
+
+    Returns
+    -------
+    scaleOrder : 1D np.ndarray of int
+        Array of indices indicating the ordering of bands with respect to energy.
+
+    E : 1D np.ndarray of float >=0
+        Vector of scale energies (unsorted, i.e., in frequency band order).
+    
+    f : 2D np.ndarray of float >=0
+        Matrix collecting starting and ending frequency of scales.
+        rows : scales (unsorted, i.e., in frequency band order)
+        columns : starting and ending freq of scale, respectively
+
+    indTot : list of 1D np.ndarray of int >0
+        List of arrays containing indices corresponding to appropriate scales. Scales in unsorted order.
+
+    scalesToKeep : 1D np.ndarray of int
+        Indices of scales to keep.
+
+    Raises
+    ------
+    This function does not raise any exceptions by itself. See numpy and scipy documentation 
+    of the functions used in the code to see, which error messages you may get. 
+    """
+
+    # inic
+    indTot = []
+    scalesToKeep = np.nonzero(Keep == 1)[0]
+    noOfKept = scalesToKeep.size
+    E = np.zeros(noOfKept)
+    
+    print("Precomputing scale energies for %d kept scales ..."%noOfKept)
+    print("Keeping scales ",scalesToKeep+1)
+
+    absFreq = np.abs(freq)  # Compute absolute values of frequencies
+
+    # Get diagonal of K_F if available
+    if mode == "fullK":
+        diag = np.diag(sourceMat).real
+
+    f = np.column_stack((F_V[scalesToKeep], F_V[scalesToKeep + 1])) # Starting and ending frequencies of scales
+
+    # Precompute frequency indices and energies for all kept scales 
+    # Must be done no matter what so this does not bring any overhead
+    i = 0
+    for k in scalesToKeep:
+
+        # Get indices of frequencies in current scale
+        if F_V[k+1] < np.max(absFreq)-absFreq[1]/2:  # End freq of scale is not Nyquist freq
+            indices = np.nonzero((absFreq>=F_V[k])&(absFreq<F_V[k+1]))[0] # Exclude end freq from scale, since it belongs to the next scale
+        else:   # End freq is Nyquist freq, include it in the scale
+            indices = np.nonzero(absFreq>=F_V[k])[0]
+        indTot.append(indices)
+
+        # Scale energies
+        if mode == "fullK":
+            E[i] = np.sum(diag[indices]) # This is O(N)
+        else:
+            E[i] = norm(sourceMat[:,indices],ord='fro',check_finite=False)**2   # This is O(Ns*N)
+
+        i += 1
+
+    # Order scales by decreasing energy
+    scaleOrder = np.flip(np.argsort(E))
+
+
+    return scaleOrder, E, f, indTot, scalesToKeep
+
+
+def taperBlockBounds(indices, winType, taperSize, Nt, fBounds, fs):
+    """
+    This function computes the mask to taper frequency block edges to reduce Gibbs phenomenon.
+
+    Parameters
+    ----------
+    indices : 1D np.ndarray of int
+        Indices of frequencies in the scale to be extended.
+    
+    winType : str
+        Type of window to be used for tapering.
+
+    taperSize : int > 0
+        Size of the tapering region on each side of the frequency block.
+        
+    Nt : int
+        Number of snapshots in data.
+
+    fBounds : 2 element 1D np.ndarray of float
+        Frequency bounds of the block in Hz. fBounds[0] = lower bound, fBounds[1] = upper bound.
+    
+    fs : float > 0
+        Sampling frequency of the dataset in Hz.
+
+    Returns
+    -------
+    newInd : 1D np.ndarray of int
+        New indices of frequencies in the extended block.
+    
+    maskTot : 2D np.ndarray of float >0
+        Smoothing mask to be applied to the extended block.
+
+    Raises
+    ------
+    AssertionError
+        When wrong shaped blocks are encountered.
+
+    ValueError
+        When invalid frequency block bounds are provided.
+
+    May throw unexpected error messages when the filter does not have local minima.
+    See the note in the code for more details.
+    """
+
+    window = get_window(winType,2*taperSize,fftbins=False)  # Get window to be used as tapering function
+    if window[0] < 1e-9 and window[-1] < 1e-9:  # If window has leading and trailing zeros, crop them out
+        window = get_window(winType,2*(taperSize+1),fftbins=False) # Get larger window to ensure we have the right amount of non-zero values after cropping
+        window = window[1:-1] # Crop out the leading and trailing zeros of the window
+    # Get tapering functions from window    
+    tf1 = window[:taperSize]    
+    tf2 = window[taperSize:]
+
+    noOfInd = indices.size
+
+    # fs/Nt is the frequency resolution (i.e. the bin width) of the signal. The freq vector is freq = [0, fs/Nt, 2*fs/Nt, ...]
+    if fBounds[0] >= 0.5*fs/Nt and fBounds[1] <= fs/2 - 0.5*fs/Nt:  # Block is fully inside frequency domain => bandpass, all sided taper
+
+        assert noOfInd % 2 == 0, "Invalid frequency indices provided for scale %s Hz, expected even number of indices, got odd"%fBounds
+        assert noOfInd >= 4*taperSize, "Scale %s Hz has size smaller than smoothing region, cannot create mask."%fBounds
+
+        noOfEntr = noOfInd//2
+
+        mask1 = np.ones(noOfEntr)
+        mask1[:taperSize] = tf1
+        mask1[-taperSize:] = tf2
+
+        mask1D = np.zeros(noOfInd)
+        mask1D[:noOfEntr] = mask1
+        mask1D[noOfEntr:] = mask1
+
+    elif fBounds[0] < 0.5*fs/Nt and fBounds[1] > fs/2 - 0.5*fs/Nt:
+        raise ValueError("Processed scale spans the whole frequency domain. Please split it into at least two scales or use classical POD.")
+
+    elif fBounds[0] < 0.5*fs/Nt:   # Block containing f=0 is on the matrix borders => lowpass, one sided taper
+
+        assert noOfInd % 2 == 1, "Invalid frequency indices provided for scale %s Hz, expected odd number of indices, got even"%fBounds
+        assert noOfInd >= 2*taperSize, "Scale %s Hz has size smaller than smoothing region, cannot create mask."%fBounds
+
+        noOfEntr = noOfInd//2 + 1 # +1 to include the DC component index
+
+        mask1 = np.ones(noOfEntr)
+        mask1[-taperSize:] = tf2
+
+        mask2 = np.ones(noOfEntr-1)
+        mask2[:taperSize] = tf1
+
+        mask1D = np.zeros(indices.size)
+        mask1D[:noOfEntr] = mask1
+        mask1D[noOfEntr:] = mask2
+
+    elif fBounds[1] > fs/2 - 0.5*fs/Nt: # Block containing f_Nyq is contiguous in frequency domain => only one set of indices
+        #assert (np.diff(indices) == 1).all(), "Invalid frequency indices for scale %s Hz provided, expected contiguous block of indices."%fBounds
+        assert noOfInd >= 2*taperSize, "Scale %s Hz has size smaller than smoothing region, cannot create mask."%fBounds
+
+        mask1D = np.ones(indices.size)
+        mask1D[:taperSize] = tf1
+        mask1D[-taperSize:] = tf2
+
+    else:
+        raise ValueError("Invalid frequency block bounds provided.")
+
+    return mask1D

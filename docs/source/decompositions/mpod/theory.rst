@@ -33,3 +33,30 @@ where :math:`\mathbf{P}_\mathbf{\Sigma}` is a permutation matrix that ranks the 
 
 In conclusion, we note that the mPOD generalizes POD and DFT: for :math:`M=1`, the mPOD is equivalent to POD, while for :math:`M=n_t`, 
 the mPOD is equivalent to DFT.
+
+fast mPOD
+^^^^^^^^^
+
+The fast mPOD follows the spectral formulation introduced by Belda *et al.* :cite:`belda2026fast` by replacing the classical FIR filter bank with compact spectral masks :math:`M_m` acting on strictly disjoint frequency supports. Starting from the spectral representation of the temporal correlation matrix,
+
+.. math::
+   \mathbf{K}_F = \mathbf{\Psi}_F \mathbf{K} \mathbf{\Psi}_F,
+
+the contribution of the :math:`m`-th band is written as
+
+.. math::
+   \mathbf{K}_{F,m} = M_m \, \mathbf{K}_F \, M_m.
+
+Because the masks have compact, non-overlapping support, :math:`\mathbf{K}_{F,m}` contains only :math:`n^{(m)}` active frequencies and reduces to a compact operator :math:`\mathbf{K}_{F,c}`. The eigenvalue problem is then solved on this reduced block,
+
+.. math::
+   \mathbf{K}_{F,c}\,\widehat{\mathbf{\Psi}}_m
+   =
+   \widehat{\mathbf{\Psi}}_m \mathbf{\Sigma}_m^2,
+
+and the temporal modes are finally recovered as
+
+.. math::
+   \mathbf{\Psi}_m = \mathbf{\Psi}_F \widehat{\mathbf{\Psi}}_m.
+
+Compared with the classical mPOD, the essential difference is therefore that each scale is no longer treated through a full :math:`n_t \times n_t` eigenvalue problem, but through an independent reduced problem whose size is set only by the number of active frequencies in that band. This is the key idea behind the fast spectral formulation proposed by Belda *et al.* (2026).

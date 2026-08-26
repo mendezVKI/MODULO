@@ -2,13 +2,17 @@ import os
 import numpy as np
 from numpy import linalg as LA
 from tqdm import tqdm
+from scipy.fft import fft, fftfreq
+from scipy.linalg import eigh, svd
+from randomized_svd import rsvd
 
-from modulo_vki.core._k_matrix import CorrelationMatrix, spectral_filter, kernelized_K
+
+from modulo_vki.core._k_matrix import CorrelationMatrix, spectral_filter, kernelized_K, compute_K_F
 from modulo_vki.core.temporal_structures import dft, temporal_basis_mPOD, Temporal_basis_POD
 from modulo_vki.core.spatial_structures import Spatial_basis_POD, spatial_basis_mPOD
 from modulo_vki.core._dmd_s import dmd_s
 
-from modulo_vki.core.utils import segment_and_fft, pod_from_dhat, apply_weights, switch_svds
+from modulo_vki.core.utils import segment_and_fft, pod_from_dhat, apply_weights, switch_svds, sortScalesByEnergy, taperBlockBounds
 from sklearn.metrics.pairwise import pairwise_kernels
 
 
@@ -32,7 +36,7 @@ class ModuloVKI:
     Notes
     -----
     MODULO operations assume the dataset is uniformly spaced in both space
-    (Cartesian grid) and time. For non-cartesian grids, the user must 
+    (Cartesian grid) and time. For non-cartesian grids, the user must
     provide a weights vector `[w_1, w_2, ..., w_Ns]` where `w_i = area_cell_i / area_grid`.
     """
 
@@ -131,10 +135,10 @@ class ModuloVKI:
 
         if self.MEMORY_SAVING:
             os.makedirs(self.FOLDER_OUT, exist_ok=True)
-            
-            if data is not None: 
-                raise ValueError("The memory saving option is active, so MODULO cannot be initialized with the full snapshot matrix. Use 'ReadData' routines to process the data in chunks instead.")        
-        
+
+            if data is not None:
+                raise ValueError("The memory saving option is active, so MODULO cannot be initialized with the full snapshot matrix. Use 'ReadData' routines to process the data in chunks instead.")
+
         # Load the data matrix
         if isinstance(data, np.ndarray):
             # Number of points in time and space
@@ -146,9 +150,9 @@ class ModuloVKI:
             self.D = None  # D is never saved when N_partitions >1
             self.N_S = N_S  # so N_S and N_t must be given as parameters of modulo
             self.N_T = N_T
-        
+
         '''If the grid is not cartesian, ensure inner product is properly defined using weights.'''
-        
+
         if weights.size != 0:
             if len(weights) == self.N_S:
                 print("The weights you have input have the size of the columns of D \n"
@@ -170,13 +174,13 @@ class ModuloVKI:
             else:
                 self.Dstar = None
         else:
-            
+
             print("Modulo assumes you have a uniform grid. "
                   "If not, please give the weights as parameters of MODULO!")
             self.weights = weights
             self.Dstar = self.D
-                         
-    
+
+
     def DFT(self, F_S, SAVE_DFT=False):
         """
         Computes the Discrete Fourier Transform (DFT) of the dataset.
@@ -197,7 +201,7 @@ class ModuloVKI:
         -------
         Phi_F : np.ndarray
                 Spatial DFT modes (spatial structures matrix).
-                
+
         Psi_F : np.ndarray
                 Temporal DFT modes (temporal structures matrix).
 
@@ -210,11 +214,11 @@ class ModuloVKI:
             Phi_F, Psi_F, Sigma_F = dft(self.N_T, F_S, D, self.FOLDER_OUT, SAVE_DFT=SAVE_DFT)
 
         else:
-            Phi_F, Psi_F, Sigma_F = dft(self.N_T, F_S, self.D, 
+            Phi_F, Psi_F, Sigma_F = dft(self.N_T, F_S, self.D,
                                         self.FOLDER_OUT, SAVE_DFT=SAVE_DFT)
 
         return Phi_F, Psi_F, Sigma_F
-    
+
     def POD(self, SAVE_T_POD: bool = False, mode: str = 'K',verbose=True):
         """
         Compute the Proper Orthogonal Decomposition (POD) of a dataset.
@@ -251,9 +255,9 @@ class ModuloVKI:
         A brief recall of the theoretical background of the POD is
         available at https://youtu.be/8fhupzhAR_M
         """
-        
+
         mode = mode.lower()
-        assert mode in ('k', 'svd'), "POD mode must be either 'K', temporal correlation matrix, or 'svd'." 
+        assert mode in ('k', 'svd'), "POD mode must be either 'K', temporal correlation matrix, or 'svd'."
 
         if mode == 'k':
                 if verbose:
@@ -298,10 +302,10 @@ class ModuloVKI:
                                                 verbose=verbose)
                         if verbose:
                             print("Done.")
-        
-        else:  
+
+        else:
                 if self.MEMORY_SAVING:
-                        
+
                         if self.N_T % self.N_PARTITIONS != 0:
                                 tot_blocks_col = self.N_PARTITIONS + 1
                         else:
@@ -322,11 +326,11 @@ class ModuloVKI:
                         Phi_P, Psi_P, Sigma_P = switch_svds(D, self.n_Modes, self.svd_solver)
 
                 else:  # self.MEMORY_SAVING:
-                        Phi_P, Psi_P, Sigma_P = switch_svds(self.D, self.n_Modes, self.svd_solver)    
+                        Phi_P, Psi_P, Sigma_P = switch_svds(self.D, self.n_Modes, self.svd_solver)
 
         return Phi_P, Psi_P, Sigma_P
 
-    
+
     def mPOD(self, Nf, Ex, F_V, Keep, SAT, boundaries, MODE, dt, SAVE=False, K_in=None, Sigma_type='accurate', conv_type: str = '1d', verbose=True):
         """
         Multi-Scale Proper Orthogonal Decomposition (mPOD) of a signal.
@@ -335,29 +339,29 @@ class ModuloVKI:
         ----------
         Nf : np.array
                 Orders of the FIR filters used to isolate each scale. Must be of size len(F_V) + 1.
-        
+
         Ex : int
                 Extension length at the boundaries to impose boundary conditions (must be at least as large as Nf).
-        
+
         F_V : np.array
                 Frequency splitting vector, containing the cutoff frequencies for each scale. Units depend on the temporal step `dt`.
-        
+
         Keep : np.array
                 Boolean array indicating scales to retain. Must be of size len(F_V) + 1.
-        
+
         SAT : int
                 Maximum number of modes per scale.
-        
+
         boundaries : {'nearest', 'reflect', 'wrap', 'extrap'}
                 Boundary conditions for filtering to avoid edge effects. Refer to:
                 https://docs.scipy.org/doc/scipy/reference/tutorial/ndimage.html
-        
+
         MODE : {'reduced', 'complete', 'r', 'raw'}
                 Mode option for QR factorization, used to enforce orthonormality of the mPOD basis to account for non-ideal filter responses.
-        
+
         dt : float
                 Temporal step size between snapshots.
-        
+
         SAVE : bool, default=False
                 Whether to save intermediate results to disk.
 
@@ -376,14 +380,14 @@ class ModuloVKI:
         -------
         Phi_M : np.array
                 Spatial mPOD modes (spatial structures matrix).
-        
+
         Psi_M : np.array
                 Temporal mPOD modes (temporal structures matrix).
-        
+
         Sigma_M : np.array
                 Modal amplitudes.
         """
-        
+
         if K_in is None:
                 if verbose:
                     print('Computing correlation matrix D matrix...')
@@ -431,6 +435,408 @@ class ModuloVKI:
             print("Spatial modes computed.")
 
         return Phi_M, Psi_M, Sigma_M
+
+
+    def fastmPOD(self, F_V, fs, Keep = None, winType = "hann", taper = None, mode = "fullK", GThresh = -1, ncpus = os.cpu_count(),
+                 oversampling = 10, n_iter = -1, useFortran = False):
+
+        """
+        Fast spectral variant of Multi-Scale Proper Orthogonal Decomposition (mPOD) of a signal.
+
+        Parameters
+        ----------
+        F_V : list of float in ascending order, >0 and <f_Nyq
+            Frequency splitting vector. Must NOT include 0 and f_Nyq.
+
+        fs : float > 0
+            Sampling frequency of the dataset.
+
+        Keep : list of bool, optional
+            Which frequency bands to keep. No of elements is len(F_V)+1.
+            Default = None (initialize to keep all scales)
+
+        winType : str, optional
+            Type of window to be used for creating tapering functions. Simple smooth windows are recommended.
+            Default = "hann".
+
+        taper : list of float, optional
+            Tapering width for each scale in Hz.
+            Default = None (no taper).
+
+        mode : str, optional
+            Computation backend: fullK, bandK, fullSVD, or randSVD. The K-based
+            modes use correlation matrices; the SVD-based modes operate on the
+            spectral data matrix. Default is fullK.
+
+        GThresh : float >= 0, optional
+            Energy ratio at which the K-based backends start using Gershgorin
+            bounds to estimate the number of significant modes. Values below
+            one disable the estimate. The special value -1 selects n_Modes/2.
+
+        ncpus : int >0, optional
+            Number of CPUs available for FFT parallelization. Set to number of physical cores /
+            number of physical cores - 1 for best performance.
+            Default = os.cpu_count()
+
+        oversampling : int >0, optional
+            Oversampling parameter for randomized SVD. Higher values can increase accuracy of randomized SVD,
+            but also increase computational cost. This is the first parameter to tweak when randomized SVD
+            does not give good results. For "randSVD" mode only, for other modes has no effect.
+            Default = 10, as in scikit-learn implementation of randomized SVD.
+
+        n_iter : int >0, optional
+            Power iteration parameter for randomized SVD. Higher values can increase accuracy of randomized SVD,
+            especially when singular values decay slowly, but also increase computational cost. Change only when
+            changing oversampling does not improve the results. Set to -1 to let the algorithm set it on-the-fly
+            based on the number of modes and size of the processed band matrix. For "randSVD" mode only,
+            for other modes has no effect.
+            Default = -1 (Set value on-the fly, in the same way as in scikit-learn).
+
+        useFortran : bool, optional
+            Whether to use Fortran implementations for assembly of correlation matrices. Can give up to 2x speedup
+            for assembly of K (mode = 'fullK') and up to 2.7x speedup for assembly of K_Fsc (mode = 'bandK') under
+            the assumption of FLOP-bound computation. For memory-bound computation this option has little to no effect.
+            Default = False.
+
+        Returns
+        -------
+        phi : 2D np.ndarray of float
+            Spatial modes in descending signifficancy order. Column-wise (i-th column = i-th mode).
+
+        psi : 2D np.ndarray of float
+            Temporal modes in descending signifficancy order. Column-wise (i-th column = i-th mode).
+
+        sigTot : 1D np.ndarray of float >0
+            Mode amplitudes in descending signifficancy order.
+
+        Raises
+        ------
+        TypeError
+            When an input has an invalid type.
+
+        ValueError
+            When an input value or computation mode is invalid.
+
+        NotImplementedError
+            When memory saving or weighted inner products are requested.
+        """
+
+        print("Computing mPOD using fast mPOD algorithm ...")
+
+        nModes = self.n_Modes
+
+        # Input checks use explicit exceptions so they remain active under
+        # ``python -O`` and provide useful errors to library callers.
+        if self.D is None:
+            raise NotImplementedError(
+                "fastmPOD currently requires the snapshot matrix in memory."
+            )
+        if self.weights.size:
+            raise NotImplementedError(
+                "Weighted inner products are not yet implemented for fastmPOD."
+            )
+        if not isinstance(F_V, list):
+            raise TypeError("F_V must be a list. Got %s." % type(F_V).__name__)
+        if not np.isscalar(fs) or fs <= 0:
+            raise ValueError("fs must be a positive number. Got %s." % fs)
+        if not isinstance(nModes, int) or not 0 < nModes < min(self.D.shape):
+            raise ValueError(
+                "n_Modes must be an int satisfying 0 < n_Modes < min(D.shape)."
+            )
+        if Keep is not None and not isinstance(Keep, list):
+            raise TypeError("Keep must be a list or None.")
+        if not isinstance(winType, str):
+            raise TypeError("winType must be a string.")
+        if taper is not None and not isinstance(taper, list):
+            raise TypeError("taper must be a list or None.")
+        if mode not in ["fullK", "bandK", "fullSVD", "randSVD"]:
+            raise ValueError("Unsupported fastmPOD mode: %s" % mode)
+        if not isinstance(ncpus, int) or ncpus < 1:
+            raise ValueError("ncpus must be a positive integer.")
+        if not isinstance(oversampling, int) or oversampling < 0:
+            raise ValueError("oversampling must be an integer >= 0.")
+        if not isinstance(n_iter, int) or n_iter < -1:
+            raise ValueError("n_iter must be >= 0, or -1 for automatic selection.")
+        if useFortran and mode not in ["fullK", "bandK"]:
+            raise ValueError("useFortran=True is supported only in fullK and bandK modes.")
+        if useFortran and self.D.dtype != np.float64:
+            raise ValueError(
+                "The optional Fortran extension requires float64 input. "
+                "Initialize ModuloVKI with dtype='float64'."
+            )
+
+        # Prepare F_V, Keep, Nf, GThresh
+        F_V = [0] + F_V + [fs/2]
+        F_V = np.array(F_V)
+        if Keep is None:
+            # The algorithm is very efficient, so we can allow the user to be a bit dumb / ignorant
+            print(f"\nWARNING: Scales to keep not specified, defaulting to keeping all scales \n")
+            Keep = [1]*(F_V.size-1)
+        Keep = np.array(Keep)
+        if GThresh == -1:
+            GThresh = nModes/2
+            print(f"Gershgorin threshold not specified, defaulting to {GThresh} (nModes/2)")
+        if taper is None:
+            taper = [-1]*(F_V.size-1)
+        taper = np.array(taper)
+
+        # Check input validity
+        if not (np.diff(F_V) > 0).all():
+            raise ValueError("F_V entries must be strictly increasing and lie in (0, fs/2).")
+        if Keep.size != F_V.size - 1:
+            raise ValueError("Keep must contain len(F_V)+1 entries.")
+        if not np.any(Keep):
+            raise ValueError("Keep must select at least one frequency band.")
+        if taper.size != F_V.size - 1:
+            raise ValueError("taper must contain len(F_V)+1 entries.")
+        if GThresh < 0:
+            raise ValueError("GThresh must be >= 0.")
+
+
+        # Precompute K_F if mode = "fullK", otherwise compute D_hat
+        print("Transforming data to spectral domain ...")
+        #startSw = time()
+        if mode == "fullK":     # compute_K_F manages Fortran import and loading internally
+            K_F, freq, Nt = compute_K_F(self.D,fs,ncpus,useFortran)     # O(Ns*Nt**2) for K from D, O(Nt**2*log(Nt)) for K_F from K
+        else:
+            Nt = self.D.shape[1]
+            freq = fftfreq(Nt,1/fs)
+            D_hat = fft(self.D,axis=1,norm='ortho',workers=ncpus)  # O(Ns*Nt*log(Nt))
+        #durSw = time() - startSw
+        #print("Done in %.3f s."%durSw)
+
+        taperWid = np.round(taper*Nt/fs).astype(int)  # Convert tapering width from Hz to number of frequency bins
+
+        # Sort scales by decreasing energy
+        scaleOrder, E, f, indTot, scalesToKeep = sortScalesByEnergy(F_V, Keep, freq, mode, K_F if mode == "fullK" else D_hat)
+        noOfScales = Keep.size
+        Etot = 0.01*np.sum(E)   # Prepare energy to print scale E content in %
+
+        # Initialize Lambda and Psi matrices as None
+        lamTot = None
+        eigvTot = None
+
+        # Loop over scales in decreasing energy order
+        #startLoop = time()
+        print("Looping through scales in decreasing energy order ... \n")
+        lamMin = 0
+        for k in scaleOrder:
+
+            print("Processing band %d/%d (%.4g Hz - %.4g Hz), %.1f %% of resolved energy in %d bins ..."%(scalesToKeep[k]+1,noOfScales,f[k,0],f[k,1],E[k]/Etot,indTot[k].size))
+
+            """
+            NOTE:
+            Since K_Fsc is hermitian symmetric, eigendecomposition K_Fsc = V@Lambda@V.H is a unitary transform,
+            and thus preserves the sum along the diagonal, i.e. the trace. From physical constraints,
+            Lambda_i >= 0 and < infty for all i, thus we can estimate, whether the scale contains enough energy
+            for its modes to be signifficant. In the case of precomputed K_F, this can be done in O(N) time
+            by comparing tr(K_Fsc) to the smallest of the nModes significant eigvals at the time. This allows us
+            to skip the eigenvalue computation for scales that do not contain enough energy, which has complexity
+            of O(N**3). In the case of the on-the-fly computation of K_Fsc, this saves even more time,
+            since K_Fsc computation is O(Ns*N**2), although estimating the trace indirectly from Frobenius norm of
+            D_hat is more expensive at O(Ns*N). The computation of scale energies (traces) was moved outside of
+            this loop to 'sortScalesByEnergy()' to allow for energy-wise scale sorting.
+            """
+
+            # Check energy in scale, stop computation when not enough energy is in the scale,
+            # since all following scales have even less energy
+            if E[k] <= lamMin:
+                print(" -> Band %d does not contain enough energy \n"%(k+1))
+                print("Energy limit reached, exiting the loop")
+                print(" -> All unprocessed bands have even less energy because of energy sorting.\n")
+                break
+
+
+            # Get indices of frequencies in current scale
+            indices = indTot[k]
+
+            # Optional tapering
+            if taperWid[scalesToKeep[k]] > 0:
+                print(" -> Computing smoothing mask of width %d bins"%(taperWid[scalesToKeep[k]]))
+                mask1D = taperBlockBounds(indices, winType=winType, taperSize=taperWid[scalesToKeep[k]], Nt=Nt, fBounds=f[k,:], fs=fs)
+
+            # number of frequencies in the current scale
+            N = indices.size
+
+            if mode in ["fullK", "bandK"]:      # K-based approaches
+                if mode == "fullK":
+                    print(" -> Using precomputed K_F")
+                    # Extract submatrix of K_F corresponding to current scale
+                    K_Fsc = K_F[indices,:]      # O(1) -- just creating a view of K_F, no copying
+                    K_Fsc = K_Fsc[:,indices]    # O(1)
+                else:
+                    print(" -> Computing K_Fsc on the fly")
+                    # Assemble K_Fsc in place
+                    if useFortran:
+                        from modulo_vki.fortran import load_sym_matmul
+                        sm = load_sym_matmul()
+                        if f[k,0] == 0:
+                            K_Fsc = sm.sym_routines.compute_persym_aha_dc(np.asfortranarray(D_hat[:,indices].copy()), D_hat.shape[0], N)
+                        elif f[k,1] == fs/2 and Nt%2 == 0:
+                            K_Fsc = sm.sym_routines.compute_persym_aha_nyq(np.asfortranarray(D_hat[:,indices].copy()), D_hat.shape[0], N)
+                        else:
+                            K_Fsc = sm.sym_routines.compute_persym_aha_band(np.asfortranarray(D_hat[:,indices].copy()), D_hat.shape[0], N)
+                    else:
+                        K_Fsc = np.linalg.matmul(D_hat[:,indices].conj().T, D_hat[:,indices])   # O(Ns*N**2), but with complex-valued matrix
+
+
+                if taperWid[scalesToKeep[k]] > 0:
+                    print(" -> Applying smoothing to K_Fsc")
+                    K_Fsc = K_Fsc * np.outer(mask1D,mask1D)    # Apply smoothing mask to K_Fsc -- O(N**2)
+
+
+                """
+                NOTE:
+                Gershgorin circle theorem is usually more restrictive than the general energy (trace) rule,
+                especially in the case of higly diagonally dominant matrices and matrices, where the entries
+                are sort of "uniformly distributed" across rows/columns (there is no row/column, that would
+                stand out with respect to its sum). However, it is also a lot more computationally expensive
+                at O(N**2), and cannot be computed without prior computation of K_Fsc, hence it is used only
+                when the energy content of the scale is reasonably low, i.e., the chance of skipping the scale
+                or lowernig the number of modes in it based on this theorem is high.
+                """
+
+                if E[k] <= GThresh*lamMin:
+                    print(" -> Low energy band, estimating no of modes from Gershgorin theorem")
+                    # Compute L1 norms of rows, i.e., upper bounds on eivals from Gershgorin theorem
+                    potLam = np.sum(np.abs(K_Fsc), axis=1)  # This is O(N**2)
+                    maxNoOfLam = np.count_nonzero(potLam > lamMin)
+                    if maxNoOfLam == 0:
+                        print(" -> Skippimg band %d based on Gershgorin theorem \n"%(k+1))
+                        continue
+                    else:
+                        print(" -> Estimate: Up to %d signifficant modes in the band"%maxNoOfLam)
+                else:
+                    maxNoOfLam = nModes
+
+                noOfLams = np.min([nModes,N,maxNoOfLam])
+
+                """
+                NOTE:
+                Whole K_F as computed from either K or D_hat should be hermitian symmetric by definition,
+                but we dont give a duck about the whole thing, we are only interested in the part of it
+                that is nonzero in current scale, so lets assure only the hermitian symmetry of K_Fsc for
+                computational efficiency reasons. This symmetrization should filter out some numerical jitter.
+                """
+
+                # Enforcing hermitian symmetry of K_Fsc
+                K_Fsc = (K_Fsc + K_Fsc.conj().T)/2
+
+                # Compute noOfLams largest eigenvalues
+                print(" -> Computing eigenvalues")
+                lam, eigv = eigh(K_Fsc,subset_by_index=[N-noOfLams,N-1],check_finite=False)     # This is O(N**3)
+
+
+
+            elif mode in ["fullSVD", "randSVD"]:    # SVD-based approaches
+                noOfLams = np.min([nModes,N])
+
+                if mode == "fullSVD":
+                    if taperWid[scalesToKeep[k]] > 0:
+                        print(" -> Computing eigenvectors of K_Fsc using full SVD with smoothing")
+                        _, lam, eigv = svd(D_hat[:,indices]*mask1D, full_matrices=False, check_finite=False) # O(Ns*N**2)
+                    else:
+                        print(" -> Computing eigenvectors of K_Fsc using full SVD")
+                        _, lam, eigv = svd(D_hat[:,indices], full_matrices=False, check_finite=False) # O(Ns*N**2)
+
+                    # Take only the noOfLams largest singular values and corresponding right singular vectors
+                    lam = lam[:noOfLams]
+                    eigv = eigv[:noOfLams,:]
+
+                else: # mode == "randSVD"
+                    if n_iter >= 0:
+                        powIter = n_iter
+                    elif n_iter == -1:
+                        powIter = 7 if noOfLams < 0.1*N else 4
+                    else:
+                        raise ValueError("Invalid n_iter value, must be >=0 for manual setting or -1 for auto-setting.")
+
+                    if taperWid[scalesToKeep[k]] > 0:
+                        print(" -> Computing eigenvectors of K_Fsc using randomized SVD with smoothing")
+                        _, lam, eigv = rsvd(D_hat[:,indices]*mask1D, t=int(noOfLams), p=powIter, oversampling=oversampling) # O(Ns*N*noOfLams)
+                    else:
+                        print(" -> Computing eigenvectors of K_Fsc using randomized SVD")
+                        _, lam, eigv = rsvd(D_hat[:,indices], t=int(noOfLams), p=powIter, oversampling=oversampling) # O(Ns*N*noOfLams)
+                    lam = np.diag(lam)
+
+                eigv = eigv.conj().T  # To be consistent with eigendecomposition output, where eigenvectors are column-wise, in SVD they are row-wise
+
+            else:
+                raise ValueError("Invalid computation mode specified.")
+
+            """
+            NOTE:
+            Sorting of eigenvalues/eigenvectors per scale and keeping only 2*nModes eigvals and eigvecs globally
+            in each iteration is computationally comparable to sorting all scales at the end and keeping only
+            nModes globally (noOfScales*O(2*nModes log 2*nModes) vs O(noOfScales*nModes log noOfScales*nModes)).
+            This approach was made even cheaper by only sorting the nonzero entries in each scale, not the full 2*nModes.
+            It also saves memory, and allows the energy check per scale described above to operate much more efficiently.
+            """
+
+            print(" -> Selecting significant modes")
+            if not lamTot is None:
+                ind2 = np.nonzero(lam > lamMin)[0]
+                if ind2.size == 0:
+                    print(" -> No significant modes found \n")
+                    continue
+
+                maxInd = nModes+ind2.size
+                lamTot[nModes:maxInd] = lam[ind2]
+                # Expand eigenvectors to full frequency space (decompress them by 0 padding)
+                eigvTot[indices,nModes:maxInd] = eigv[:,ind2]
+
+                # Sort all modes by descending eigenvalue magnitude
+                idx = np.flip(np.argsort(lamTot[:maxInd]))
+                lamTot[:maxInd] = lamTot[idx]
+                eigvTot[:,:maxInd] = eigvTot[:,idx]
+                # Zero-out nonsignifficant modes
+                lamTot[nModes:] = 0
+                eigvTot[:,nModes:] = 0
+                print(" -> Kept %d modes \n"%ind2.size)
+
+            else:
+                # lamTot is None
+                print(" -> Selection unapplicable, taking %d modes \n"%noOfLams)
+                # Allocate space for eigenvalues and eigenvectors for faster operation
+                lamTot = np.zeros((2*nModes))
+                eigvTot = np.zeros((Nt,2*nModes), dtype = 'complex')
+
+                # Sorting to have descending eigenvalues
+                idx = np.flip(np.argsort(lam))
+                lamTot[:lam.size] = lam[idx]
+                # Expand eigenvectors to full frequency space (decompress them by 0 padding)
+                eigvTot[indices,:lam.size] = eigv[:,idx]
+
+            lamMin = lamTot[nModes-1]   # Update the smallest significant eigenvalue for checks in the next scale
+
+        # Take only the desired amount of modes
+        eigvTot = eigvTot[:,:nModes]
+
+        # Only the final modes are transformed back to time domain, saving time (least possible ffts)
+        psi = fft(eigvTot,Nt,axis=0,norm='ortho',workers=np.min([ncpus,nModes])).real
+        #print("Done in %.3f s"%(time()-startLoop))
+
+        #startNorm = time()
+        print("Normalizing temporal modes ...")
+        psi = psi/np.linalg.norm(psi,axis=0)
+        #print("Done in %.3f s"%(time()-startNorm))
+
+        # Reconstruct spatial mPOD modes
+        #startSpat = time()
+        print("Reconstructing spatial modes ...")
+        phi = np.linalg.matmul(self.D, psi)  # Get spatial mode shapes
+        # Get singular values as norms of spatial modes (more accurate than computation from K_Fsc, should fit the data better by enforcing ||phi_i||=1)
+        sigTot = np.linalg.norm(phi,axis=0)
+        phi = phi/sigTot    # Normalize spatial modes
+        # Make sure the singular values and modes are correctly sorted and that the correction of singvals did not mess with the ordering
+        idx = np.flip(np.argsort(sigTot))
+        sigTot = sigTot[idx]
+        phi = phi[:,idx]
+        psi = psi[:,idx]
+        #print("Done in %.3f s"%(time()-startSpat))
+
+        return phi, psi, sigTot
+
 
     def DMD(self, SAVE_T_DMD: bool = True, F_S: float = 1.0, verbose:  bool = True):
         """
@@ -537,7 +943,7 @@ class ModuloVKI:
         if mode == 'sieber':
             N_O = kwargs.pop('N_O', 100)
             f_c = kwargs.pop('f_c', 0.3)
-            
+
             return self.compute_SPOD_s(
                 N_O=N_O,
                 f_c=f_c,
@@ -551,7 +957,7 @@ class ModuloVKI:
             n_processes = kwargs.pop('n_processes', 1)
 
             # Load or reuse data matrix
-            
+
             if self.D is None:
                 D = np.load(f"{self.FOLDER_OUT}/MODULO_tmp/data_matrix/database.npz")['D']
             else:
@@ -566,18 +972,18 @@ class ModuloVKI:
                 n_processes=n_processes
                 )
 
-            return self.compute_SPOD_t(D_hat=D_hat, 
+            return self.compute_SPOD_t(D_hat=D_hat,
                                        freq_pos=freqs_pos,
-                                        n_Modes=n_Modes, 
-                                        SAVE_SPOD=SAVE_SPOD, 
+                                        n_Modes=n_Modes,
+                                        SAVE_SPOD=SAVE_SPOD,
                                         svd_solver=self.svd_solver,
                                         n_processes=n_processes)
-            
+
         else:
                 raise ValueError("mode must be 'sieber' or 'towne'")
 
 
-    def compute_SPOD_t(self, D_hat, freq_pos, n_Modes=10, SAVE_SPOD=True, svd_solver=None, 
+    def compute_SPOD_t(self, D_hat, freq_pos, n_Modes=10, SAVE_SPOD=True, svd_solver=None,
                        n_processes=1):
         """
         Compute the CSD-based Spectral POD (Towne et al.) from a precomputed FFT tensor.
@@ -608,13 +1014,13 @@ class ModuloVKI:
         """
         # Perform the POD (parallel if requested)
                 # received D_hat_f, this is now just a POD on the transversal direction of the tensor,
-        # e.g. the frequency domain. 
+        # e.g. the frequency domain.
         n_freqs = len(freq_pos)
-        
+
         # also here we can parallelize
-        Phi_SP, Sigma_SP = pod_from_dhat(D_hat=D_hat, n_modes=n_Modes, n_freqs=n_freqs, 
+        Phi_SP, Sigma_SP = pod_from_dhat(D_hat=D_hat, n_modes=n_Modes, n_freqs=n_freqs,
                                          svd_solver=self.svd_solver, n_processes=n_processes)
-        
+
         # Optionally save the results
         if SAVE_SPOD:
                 folder_out = self.FOLDER_OUT + "MODULO_tmp/"
@@ -660,81 +1066,98 @@ class ModuloVKI:
         Sigma_sP : numpy.ndarray, shape (n_Modes,)
                 Modal energies (eigenvalues of the filtered covariance).
         """
+        self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, self.MEMORY_SAVING,
+                                   self.FOLDER_OUT, self.SAVE_K, D=self.Dstar,
+                                   weights=self.weights)
 
-        self.K = CorrelationMatrix(self.N_T, self.N_PARTITIONS, self.MEMORY_SAVING, 
-                                   self.FOLDER_OUT, self.SAVE_K, D=self.Dstar)
-        
         if self.MEMORY_SAVING:
                 self.K = np.load(self.FOLDER_OUT + '/correlation_matrix/k_matrix.npz')['K']
-        
-        # additional step: diagonal spectral filter of K 
+
+        # additional step: diagonal spectral filter of K
         K_F = spectral_filter(self.K, N_o=N_O, f_c=f_c)
-        
+
         # and then proceed with normal POD procedure
         Psi_P, Sigma_P = Temporal_basis_POD(K_F, SAVE_SPOD, self.FOLDER_OUT, n_Modes)
-        
+
         # but with a normalization aspect to handle the non-orthogonality of the SPOD modes
-        Phi_P = Spatial_basis_POD(self.D, N_T=self.K.shape[0], 
+        Phi_P = Spatial_basis_POD(self.D, N_T=self.K.shape[0],
                                         PSI_P=Psi_P, Sigma_P=Sigma_P,
-                                MEMORY_SAVING=self.MEMORY_SAVING, 
+                                MEMORY_SAVING=self.MEMORY_SAVING,
                                 FOLDER_OUT=self.FOLDER_OUT,
                                 N_PARTITIONS=self.N_PARTITIONS,rescale=True)
-                        
+
 
         return Phi_P, Psi_P, Sigma_P
 
-    
-    def kPOD(self, M_DIST=[1, 10], 
+
+    def kPOD(self, M_DIST=[1, 10],
              k_m=0.1, cent=True,
-                n_Modes=10, 
-                alpha=1e-6, 
-                metric='rbf', 
+                n_Modes=10,
+                alpha=1e-6,
+                metric='rbf',
                 K_out=False, SAVE_KPOD=False):
-        """
-        Perform kernel PCA (kPOD) for snapshot data as in VKI Machine Learning for Fluid Dynamics course.
+        r"""
+        Perform kernel PCA (kPOD) for snapshot data, following the VKI Machine Learning for Fluid Dynamics course.
 
         Parameters
         ----------
         M_DIST : array-like of shape (2,), optional
-                Indices of two snapshots used to estimate the minimal kernel value.
-                These should be the most “distant” snapshots in your dataset. Default is [1, 10].
+            Indices of two snapshots used to estimate the minimal kernel value.
+            These should correspond to the most distant snapshots in the dataset.
+            Default is [1, 10].
+
         k_m : float, optional
-                Minimum value for the kernelized correlation. Default is 0.1.
+            Minimum value for the kernelized correlation. Default is 0.1.
+
         cent : bool, optional
-                If True, center the kernel matrix before decomposition. Default is True.
+            If True, center the kernel matrix before decomposition.
+            Default is True.
+
         n_Modes : int, optional
-                Number of principal modes to compute. Default is 10.
+            Number of principal modes to compute. Default is 10.
+
         alpha : float, optional
-                Regularization parameter for the modified kernel matrix \(K_{\zeta}\). Default is 1e-6.
+            Regularization parameter for the modified kernel matrix \(K_{\zeta}\).
+            Default is 1e-6.
+
         metric : str, optional
-                Kernel function identifier (passed to `sklearn.metrics.pairwise.pairwise_kernels`).
-                Only 'rbf' has been tested; other metrics may require different parameters. Default is 'rbf'.
+            Kernel function identifier passed to
+            `sklearn.metrics.pairwise.pairwise_kernels`.
+            Only 'rbf' has been tested; other metrics may require additional
+            parameters. Default is 'rbf'.
+
         K_out : bool, optional
-                If True, also return the full kernel matrix \(K\). Default is False.
+            If True, also return the full kernel matrix \(K\).
+            Default is False.
+
         SAVE_KPOD : bool, optional
-                If True, save the computed kPOD results to disk. Default is False.
+            If True, save the computed kPOD results to disk.
+            Default is False.
 
         Returns
         -------
-        Psi_xi : ndarray of shape (n_samples, n_Modes)
-                The kPOD principal component time coefficients.
-        Sigma_xi : ndarray of shape (n_Modes,)
-                The kPOD singular values (eigenvalues of the centered kernel).
         Phi_xi : ndarray of shape (n_samples, n_Modes)
-                The mapped eigenvectors (principal modes) in feature space.
+            The mapped eigenvectors, that is, the principal modes in feature space.
+
+        Psi_xi : ndarray of shape (n_samples, n_Modes)
+            The kPOD principal component coefficients.
+
+        Sigma_xi : ndarray of shape (n_Modes,)
+            The kPOD singular values, obtained from the eigendecomposition of the
+            centered kernel matrix.
+
         K_zeta : ndarray of shape (n_samples, n_samples)
-                The (regularized and centered) kernel matrix used for decomposition.
-                Only returned if `K_out` is True.
+            The regularized and centered kernel matrix used for the decomposition.
+            Returned only if `K_out` is True.
 
         Notes
         -----
-        - Follows the hands-on ML for Fluid Dynamics tutorial by VKI  
-        (https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552).  
-        - Kernel computed as described in  
-        Horenko et al., *Machine learning for dynamics and model reduction*, arXiv:2208.07746.
-
+        This implementation follows the hands-on tutorial from the VKI Machine
+        Learning for Fluid Dynamics course. The kernel is computed as described
+        in Horenko et al., *Machine learning for dynamics and model reduction*,
+        arXiv:2208.07746.
         """
-        
+
         if self.D is None:
             D = np.load(self.FOLDER_OUT + '/MODULO_tmp/data_matrix/database.npz')['D']
         else:
@@ -742,7 +1165,7 @@ class ModuloVKI:
 
         # Compute Eucledean distances
         i, j = M_DIST
-        
+
         M_ij = np.linalg.norm(D[:, i] - D[:, j]) ** 2
 
         K_r = kernelized_K(D=D, M_ij=M_ij, k_m=k_m, metric=metric, cent=cent, alpha=alpha)
@@ -750,10 +1173,10 @@ class ModuloVKI:
         Psi_xi, Sigma_xi = Temporal_basis_POD(K=K_r, n_Modes=n_Modes, eig_solver='eigh')
 
         PHI_xi_SIGMA_xi = D @ Psi_xi
-        
+
         Sigma_xi = np.linalg.norm(PHI_xi_SIGMA_xi, axis=0) # (R,)
         Phi_xi   = PHI_xi_SIGMA_xi / Sigma_xi[None, :] # (n_s, R)
-        
+
         sorted_idx = np.argsort(-Sigma_xi)
 
         Phi_xi = Phi_xi[:, sorted_idx]  # Sorted Spatial Structures Matrix
@@ -762,17 +1185,16 @@ class ModuloVKI:
 
         if K_out:
             return Phi_xi, Psi_xi, Sigma_xi, K_r
-        else:
-            return Phi_xi, Psi_xi, Sigma_xi, None
-    
-    
-#     def kDMD(self, 
-#              F_S=1.0, 
-#              M_DIST=[1, 10], 
-#              k_m=0.1, cent=True, 
-#              n_Modes=10, 
+        return Phi_xi, Psi_xi, Sigma_xi
+
+
+#     def kDMD(self,
+#              F_S=1.0,
+#              M_DIST=[1, 10],
+#              k_m=0.1, cent=True,
+#              n_Modes=10,
 #              n_modes_latent=None,
-#              alpha=1e-6, 
+#              alpha=1e-6,
 #              metric='rbf', K_out=False):
 #         """
 #         Perform kernel DMD (kDMD) for snapshot data as in VKI’s ML for Fluid Dynamics course.
@@ -813,13 +1235,13 @@ class ModuloVKI:
 
 #         Notes
 #         -----
-#         - Follows the hands-on ML for Fluid Dynamics tutorial by VKI  
-#         (https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552).  
-#         - Kernel computed as described in  
+#         - Follows the hands-on ML for Fluid Dynamics tutorial by VKI
+#         (https://www.vki.ac.be/index.php/events-ls/events/eventdetail/552).
+#         - Kernel computed as described in
 #         Horenko et al., *Machine learning for dynamics and model reduction*, arXiv:2208.07746.
 #         """
-#         # we need the snapshot matrix in memory for this decomposition 
-        
+#         # we need the snapshot matrix in memory for this decomposition
+
 #         if self.MEMORY_SAVING:
 #                 if self.N_T % self.N_PARTITIONS != 0:
 #                         tot_blocks_col = self.N_PARTITIONS + 1
@@ -837,25 +1259,25 @@ class ModuloVKI:
 #                         D[:, R1:R2] = di
 #                         R1 = R2
 #         else:
-#                 D = self.D 
-        
-#         n_s, n_t = D.shape 
-#         # as done with the classic dmd, we assume X = D_1 = D(0:n_t - 1) and 
+#                 D = self.D
+
+#         n_s, n_t = D.shape
+#         # as done with the classic dmd, we assume X = D_1 = D(0:n_t - 1) and
 #         # Y = D_2 = D(1:n_t)
-        
+
 #         X = D[:, :-1]
 #         Y = D[:, 1:]
-        
+
 #         # we seek A = argmin_A ||Y - AX|| = YX^+ = Y(Psi_r Sigma_r^+ Phi^*)
 #         n_modes_latent = n_Modes if n_modes_latent is None else n_modes_latent
-        
-#         # leverage MODULO kPOD routine to compress the system instead of standard POD 
+
+#         # leverage MODULO kPOD routine to compress the system instead of standard POD
 #         # we are now in the kernel (feature) space, thus:
 #         i, j = M_DIST
-        
-#         # gamma needs to be the same for the feature spaces otherwise 
-#         # leads to inconsistent galerkin proj.! 
-         
+
+#         # gamma needs to be the same for the feature spaces otherwise
+#         # leads to inconsistent galerkin proj.!
+
 #         M_ij = np.linalg.norm(X[:, i] - X[:, j]) ** 2
 
 #         gamma = - np.log(k_m) / M_ij
@@ -878,22 +1300,21 @@ class ModuloVKI:
 
 #         # Galerkin projection using the **unmodified** K_YX
 #         A_r = Sigma_inv @ Psi_xi.T @ K_YX @ Psi_xi @ Sigma_inv
-        
+
 #         # eigendecomposition of A gives DMD modes
 #         dt = 1/F_S
-#         Lambda, Phi_Ar = LA.eig(A_r) 
+#         Lambda, Phi_Ar = LA.eig(A_r)
 #         freqs = np.imag(np.log(Lambda)) / (2 * np.pi * dt)
-        
+
 #         # we can trace back the eigenvalues of the not-truncated A (Tu et al.)
 #         Phi_D = Y @ Psi_xi @ Sigma_inv @ Phi_Ar
 #         a0s = LA.pinv(Phi_D).dot(X[:, 0])
-        
+
 #         return Phi_D, Lambda, freqs, a0s, None
-        
-                
-
-                
-    
 
 
-        
+
+
+
+
+

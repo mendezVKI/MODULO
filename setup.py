@@ -1,11 +1,11 @@
-from os import path
-from setuptools import setup, find_packages
 import sys
+from os import path
 
-# NOTE: This file must remain Python 2 compatible for the foreseeable future,
-# to ensure that we error out properly for people with outdated setuptools
-# and/or pip.
-min_version = (3, 6)
+from setuptools import find_packages, setup
+
+
+# Keep this aligned with the versions exercised by the release workflow.
+min_version = (3, 10)
 if sys.version_info < min_version:
     error = """
 modulo_vki does not support Python {0}.{1}.
@@ -24,18 +24,24 @@ here = path.abspath(path.dirname(__file__))
 
 with open(path.join(here, 'README_pypi.rst'), encoding='utf-8') as readme_file:
     readme = readme_file.read()
-    
+
 
 setup(
     name='modulo_vki',
-    version='2.1.5',
+    version='3.0.0',
     description="MODULO (MODal mULtiscale pOd) is a software developed at the von Karman Institute to perform "
                 "Multiscale Modal Analysis of numerical and experimental data.",
     long_description=readme,
     long_description_content_type='text/x-rst',
-    author=["R. Poletti","L. Schena", "D. Ninni", "M. A. Mendez"],
+    author="R. Poletti, L. Schena, D. Ninni, M. A. Mendez, M. Belda",
     author_email='mendez@vki.ac.be',
-    url='https://github.com/mendezVKI/MODULO/tree/master/modulo_python_package/',
+    url='https://github.com/mendezVKI/MODULO',
+    project_urls={
+        'Documentation': 'https://mendezvki.github.io/MODULO/intro.html',
+        'Source': 'https://github.com/mendezVKI/MODULO',
+        'Issues': 'https://github.com/mendezVKI/MODULO/issues',
+        'Fast mPOD paper': 'https://arxiv.org/abs/2604.12077',
+    },
     python_requires='>={}'.format('.'.join(str(n) for n in min_version)),
     packages=find_packages(exclude=['docs', 'tests']),
     entry_points={
@@ -44,34 +50,47 @@ setup(
         ],
     },
     include_package_data=True,
-    package_data={
-        'modulo': [
-            # When adding files here, remember to update MANIFEST.in as well,
-            # or else they will not be included in the distribution on PyPI!
-            # 'path/to/data_file',
-        ]
-    },
+    package_data={'modulo_vki.fortran': ['symMatmulRoutines.f90']},
     install_requires=[
         "tqdm",
         "numpy",
         "scipy",
         "scikit-learn",
-        "ipykernel",
-        "ipython",
-        "ipython-genutils",
-        "ipywidgets",
         "matplotlib",
+        "randomized_svd"
     ],
-    extra_requires={
+    extras_require={
         'tutorials': [
             "pyvista",
             "imageio",
-        ]
+            "ipykernel",
+            "ipython",
+            "ipython-genutils",
+            "ipywidgets",
+            "nbconvert",
+        ],
+        'vtk_utils': [
+            "vtk",
+            "pyvista",
+        ],
+        # This installs only the Python-side build tools. A compatible Fortran
+        # compiler and BLAS implementation are intentionally left to the user.
+        # The extension is never compiled during a normal MODULO installation.
+        'fortran': [
+            "meson>=1.2",
+            "ninja>=1.11",
+        ],
     },
-    license='BSD (3-clause)',
+    license='MIT',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: MacOS',
+        'Operating System :: POSIX :: Linux',
     ],
 )
